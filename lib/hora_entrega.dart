@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:biomercados/config.dart';
 import 'package:flutter/material.dart';
-
+import 'package:biomercados/modelo.dart';
 import 'funciones_generales.dart';
 class HoraEntrega extends StatefulWidget {
   @override
@@ -19,7 +16,7 @@ class _hora_entregaState extends State<HoraEntrega> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _horasDisponiblesEntrega(),
+      future: ModeloTime().horasDisponiblesEntrega(),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.done) {
           print(projectSnap.data);
@@ -58,14 +55,5 @@ class _hora_entregaState extends State<HoraEntrega> {
     );
 
   }
-  _horasDisponiblesEntrega() async {
-    String url=await UrlLogin('horasDisponiblesEntrega');
-    final response = await http.get(url,headers: {"Accept": "application/json"},);
-    print(response.body);
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['data'];
-    }else{
-      return false;
-    }
-  }
+
 }

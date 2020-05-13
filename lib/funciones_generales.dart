@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
+import 'package:biomercados/blocks/auth_block.dart';
 import 'package:biomercados/widget/cant_carrito.dart';
 import 'package:biomercados/widget/cant_carritob.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'config.dart';
 
 
@@ -55,10 +58,10 @@ btnAtras3(context){
       ),
     );
   }
-  textoTop2(texto){
+  textoTop2(texto){//se cambio para el nuevo diseño esta enla orden
     return
 Center(
-            child: Text(texto,style:TextStyle(color: Color(colorRojo),fontSize: 20,fontWeight: FontWeight.bold))
+            child: Text(texto,style:TextStyle(color: Color(colorVerde),fontSize: 20))
         );
 
   }
@@ -124,20 +127,158 @@ topLoginB(String texto){
 subTituloLogin(String texto){
   return Text(texto,textAlign: TextAlign.center,style: TextStyle(color: Color(0xff28b67a), fontSize: 18.00),);
 }
-peticionGet(url) async {
+getRecordarClave() async {
+   Map recuerdo=Map();
+   if(await storage.getItem('recuerdo')==null){
+     recuerdo=null;
+   }else{
+    recuerdo=jsonDecode(await storage.getItem('recuerdo') ?? []);
+   }
+   
+   return recuerdo;
+}
+
+setRecordarClave(String correo,String clave) async {
+    Map recuerdo=Map();
+    recuerdo['si']=true;
+    recuerdo['correo']=correo;
+    recuerdo['clave']=clave;
+    await storage.setItem('recuerdo',jsonEncode(recuerdo));
+}
+peticionGetZlib(url) async {
+  var data;
   try {
     final response = await http.get(
         url, headers: {"Accept": "application/json"}).timeout(
         Duration(seconds: 20));
-    print(response.body);
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+
+    try {
+      var bytes = response.bodyBytes;
+      var inflated = zlib.decode(bytes);
+     data = utf8.decode(inflated);
+
+    }catch(_){
+      data=response.body;
+    }
+
+    if (response.statusCode == 200 || response.statusCode ==409) {
+      return jsonDecode(data);
     } else {
-      return jsonDecode(response.body);
+      return msjIntentedeNuevo();
     }
   } catch (_) {
     return msjConexion();
   }
+}
+cerrar_sesion(context){
+  //ModalRoute.withName('/');
+  //Phoenix.rebirth(context);
+
+  Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
+}
+getData(key) async{
+  return jsonDecode(await storage.getItem(key));
+}
+delIdData(key,id) async {
+  Map l=await getData(key);
+  List lista=l['data'];
+  List listaNueva=List();
+  int cant=lista.length;
+  for(int i=0; i<cant; i++){
+    if(lista[i]['id']!=id){
+      listaNueva.add(lista[i]);
+    }
+  }
+  l['data']=listaNueva;
+  await storage.setItem(key,jsonEncode(l));
+}
+saveData(key,nuevaData) async {
+  await storage.setItem(key,jsonEncode(nuevaData));
+}
+peticionGet(url) async {
+  try {
+    final response = await http.get(
+        url, headers: {"Accept": "application/json"}).timeout(
+        Duration(seconds: 20),);
+    print(response.body);
+    if (response.statusCode == 200 || response.statusCode ==409) {
+      return jsonDecode(response.body);
+    } else {
+      return msjIntentedeNuevo();
+    }
+  } catch (_) {
+    return msjConexion();
+  }
+}
+AppBarBio(context,texto){
+  return AppBar(
+    leading: leadingBio(context),
+    //iconTheme: IconThemeData(color: Colors.red),
+    backgroundColor: colorAppBarBio(),
+    title: titleBio(texto),//Text("Orden Nro."+widget.id,style: TextStyle(color: Colors.red),),
+elevation: 0,
+  );
+}
+colorAppBarBio(){
+    return Colors.white;
+}
+leadingBio(context){
+    return btnAtras3(context);
+}
+titleBio(texto){
+    return textoTop3(texto);
+}
+iconoCarrito(context,actualizar){
+  final proveedor = Provider.of<AuthBlock>(context);
+    int cant=0;
+  return IconButton(
+color: Color(colorVerde),
+    icon:Stack(children: <Widget>[Icon(Icons.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child:
+    Container(
+        width: 17.0,
+        height: 17.0,
+        // padding: const EdgeInsets.all(3.0),//I used some padding without fixed width and height
+        decoration: new BoxDecoration(
+
+          shape: BoxShape.circle,
+          // You can use like this way or like the below line
+          //borderRadius: new BorderRadius.circular(30.0),
+          color: Color(colorRojo),
+        ),
+        child: Center(child:
+        FutureBuilder(
+            future: proveedor.cantCarrito(),
+            builder: (context, projectSnap) {
+              if(projectSnap.data==0){
+                return Text('');
+              }else {
+                if(projectSnap.data!=null) {
+                  if (int.parse(projectSnap.data) > 0) {
+                    cant = int.parse(projectSnap.data);
+                  } else {
+                    cant = 0;
+                  }
+                }else{
+                  cant=0;
+                }
+                return Text(cant.toString(), style: TextStyle(color: Colors.white,
+                    fontSize: 14.0));
+              }
+            }
+        )) //) You can add a Icon instead of text also, like below.
+      //child: new Icon(Icons.arrow_forward, size: 50.0, color: Colors.black38)),
+    )
+
+    )],),
+    //icon: btnCarrito(true),
+    onPressed: () {
+  if(cant>0) {
+    Navigator.pushNamed(context, '/cart',arguments: actualizar);
+  }else{
+    msj("Su carrito se encuentra vacio..");
+  }
+    },
+  );
 }
 btnCarrito(bool actualizar){
   return Stack(children: <Widget>[Icon(Icons.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child: CantCarrito(actualizar: actualizar,))],);
@@ -180,12 +321,19 @@ msjConexion(){
  // msj("Verifique su conexión a internet, intente de nuevo.");
   return data;
 }
+msjIntentedeNuevo(){
+  Map data={
+    'success':false,
+    'msj_general':"Disculpe intente nuevamente."
+  };
+  // msj("Verifique su conexión a internet, intente de nuevo.");
+  return data;
+}
 msj(String msj){
   Fluttertoast.showToast(
       msg: msj,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
-      timeInSecForIos: 1,
       fontSize: 16.0);
 }
 msjb(String msj,context){
@@ -235,7 +383,7 @@ patron_validacion(tipo){
       },
       'numero':{
         'patron':r"^[\d]+$",
-        'msj':"Solo se aceptan numeros y sin espacios",
+        'msj':"Solo se aceptan numeros enteros",
       },
       'float':{
         'patron':r"^[\d.,]+$",
@@ -285,23 +433,42 @@ patron_validacion(tipo){
     };
   return v[tipo];
 }
+setCantPago(nroOrden) async {
+  Map usuario= await getUser();
+  int cantPago=usuario['cantPago'][nroOrden] ?? 0;
+  usuario['cantPago'][nroOrden]=cantPago+1;
+  await storage.setItem('user',jsonEncode(usuario));
+}
+
+getCantPago(nroOrden) async {
+  Map usuario= await getUser();
+  int cantPago=0;
+ // print(usuario['cantPago'][nroOrden]);
+if(usuario['cantPago']==null){
+  return cantPago;
+}else {
+  cantPago = usuario['cantPago'][nroOrden] ?? 0;
+  return cantPago;
+}
+
+}
 setEvento(evento,String titulo) async {
-  await storage.write(key: 'evento', value: evento);
-  await storage.write(key: 'titulo', value: titulo);
+  await storage.setItem('evento', evento);
+  await storage.setItem('titulo', titulo);
 }
 getEvento() async {
-  String evento = await storage.read(key: 'evento');
+  String evento = await storage.getItem('evento');
   return evento;
 }
 getTitulo() async {
-  String titulo = await storage.read(key: 'titulo');
+  String titulo = await storage.getItem('titulo');
   return titulo;
 }
 delEvento()async {
-  await storage.delete(key: 'evento');
+  await storage.deleteItem('evento');
 }
 delTitulo()async {
-  await storage.delete(key: 'titulo');
+  await storage.deleteItem('titulo');
 }
 
 _crearCarrito(idUsuario)async{
@@ -310,7 +477,7 @@ Map carrito= Map();
 carrito['estado']=idUsuario;
 carrito['productos']=null;
 
-  await storage.write(key: 'carrito', value: jsonEncode(carrito));
+  await storage.setItem('carrito',jsonEncode(carrito));
 print("Carrito creado");
 }
 iniciarCarrito() async {
@@ -320,7 +487,7 @@ iniciarCarrito() async {
 
     print("iniciando carrito para: $idUsuario");
 
-  String res= await storage.read(key: 'carrito');
+  String res= await storage.getItem('carrito');
   Map map;
   if(res!=null){
     map=jsonDecode(res);
@@ -328,20 +495,21 @@ iniciarCarrito() async {
       print("Carrito ya existe");
       return true;
     }else{
-      _crearCarrito(idUsuario);
+      await _crearCarrito(idUsuario);
 
       return true;
     }
   }else{
-    _crearCarrito(idUsuario);
+    await _crearCarrito(idUsuario);
     return true;
   }
 }
 setCarrito(int idProducto,int cant) async{
-  print("Agregado al carrito $idProducto $cant");
   Map carrito= Map();
+  print("Agregado al carrito $idProducto $cant");
 
-  carrito= jsonDecode(await storage.read(key: 'carrito'));
+
+  carrito= await jsonDecode(await storage.getItem('carrito'));
   print(carrito);
   if(carrito['productos']==null){
     Map productos= Map();
@@ -352,25 +520,26 @@ setCarrito(int idProducto,int cant) async{
     productos["$idProducto"]=cant;
     carrito['productos']=productos;
   }
+print("Cargo");
 
-
-  await storage.write(key: 'carrito', value: jsonEncode(carrito));
+  await storage.setItem('carrito',jsonEncode(carrito));
 
 }
+
 setOtroCarrito(String id,String valor) async{ //Ejemplo, metodos de pago, direccion y hora de entrega
   print("Agregado al carrito Otro iten: $id => $valor");
   Map carrito= Map();
-  carrito= jsonDecode(await storage.read(key: 'carrito'));
+  carrito= jsonDecode(await storage.getItem('carrito'));
   carrito[id]=valor;
-  await storage.write(key: 'carrito', value: jsonEncode(carrito));
+  await storage.setItem('carrito',jsonEncode(carrito));
 
 }
 
 getCarrito()async{
-  return jsonDecode(await storage.read(key: 'carrito'));
+  return jsonDecode(await storage.getItem('carrito'));
   }
 delCarrito()async {
-  await storage.delete(key: 'carrito');
+  await storage.deleteItem('carrito');
 }
 class Customer {
   int id;
@@ -413,5 +582,6 @@ InkWell link(String texto,String link,context){
     },
   );
 }
+
 final formatDolar = new NumberFormat.simpleCurrency(locale: 'en_US',decimalDigits: 2);
 final formatBolivar = new NumberFormat.simpleCurrency(locale: 'es_ES',name: 'Bs',decimalDigits: 2);

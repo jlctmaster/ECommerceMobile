@@ -1,13 +1,11 @@
+import 'package:biomercados/modelo.dart';
+import 'package:biomercados/widget/recordar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:biomercados/auth/auth.dart';
-import 'package:biomercados/auth/signup.dart';
 import 'package:biomercados/blocks/auth_block.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/models/user.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-
 class SignIn extends StatefulWidget {
   @override
   _SignInState createState() => _SignInState();
@@ -19,6 +17,15 @@ class _SignInState extends State<SignIn> {
   final UserCredential userCredential = UserCredential();
   var passwordVisible = true;
   int _colorVerde=0xff28b67a;
+  bool cargado=false;
+bool checkedValue=false;
+bool primeraVez=true;
+  Future _getTaskAsync;
+  @override
+  void initState() {
+    _getTaskAsync = _valorInicial();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,63 +47,15 @@ class _SignInState extends State<SignIn> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
-                          child: TextFormField(
-
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              return validar('correo',value,true);
-                            },
-                            onSaved: (value) {
-                              setState(() {
-                                userCredential.usernameOrEmail = value.trim();
-                              });
-                            },
-                            decoration: InputDecoration(
-
-                              // hintText: 'Ingrese el correo electrónico',
-                                labelText: 'Correo'
-
-                            ),
-
-                          ),
+                          child: futureCorreo()
                         ),
-                        TextFormField(
-
-                          validator: (value) {
-                            return validar('todo',value,true);
-                          },
-                          onSaved: (value) {
-                            setState(() {
-                              userCredential.password = value;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            // hintText: 'Ingrese la contraseña',
-                              labelText: 'Contraseña',
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  // Based on passwordVisible state choose the icon
-                                  passwordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Color(0xffcccccc),
-                                ),
-                                onPressed: () {
-                                  // Update the state i.e. toogle the state of passwordVisible variable
-                                  setState(() {
-                                    passwordVisible = !passwordVisible;
-                                  });
-                                },
-                              )
-                          ),
-                          obscureText: passwordVisible,
-
-                        ),
+                        futureClave(),
                         Padding(padding: EdgeInsets.only(top:5.0)),
                         Align(
                           alignment: Alignment.centerRight,
                           child:_a("¿Olvidaste la contraseña?",'/recuperar'),
                         ),
+                        futureRecordar(),
                         Padding(
                           padding: const EdgeInsets.only(top: 25.0),
                           child: SizedBox(
@@ -122,13 +81,19 @@ class _SignInState extends State<SignIn> {
                                       // Update values
                                       _formKey.currentState.save();
                                       // Hit Api
-                                      await auth.login(userCredential);
-                                      if(auth.isLoggedIn){
-                                        setState((){
+                                      bool res=await auth.login(userCredential);
+                                      if(checkedValue==true){
+                                        print("RECORDADO");
+                                        await setRecordarClave(userCredential.usernameOrEmail, userCredential.password);
+                                      }else{
+                                        await ModeloTime().borrarRecordarClave();
+                                      }
+                                      if(res){
                                           msj("Bienvenido.");
-                                          //Navigator.pushReplacementNamed(context, '/home');
-                                          Navigator.pushNamedAndRemoveUntil(context,'/home', (Route<dynamic> route) => false);
-                                        });
+                                         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Home()));
+                                         // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Home()));
+                                          Navigator.pushReplacementNamed(context, '/home');
+                                        //  Navigator.pushNamedAndRemoveUntil(context,'/home', (Route<dynamic> route) => true);
                                       }else{
                                         //msj("Credenciales invalidas.");
                                         setState((){
@@ -141,7 +106,8 @@ class _SignInState extends State<SignIn> {
                               },
                             ),
                           ),
-                        )
+                        ),
+
                       ],
                     ),
                   ),
@@ -155,6 +121,107 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+  futureCorreo(){
+    return FutureBuilder(
+      future: _getTaskAsync,
+      builder: (context, res) {
+        if (res.connectionState == ConnectionState.done) {
+          if(res.data==null){
+            return campoTextoCorreo('');
+          }
+          if(res.data['correo']==null){
+            return campoTextoCorreo('');
+          }else {
+            return campoTextoCorreo(res.data['correo']);
+          }
+        }else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+  futureClave(){
+    return FutureBuilder(
+      future: _getTaskAsync,
+      builder: (context, res) {
+        if (res.connectionState == ConnectionState.done) {
+          if(res.data==null){
+            return campoTextoClave('');
+          }
+            if(res.data['clave']==null){
+              return campoTextoClave('');
+            }else{
+              return campoTextoClave(res.data['clave'] ?? '');
+            }
+
+        }else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+  campoTextoClave(valorInicial){
+    return TextFormField(
+initialValue: valorInicial ?? '',
+      validator: (value) {
+        return validar('todo',value,true);
+      },
+      onSaved: (value) {
+        setState(() {
+          userCredential.password = value;
+        });
+      },
+      decoration: InputDecoration(
+        // hintText: 'Ingrese la contraseña',
+          labelText: 'Contraseña',
+          suffixIcon: IconButton(
+            icon: Icon(
+              // Based on passwordVisible state choose the icon
+              passwordVisible
+                  ? Icons.visibility
+                  : Icons.visibility_off,
+              color: Color(0xffcccccc),
+            ),
+            onPressed: () {
+              // Update the state i.e. toogle the state of passwordVisible variable
+              setState(() {
+                passwordVisible = !passwordVisible;
+              });
+            },
+          )
+      ),
+      obscureText: passwordVisible,
+
+    );
+  }
+  campoTextoCorreo(valorInicial){
+    return TextFormField(
+      initialValue: valorInicial,
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) {
+        return validar('correo',value,true);
+      },
+      onSaved: (value) {
+        setState(() {
+          userCredential.usernameOrEmail = value.trim();
+        });
+      },
+      decoration: InputDecoration(
+
+        // hintText: 'Ingrese el correo electrónico',
+          labelText: 'Correo'
+
+      ),
+
+    );
+  }
+_valorInicial() async {
+      Map res=await getRecordarClave();
+      return res;
+  }
+
+
+
   InkWell _a(String texto,String link){
     return InkWell(
       child: Text(texto, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(_colorVerde))),
@@ -162,7 +229,33 @@ class _SignInState extends State<SignIn> {
         setState((){
           Navigator.pushNamed(context, link);
         });
+      },
+    );
+  }
 
+  _actualizar(a) {
+    checkedValue=a;
+  }
+
+  futureRecordar() {
+    return FutureBuilder(
+      future: _getTaskAsync,
+      builder: (context, res) {
+        if (res.connectionState == ConnectionState.done) {
+          bool tipo=false;
+          if(res.data!=null) {
+            if (res.data['correo'] != null) {
+              tipo = true;
+              if (primeraVez) {
+                checkedValue = true;
+                primeraVez = false;
+              }
+            }
+          }
+            return Recordar(onChanged: _actualizar,tipo:tipo);
+        }else {
+          return CircularProgressIndicator();
+        }
       },
     );
   }

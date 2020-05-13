@@ -95,7 +95,7 @@ Divider(),
 
         );
 
-      },) :IconButton(icon: Icon(Icons.navigate_next,),)
+      },) : Icon(Icons.navigate_next,) //IconButton(icon: Icon(Icons.navigate_next,),)
       ,
       onTap: (){
         Navigator.push(

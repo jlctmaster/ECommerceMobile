@@ -47,15 +47,7 @@ String opinion="";
     return DefaultTabController(
         length: 3,
         child:  Scaffold(
-        appBar: AppBar(
-          leading: btnAtras3(context),
-          iconTheme: IconThemeData(color: Colors.red),
-
-
-backgroundColor: Colors.white,
-          title: textoTop3("Orden Nro."+widget.id),//Text("Orden Nro."+widget.id,style: TextStyle(color: Colors.red),),
-
-        ),
+        appBar: AppBarBio(context,"Orden Nro."+widget.id),
         body:TabBarView(
           children: [
             new Container(child: Column(children: <Widget>[
@@ -209,8 +201,7 @@ Padding(
 ,
 
 
-        Expanded(
-          child:  Flexible(
+       Flexible(
               child: ListView.builder(
                   itemCount: products.length,
                   itemBuilder: (context, index) {
@@ -263,7 +254,7 @@ Padding(
                   }
               )
           ),
-        ),
+
         Container(
             child: Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20),

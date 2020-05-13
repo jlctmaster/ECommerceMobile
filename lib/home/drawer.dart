@@ -83,7 +83,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     shape: BoxShape.circle,
                     color: Theme.of(context).primaryColor,
                   ),
-                  child: CantCarrito(actualizar: false,),
+                  child: CantCarrito(actualizar: false),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -117,8 +117,9 @@ class _AppDrawerState extends State<AppDrawer> {
                 title:  _textoSubTitle('Cerrar sesión'),
                 onTap: () async {
                   await auth.logout();
-                  Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
+                  //Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
                   Fluttertoast.showToast(msg: 'Vuelve pronto.',toastLength: Toast.LENGTH_SHORT);
+                  cerrar_sesion(context);
                 },
               ),
              // _categorias(),
@@ -204,13 +205,14 @@ _categorias(){
              // return Text();
           },
         );
+        /*
         int i=0;
         while(res.data[i]!=null){
           return Text(res.data[i]['name']);
           i++;
         }
 
-
+*/
 
 
 

@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:biomercados/home/listado_combos.dart';
+import 'package:biomercados/home/listado_productos.dart';
+import 'package:biomercados/modelo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:biomercados/funciones_generales.dart';
@@ -6,6 +9,7 @@ import 'package:biomercados/home/rating.dart';
 import 'package:biomercados/modelo/products.dart';
 import 'package:http/http.dart' as http;
 import '../config.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 class Principal extends StatefulWidget {
   final ValueChanged<String> actualizarHome;
 
@@ -18,7 +22,7 @@ class _principalState extends State<Principal> {
 
   @override
   Widget build(BuildContext context) {
-
+    ModeloTime().verificarSesionN(context);
     return CustomScrollView(
       // Add the app bar and list of items as slivers in the next steps.
         slivers: <Widget>[
@@ -33,53 +37,19 @@ class _principalState extends State<Principal> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   //_tituloConBoton('Categorias','Ver todas','/categorise'),//Titulo antes del scroll
-                  _textoTituloCentrado('Categorias'),
+                 // _textoTituloCentrado('Categorias'),
                   Categorias(),// categorias en scroll lateral
+
+
+                  Padding(padding: EdgeInsets.only(top:5),),
+
+                  _textoTituloCentrado('Mi compra fácil'),
+                    ListadoCombos(),
+                  listaPublicidadTop(),
+
                   _textoTituloCentrado('Seguro que te gusta'),
-                  FutureBuilder(
-                    future: listarProductos(),
-                    builder: (context, projectSnap) {
-                      if (projectSnap.connectionState == ConnectionState.done) {
-                        if(projectSnap.data!=null) {
-                          return Container(
-                           // width: 350,
-                              child: GridView.count(
-physics: ClampingScrollPhysics(),
-                                shrinkWrap: true,
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.7,
-                                padding: EdgeInsets.only(
-                                    top: 8, left: 6, right: 6, bottom: 12),
-                                children: cajaProductos(projectSnap.data),
-                              ),
-                            )
-
-
-                          ;
-                        }else{
-                          return Padding(
-                              padding: EdgeInsets.only(bottom: 50,left: 20,right: 20),
-                              child:Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  //Icon(Icons.do_not_disturb,size: 50,),
-                                  Center(child: Text("Ups, nos hemos encontrado productos que coincidan con tu búsqueda, intenta más tarde.", style: TextStyle(color:Color(colorRojo), fontSize: 22, fontWeight: FontWeight.bold),),),
-
-
-
-                                  //Text("No hay productos, intente mas tarde.",style: TextStyle(fontSize: 30),)
-                                ],)
-                          );
-                        }
-
-                      }else {
-                        return Center(child:CircularProgressIndicator());
-                      }
-                    },
-
-                  ),
-
-
+                  ListadoProductos(tipoListado: 'ia',),
+                  listaPublicidadFinal(),
                   //_banner('assets/images/banner-2.png'),
                   //_textoTituloCentrado('Ofertas'),
                 ],
@@ -91,8 +61,102 @@ physics: ClampingScrollPhysics(),
         ]);
 
   }
+  List agregarImagenList(data){
+    final List imgList=List();
+    String imagen;
+    for (var n in data['data']) {
+     imagen=(n['image']).replaceAll('\\', '/');
+      imgList.add(CachedNetworkImage(imageUrl: BASE_URL_IMAGEN+imagen,));
+      print(BASE_URL_IMAGEN+imagen);
+    }
+
+    return imgList;
+  }
+  listaPublicidadFinal(){
+
+    return  SizedBox(
+        height: (MediaQuery.of(context).size.width / 2 - 5),
+        width: double.infinity,
+
+        child: new FutureBuilder(
+          future: ModeloTime().listarPublicidad('footer'), // async work
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting: return Center(child:CircularProgressIndicator());
+              default:
+                if (snapshot.hasError)
+                  return new Text('Error: ${snapshot.error}');
+                else{
+                  if(snapshot.data['data']==null){
+                    return Text("");
+                  }else {
+                    return Carousel(
+                      boxFit: BoxFit.cover,
+                      autoplay: true,
+                      animationCurve: Curves.fastOutSlowIn,
+                      //animationDuration: Duration(milliseconds: 4000),
+                      autoplayDuration: Duration(milliseconds: 4000),
+                      dotSize: 6.0,
+                      dotIncreasedColor: Color(0xFFFF335C),
+                      dotBgColor: Colors.transparent,
+                      //dotPosition: DotPosition.topRight,
+                      dotVerticalPadding: 10.0,
+                      showIndicator: false,
+                      indicatorBgPadding: 7.0,
+                      images: agregarImagenList(snapshot.data),
+                    );
+                  }
+                  // return snapshot.data['data'];
+                }
+                //return new Text(snapshot.data[0]['name']);
+            }
+          },
+        )
+    );
+  }
+  listaPublicidadTop(){
+
+    return  SizedBox(
+        height: (MediaQuery.of(context).size.width* 0.3),
+        width: double.infinity,
+        //width: MediaQuery.of(context).size.width,
+        child: new FutureBuilder(
+          future: ModeloTime().listarPublicidad('top'), // async work
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting: return Center(child:CircularProgressIndicator());
+              default:
+                if (snapshot.hasError)
+                  return new Text('Error: ${snapshot.error}');
+                else{
+
+                  return Carousel(
+                    boxFit: BoxFit.cover,
+                    autoplay: true,
+                    animationCurve: Curves.fastOutSlowIn,
+                    //animationDuration: Duration(milliseconds: 4000),
+                    autoplayDuration: Duration(milliseconds: 5000),
+                    dotSize: 6.0,
+                    dotIncreasedColor: Color(0xFFFF335C),
+                    dotBgColor: Colors.transparent,
+                    dotPosition: DotPosition.bottomRight,
+                    dotVerticalPadding: 10.0,
+                  //  overlayShadowColors: Colors.white,
+                    showIndicator: true,
+                    indicatorBgPadding: 7.0,
+                    images: agregarImagenList(snapshot.data),
+                  );
+                  // return snapshot.data['data'];
+                }
+            //return new Text(snapshot.data[0]['name']);
+            }
+          },
+        )
+    );
+  }
   Widget _cuadroCategoria(id,name,image){
     return Card(
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
@@ -194,19 +258,42 @@ physics: ClampingScrollPhysics(),
     return Container(
         height: 140.0,
         child:
-        FutureBuilder<List<Post>>(
-          future: fetchPosts(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return Container(child:Text("Cargando categorias..."));
-            List<Post> posts = snapshot.data;
-            return new ListView(
-              scrollDirection: Axis.horizontal,
-              children: posts.map((post) => _cuadroCategoria(post.id,post.name,post.image)).toList(),
-            );
+        new FutureBuilder(
+          future: listarCategorias(), // async work
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting: return Center(child:CircularProgressIndicator());
+              default:
+                if (snapshot.hasError)
+                  return new Text('Error: ${snapshot.error}');
+                else{
+                  return _bloqueCategorias(snapshot.data);
+                }
+                  return new Text(snapshot.data[0]['name']);
+            }
           },
-        )
-
+        ),
     );
+
+  }
+  _bloqueCategorias(data){
+    return new ListView.builder
+      (
+        scrollDirection: Axis.horizontal,
+        itemCount: data.length,
+        itemBuilder: (BuildContext ctxt, int index) {
+          var ca=data[index];
+          return _cuadroCategoria(ca['id'],ca['name'],ca['image']);
+        }
+    );
+  }
+  listarCategorias() async{
+    Map data= await getData('categories');
+    if(data['success']==true){
+      return data['data'];
+    }else{
+      return false;
+    }
   }
   Future<List<Post>> fetchPosts() async {
     http.Response response =
@@ -218,22 +305,7 @@ physics: ClampingScrollPhysics(),
     return responseJson.map((m) => new Post.fromJson(m)).toList();
    // return responseJson;
   }
-  Future listarProductos() async {
 
-
-    print("LISTO listarProductosIA");
-    String url = await UrlLogin('listarProductosIA');
-    final response = await http.get(
-        url, headers: {"Accept": "application/json"});
-    print(response.body);
-    var res=jsonDecode(response.body);
-
-    if(res['success']==true) {
-      return res['data'];
-    }else{
-      return null;
-    }
-  }
   cajaProductos(products) {
     //final formatCurrency = new NumberFormat("#,##0.00", "en_US");
     return List.generate(products.length, (index) {
@@ -252,17 +324,21 @@ physics: ClampingScrollPhysics(),
       int stock=int.parse(products[index]['qty_avaliable']);
       int pedidoMaximo=int.parse(products[index]['qty_max']);
       return Container(
-        child: Card(
-
-
-          clipBehavior: Clip.antiAlias,
+        color: Colors.white,
+      child: Card(
+        margin: EdgeInsets.zero,
+        elevation: 0,
+        clipBehavior: Clip.antiAlias,
+        color: Colors.white,
           child: InkWell(
+
             onTap: () {
               Navigator.pushNamed(
                 context,
                 '/producto',
                 arguments: Products(
                     image:imagen_grande,
+                    image_previa: imagen,
                     name:name,
                     precio:priceDolar+"/"+price,
                     rating: rating,
@@ -279,9 +355,11 @@ physics: ClampingScrollPhysics(),
               );
             },
             child: Column(
+
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
+
                   height: (MediaQuery.of(context).size.width / 2 - 5),
                   //height: 180,
                   width: double.infinity,
@@ -296,11 +374,11 @@ physics: ClampingScrollPhysics(),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
+                  padding: const EdgeInsets.only(top: 1.0),
                   child: ListTile(
                     title: Text(
                       name,
-                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
 
 
                       style: TextStyle(
@@ -343,6 +421,7 @@ physics: ClampingScrollPhysics(),
     });
 
   }
+
 }
 class Post {
   final String id;

@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:biomercados/widget/cant_carritob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:biomercados/config.dart';
@@ -9,43 +7,39 @@ import 'package:biomercados/home/agregarProducto.dart';
 import 'package:biomercados/home/galeria.dart';
 import 'package:biomercados/home/rating.dart';
 import 'package:biomercados/modelo/products.dart';
-
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:biomercados/modelo/favorites.dart';
 import 'package:http/http.dart' as http;
 class Producto extends StatefulWidget {
   @override
   _productoState createState() => _productoState();
 }
-class _productoState extends State<Producto> {
+class _productoState extends State<Producto>{
   bool _status_favorite=false;
   Favorites objFavorites = Favorites();
-
+  bool guardadoVisita=false;
   bool mayor=true;
-
+  bool consultadoFavorito=false;
   var msj_mayor;
 
   @override
   Widget build(BuildContext context) {
+   // final proveedor = Provider.of<AuthBlock>(context);
     final Products args = ModalRoute.of(context).settings.arguments;
     guardarVisitaProducto(args.id);
     if(_status_favorite==false) {
-      consultarFavorito(args.id);
+      if(consultadoFavorito==false) {
+        consultarFavorito(args.id);
+        consultadoFavorito=true;
+      }
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalles del producto'),
-
+        title: titleBio('Detalles del producto'),
+        leading: leadingBio(context),
+        backgroundColor: colorAppBarBio(),
         actions: <Widget>[
 
-          IconButton(
-            icon:btnCarritob(),
-            onPressed: (){
-              Navigator.pushNamed(context, '/cart');
-            },
-        )
+          iconoCarrito(context,true),
         ],
       ),
       body: SafeArea(
@@ -61,7 +55,7 @@ class _productoState extends State<Producto> {
                 child: Stack(
                     alignment: Alignment.bottomRight,
                     children: <Widget>[
-                      Galeria(galleryItems:json.decode(args.image)),
+                      Galeria(galleryItems:json.decode(args.image),imagenPrevia:args.image_previa),
                      /*
                       Center(
                         child:PhotoView(
@@ -159,6 +153,7 @@ class _productoState extends State<Producto> {
                     FutureBuilder(
                         future: mayorDeEdad(args.id),
                         builder: (context, projectSnap) {
+                          //return mayor ? AgregarProducto(precioBolivar: args.precioBolivar,precioDolar: args.precioDolar,id:args.id,stock: args.stock,pedidoMax:args.pedidoMax) : Text(msj_mayor,style: TextStyle(color:Colors.red),);
                           return mayor ? AgregarProducto(precioBolivar: args.precioBolivar,precioDolar: args.precioDolar,id:args.id,stock: args.stock,pedidoMax:args.pedidoMax) : Text(msj_mayor,style: TextStyle(color:Colors.red),);
 
                     }),
@@ -213,7 +208,7 @@ class _productoState extends State<Producto> {
     objFavorites.products_id=products_id;
     objFavorites.guardar();
     setState(() {
-      if(_status_favorite){
+      if(_status_favorite==true){
         _status_favorite = false;
       }else {
         msj("Agregado a favoritos.");
@@ -225,7 +220,8 @@ class _productoState extends State<Producto> {
 void consultarFavorito(int products_id) async {
     objFavorites.products_id=products_id;
     await objFavorites.consultar();
-    if(objFavorites.res['success']==true){
+
+    if(objFavorites.res['data'][products_id.toString()]==true){
       setState(() {
         _status_favorite=true;
       });
@@ -233,26 +229,34 @@ void consultarFavorito(int products_id) async {
     return;
   }
   guardarVisitaProducto(int products_id) async {
-    String url;
-    String datos='guardarVisitaProducto&products_id='+products_id.toString();
-    url=await UrlLogin(datos);
-    final response = await http.get(url,headers: {"Accept": "application/json"},);
-    print(response.body);
-    print(response.statusCode);
+    if(guardadoVisita==false) {
+      String url;
+      String datos = 'guardarVisitaProducto&products_id=' +
+          products_id.toString();
+      url = await UrlLogin(datos);
+      final response = await http.get(
+        url, headers: {"Accept": "application/json"},);
+      print(response.body);
+      print(response.statusCode);
+      guardadoVisita=true;
+    }
   }
   mayorDeEdad(int products_id) async {
     String url;
     Map res=Map();
-    String datos='mayorDeEdad&products_id='+products_id.toString();
-    url=await UrlLogin(datos);
-    res= await peticionGet(url);
+    res=await getData('productos_mayor');
 
-
-    if(res['success']==true){
-      mayor= true;
-    }else{
+   // String datos='mayorDeEdad&products_id='+products_id.toString();
+   // url=await UrlLogin(datos);
+    //res= await peticionGet(url);
+      print("MAYOR");
+      print(res);
+    if(res['data'][products_id.toString()]==true){
       mayor= false;
       msj_mayor=res['msj_general'];
+
+    }else{
+      mayor= true;
     }
 
   }

@@ -2,25 +2,27 @@ import 'dart:convert';
 import 'package:biomercados/config.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/models/user.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 
 
 
 class AuthService {
-  final storage = FlutterSecureStorage();
+  //final LocalStorage storage = new LocalStorage('todo_app');
   // Create storage
   Future<bool> login(UserCredential userCredential) async {
+    //var status = await Permission.storage.status;
+
     Map res=Map();
     String password=userCredential.password;
     String email= userCredential.usernameOrEmail;
-    String url='$BASE_URL/api_rapida.php?evento=loginMovil&email=$email&password=$password';
-    res= await peticionGet(url);
-
+    String url='$BASE_URL/api_rapida.php?evento=theBest&email=$email&password=$password';
+    res=await peticionGetZlib(url);
 
     if(res['success']==true){
-      setUser(jsonEncode(res));
+      await setUser(jsonEncode(res['data']['usuario']['data']));
+      await setData(res['data']);
       return true;
+     // setUser(jsonEncode(res['data']['usuario']['data']));
+     // return true;
     }else{
       msj(res['msj_general']);
       return false;
@@ -74,16 +76,23 @@ class AuthService {
   }
 
   setUser(String value) async {
-    await storage.write(key: 'user', value: value);
+    await storage.setItem('user',value);
+  }
+  setData(Map value) async {
+    value.forEach(await actualizarTodo);
+  }
+
+  void actualizarTodo(key, value) async{
+    await storage.setItem(key,jsonEncode(value));
   }
 
   getUser() async {
-    String user = await storage.read(key: 'user');
+    String user = await storage.getItem('user');
     if (user != null) {
       return jsonDecode(user);
     }
   }
   logout() async {
-    await storage.delete(key: 'user');
+    await storage.deleteItem('user');
   }
 }

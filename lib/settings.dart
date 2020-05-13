@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 import 'funciones_generales.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'blocks/auth_block.dart';
 import 'package:provider/provider.dart';
 class Settings extends StatefulWidget {
@@ -17,9 +15,7 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     AuthBlock auth = Provider.of<AuthBlock>(context);
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Configuración'),
-        ),
+        appBar: AppBarBio(context, 'Configuración'),
         body: SafeArea(
               child: Column(
                 children: <Widget>[

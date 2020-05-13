@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:biomercados/auth/tdc.dart';
 import 'package:biomercados/config.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/home/orden.dart';
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 class EnviarPago extends StatefulWidget{
   final int id;
@@ -41,25 +43,21 @@ bool _cargadoTotalPagar=false;
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text("Realizar pago"),),
+      appBar: AppBarBio(context,"Realizar pago."),
       body:  SingleChildScrollView( child: Container(
 
         child:Padding(padding:EdgeInsets.all(15),child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-
            Center(child: subTituloLogin("Realice su pago a la siguiente cuenta"),),
-Divider(),
+          Divider(),
           _texto("Banco: ",widget.nombreBanco),
           _texto("Moneda: ",widget.moneda),
           _texto("Titular: ",widget.titular),
           _texto("Datos: ", widget.description ?? '-'),
-Divider(),
+          Divider(),
           //_texto("Monto a pagar: ",widget.description),
           _totalPagar(),
-
-
-
         ],
       ),),),),
     );
@@ -71,7 +69,8 @@ Divider(),
       future: _montoPagar(),
       builder: (context, res) {
         if (res.connectionState == ConnectionState.done) {
-          return _bloquePagar(res.data);
+            return _bloquePagar(res.data['data'],int.parse(res.data['data'][0]['cant_pagos']));
+
         }else {
           return Center(child: CircularProgressIndicator(),);
         }
@@ -132,7 +131,7 @@ Divider(),
         return 'nro_venezuela';
     }
   }
-  _bloquePagar(data){
+  _bloquePagar(data,cant_pagos){
     int status=int.parse(data[0]['order_status']);
 
     rateJson=jsonDecode(data[0]['rate_json']);
@@ -181,24 +180,38 @@ if(status>1) _pagado=true;
         //_textoc("Total a pagar: ",_formatearMoneda(double.parse((totalPagar+0.004).toStringAsFixed(2)))),
         _textoc("Total a pagar: ", _formatearMoneda(totalPagar)),
         //_textoc("Total a pagar: ",(totalPagar+0.004).toStringAsFixed(2)),
-        _pagado ? Column(children: <Widget>[
-          Icon(Icons.check_circle, size: 50, color: Color(colorVerde),),
-          Text("Gracias por su compra", style: TextStyle(fontSize: 20),),
-          Text(
-            "Es posible que algunos de sus pagos estén en proceso de verificación. En el menu Orden o Tracking puede ver en tiempo real el estatus de su orden.",
-            textAlign: TextAlign.center,),
-          link("Volver al menu principal", "/home", context)
-        ],) :
-        _formularios(),
+        formu(_pagado,cant_pagos),
+
+
       ],
     );
   }else{
     return Center(child: Text("Disculpe, este método de pago no se encuentra disponible para su orden. Esto puede ser debido a que el monto a pagar en la moneda seleccionada es muy bajo.",textAlign:TextAlign.center,style: TextStyle(color: Colors.red),),);
   }
   }
-
+  formu(bool pagado,cant_pagos){
+    if(pagado){
+     return Column(children: <Widget>[
+        Icon(Icons.check_circle, size: 50, color: Color(colorVerde),),
+        Text("Gracias por su compra", style: TextStyle(fontSize: 20),),
+        Text(
+          "Es posible que algunos de sus pagos estén en proceso de verificación. En el menu Orden o Tracking puede ver en tiempo real el estatus de su orden.",
+          textAlign: TextAlign.center,),
+        link("Volver al menu principal", "/home", context)
+      ],);
+    }else{
+      if(cant_pagos>1){
+        return Center(child:Text("Disculpe, a alcanzado el límite de pagos permitidos. Diríjase a la tienda Biomercados mas cercana.",style: TextStyle(fontSize: 18,color: Colors.red)) ,);
+      }else {
+        return _formularios();
+      }
+    }
+  }
   _formularios() {
     switch (widget.payment_methods_id) {
+      case 8 :
+        return _formularioTDC();
+        break;
       case 3 :
         return _formularioEfectivo();
         break;
@@ -214,7 +227,8 @@ _formularioEfectivo(){
           Divider(),
           Center(child: subTituloLogin("¿Cuanto pagara en efectivo?"),),
           Row(children: <Widget>[
-            Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que transfirio a nuestra cuenta',_tipoValidacion(),true),),
+            //Expanded(child: Padding(padding:EdgeInsets.only(right: 5), child: _campoTexto_ref('Seriales','Por favor ingrese los seriales de su efectivo','todo',true),),),
+            Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que pagara en efectivo','numero',true),),
           ],),
 
           _botonRojo()
@@ -242,6 +256,24 @@ Padding(
 )
 ,
             _botonRojo()
+
+          ],
+        )
+    );
+  }
+  _formularioTDC(){
+    return Form(
+        key: _formKey,
+        child:Column(
+          children: <Widget>[
+            Divider(),
+            Center(child: subTituloLogin("¿Cuanto pagara mediante su TDC?"),),
+            Row(children: <Widget>[
+
+              Expanded(child: _campoTexto_monto('Monto a pagar','Por favor ingrese el Monto a pagar mediante su TDC',_tipoValidacion(),true),),
+
+            ],),
+            _botonRojob()
 
           ],
         )
@@ -281,20 +313,23 @@ Padding(
     switch(tipo){
       case 'nro_venezuela':
       case 'float':
+      case 'thousand':
+      tipoKey=TextInputType.text;
+        break;
       case 'numero':
-        tipoKey=TextInputType.number;
+        //tipoKey=TextInputType.numberWithOptions(decimal: true,signed: true);
+        tipoKey=TextInputType.numberWithOptions(decimal: false);
         break;
       default:
         tipoKey=TextInputType.text;
     }
     //TextInputType emailAddress = TextInputType.emailAddress;
     return TextFormField(
+
       validator: (value) {
-        if(validarMonto(value)) {
-          return validar(tipo, value, obligatorio);
-        }else{
-          return 'Monto incorrecto.';
-        }
+
+        return validarMonto(tipo, value, obligatorio);
+
       },
       onSaved: (value) {
         value=set_formato_moneda(value);
@@ -325,7 +360,6 @@ Padding(
     String listo='';
     String b=value.trim();
     List c;
-    String d;
    // b=b.replaceAll(RegExp(r'\s'), '');
    // b=b.replaceAll(RegExp(r',\.'), ' ');
     b=b.replaceAll(' ', '');
@@ -347,6 +381,41 @@ Padding(
     listo=b;
     }
     return listo;
+  }
+  _botonRojob() {
+
+    return Padding(
+        padding: const EdgeInsets.only(top: 25.0),
+        child: Center(
+          child: SizedBox(
+            width: 150,
+            height: 40,
+            child:RaisedButton(
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0),
+              ),
+              color: Color(0xFFe1251b),
+              textColor: Colors.white,
+              child: _cargando ? CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ) : Text('Realizar pago'),
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Tdc(nroOrden: widget.nroOrden,monto: _monto,)),
+                  ).then((value){
+                    setState(() {});
+                  });
+                }
+
+
+              },
+            ),
+          ),
+        )
+    );
   }
   _botonRojo() {
 
@@ -391,42 +460,51 @@ Padding(
     String url=await UrlLogin('guardarPago&coins_id='+widget.coins_id.toString()+'&ref=$_ref&amount=$_monto&orders_id='+widget.nroOrden.toString()+'&bank_datas_id='+widget.id.toString());
     final response = await http.get(url,headers: {"Accept": "application/json"},
     );
-    print(response.body);
-    Map res= jsonDecode(response.body);
+    //print(response.body);
+   // Map res= jsonDecode(response.body);
     if (response.statusCode == 200) {
       msj("Su pago ha sido abonado.");
     }
   }
   _montoPagar() async {
     int orders_id=widget.nroOrden;
+
     String urlb=await UrlLogin('totalPagar&orders_id=$orders_id');
-    final response = await http.get(urlb,headers: {"Accept": "application/json"},);
-    print(response.body);
-    Map res= jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
+    Map res= await peticionGetZlib(urlb);
 
-     // msj(status.toString());
-     return res['data'];
+  //  int cantPago=await getCantPago(widget.nroOrden);
+  //  print("aaaaaaaaaaaa $cantPago");
+
+  //  res['limitePago']=false;
+  //  if(cantPago>1){
+    //  res['limitePago']=true;
+    //  return res;
+   // }
+    if (res['success']==true) {
+     return res;
     }else{
       msj(res['msj_general']);
     }
   }
 
-  bool validarMonto(String value) {
-    double monto;
-    double pagar=double.parse(total_pay.toStringAsFixed(2));
-    //msj("$monto $pagar");
-    if(value!=null && value!='') {
+  validarMonto(tipo, value, obligatorio) {
+    if(validar(tipo, value, obligatorio)==null) {
+      double monto;
+      double pagar = double.parse(total_pay.toStringAsFixed(2));
 
-      monto = double.parse(set_formato_moneda(value));
-      if(monto>pagar || monto==0){
-        return false;
-      }else{
-        return true;
+      if (value != null && value != '') {
+        monto = double.parse(set_formato_moneda(value));
+        if (monto > pagar || monto == 0) {
+          return 'Monto incorrecto.';
+        } else {
+          return null;
+        }
+      } else {
+        return null;
       }
     }else{
-      return true;
+      return validar(tipo, value, obligatorio);
     }
   }
 }

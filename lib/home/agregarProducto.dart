@@ -1,8 +1,8 @@
-import 'dart:convert';
-
+import 'package:biomercados/blocks/auth_block.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:biomercados/funciones_generales.dart';
+import 'package:provider/provider.dart';
 class AgregarProducto extends StatefulWidget {
   final double precioDolar;
   final double precioBolivar;
@@ -36,9 +36,9 @@ class _AgregarProductoState extends State<AgregarProducto> {
 
   @override
   Widget build(BuildContext context) {
-//return Text("ssssssss");
+    final proveedor = Provider.of<AuthBlock>(context);
     return FutureBuilder(
-      future: getCarrito(),
+      future: proveedor.getCarritob(),
       builder: (context, obj) {
        // if (obj.connectionState == ConnectionState.done) {
          // if(productos!=null){
@@ -91,18 +91,22 @@ Column(
               ),
 
 
-              FlatButton(child: Icon(Icons.do_not_disturb_on),onPressed: (){
+              FlatButton(child: Icon(Icons.do_not_disturb_on),
 
-                setState(() {
+                  onPressed: () async {
+
+
                   if(_cant>0) {
                     _rojoStock=false;
                     _colorStock=Colors.black;
+
                     _cant--;
                     _stock++;
                     _dolar=formatDolar.format((widget.precioDolar*_cant));
                     _bolivar=formatBolivar.format((widget.precioBolivar*_cant));
                     //productos[widget.id] = _cant;
-                    setCarrito(widget.id,_cant);
+                    await setCarrito(widget.id,_cant);
+                   proveedor.actualizar();
                   }
                    if(_pedidoMax>_cant){
                     if(_rojoMaximo){
@@ -113,27 +117,29 @@ Column(
 
                     }
                   }
-                });
+
               }),
               Icon(Icons.shopping_cart,size: 16,),
               Text("$_cant",style: TextStyle(fontSize: 21),),
               FlatButton(
                 child: Icon(Icons.add_circle),
-                onPressed: (){
+                onPressed: () async {
 
 if(_stock>0 && (_pedidoMax>_cant || widget.pedidoMax==0) && widget.stock>_cant) {
 
-  setState(() {
+  //setState(() async {
 
     if (_cant >= 0) {
       _cant++;
+
       _stock--;
       _dolar = formatDolar.format((widget.precioDolar * _cant));
       _bolivar = formatBolivar.format((widget.precioBolivar * _cant));
-      setCarrito(widget.id, _cant);
+      await setCarrito(widget.id, _cant);
+      proveedor.actualizar();
       // productos[widget.id] = _cant;
     }
-  });
+ // });
 }
 
 if(_stock==0 || widget.stock==_cant){

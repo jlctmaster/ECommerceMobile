@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:biomercados/config.dart';
 import 'package:flutter/material.dart';
 
 import '../funciones_generales.dart';

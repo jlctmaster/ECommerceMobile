@@ -2,16 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
 import 'funciones_generales.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'blocks/auth_block.dart';
-import 'package:provider/provider.dart';
 
 import 'blocks/modelo.dart';
-import 'config.dart';
-import 'models/user.dart';
 class Direcciones extends StatefulWidget {
   final String id;
   final String cities_id;
@@ -62,6 +56,8 @@ bool _avisoObligatorioCities=false;
 bool _widgetCities=true;
 bool _widgetRegions=true;
 
+  bool _buenoStates=false;
+
   @override
   Widget build(BuildContext context) {
 
@@ -69,9 +65,7 @@ bool _widgetRegions=true;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
-        appBar: AppBar(
-          title: Text('Mis direcciones'),
-        ),
+        appBar: AppBarBio(context, 'Mis direcciones'),
         body:SingleChildScrollView(
         padding: EdgeInsets.only(bottom: bottom),
         reverse: true,
@@ -272,10 +266,14 @@ _botonEnvio(id){
     return DropdownButton(
 
       items: data?.map((item) {
+        if(item['id']==_states_id){ //para evitar el error si desactiamos un estado y el usuario consulta y tiene el estado viejo
+          _buenoStates=true;
+        }
         return DropdownMenuItem(
           child: Text(item['name']),
           value: item['id'],
         );
+
       })?.toList() ?? [],
       hint: Text("Estado",),
       onChanged: (newVal) {
@@ -293,7 +291,7 @@ _botonEnvio(id){
       },
 underline: _validarCombosLinea(_avisoObligatorioState),
       isExpanded: true,
-      value: _states_id,
+      value: _buenoStates ? _states_id : null,
     );
 
   }

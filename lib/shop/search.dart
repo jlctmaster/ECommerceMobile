@@ -61,7 +61,7 @@ class _ShopSearchState extends State<ShopSearch> {
 
                         });
                       },
-                      items: <String>['Mas recientes', 'Mas vendidos','Mejores precios']
+                      items: <String>['Mas recientes', 'Mas vendidos','Mejores precios','Orden alfabético A-Z','Orden alfabético Z-A']
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -149,11 +149,15 @@ class _ShopSearchState extends State<ShopSearch> {
                         height: 40.0,
                         child: RaisedButton(
 
-                          onPressed: () {
+                          onPressed: () async {
+                            String eventoActual=await getEvento();
+                            String tituloActual=await getTitulo();
                             print(dropdownValue+" "+_values.end.round().toString()+" "+_values.start.round().toString());
                             String precioInicial=_values.start.round().toString();
                             String precioFinal=_values.end.round().toString();
-                            setEvento('listarProductosFiltrados&precioInicial=$precioInicial&precioFinal=$precioFinal&tipo=$dropdownValue',"Productos Filtrados");
+
+                            setEvento('$eventoActual&precioInicial=$precioInicial&precioFinal=$precioFinal&tipo=$dropdownValue',tituloActual);
+                           // setEvento('listarProductosFiltrados&precioInicial=$precioInicial&precioFinal=$precioFinal&tipo=$dropdownValue',"Productos Filtrados");
                            Navigator.pushNamed(context, '/home');
                           },
                           child: Text(

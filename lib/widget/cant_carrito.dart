@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:biomercados/config.dart';
 import 'package:flutter/material.dart';
 
 import '../funciones_generales.dart';
@@ -10,7 +7,7 @@ class CantCarrito extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final bool actualizar;
 //COLOCAR EL REQUIRED AVERIGUAR EL MOTIVO
-  const CantCarrito({Key key, this.campo, @required this.onChanged, this.actualizar}) : super(key: key);
+  const CantCarrito({Key key, this.campo, this.onChanged, this.actualizar}) : super(key: key);
   @override
   _cantCarritoState createState() => _cantCarritoState();
 }
@@ -36,13 +33,13 @@ class _cantCarritoState extends State<CantCarrito> {
           .toString();
 
       // defines a timer
-      _everySecond = Timer.periodic(Duration(seconds: 3), (Timer t) {
-        setState(() {
+      _everySecond = Timer.periodic(Duration(seconds: 10), (Timer t) {
+        //setState(() {
           _now = DateTime
               .now()
               .second
               .toString();
-        });
+       // });
       });
     }
 
@@ -97,7 +94,7 @@ _cant() async{
     productos=carrito['productos'];
     productos.forEach((key, value) {
       if(value>0){
-        cant++;
+        cant+=value;
       }
     });
 

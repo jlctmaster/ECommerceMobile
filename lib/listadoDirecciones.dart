@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -45,18 +43,16 @@ bool _btnDireccionesCargando=false;
     final bottom = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Mis direcciones'),
-        ),
+        appBar:AppBarBio(context, 'Mis direcciones'),
         body:SingleChildScrollView(
         child:SafeArea(
           child:
               Padding(
-                padding: const EdgeInsets.only(left: 20.0,right: 20.00),
+                padding: const EdgeInsets.only(left: 10.0,right: 10.00),
                 child:Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                   topFormularios("Administre las direcciones para sus compras"),
+                    topFormularios("Administre las direcciones para sus compras"),
                     _listadoDeDirecciones(),
 
                   ],
@@ -138,7 +134,7 @@ bool _btnDireccionesCargando=false;
               Navigator.pop(context);
             }, child: new Text('NO')),
             new FlatButton(onPressed: () async {
-             modelo.eliminarDireccion(datab[index]['id']);
+             await modelo.eliminarDireccion(datab[index]['id']);
               setState(() {
                 datab.removeAt(index);
               });

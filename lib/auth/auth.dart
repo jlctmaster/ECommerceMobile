@@ -1,11 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:biomercados/auth/cambiarClavePublico.dart';
 import 'package:biomercados/auth/confirmarCodRecuperacion.dart';
 import 'package:biomercados/auth/confirmar_registro.dart';
-import 'package:provider/provider.dart';
-import 'package:biomercados/blocks/auth_block.dart';
 import 'signin.dart';
 import 'signup.dart';
 import 'recuperar.dart';

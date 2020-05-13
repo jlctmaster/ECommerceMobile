@@ -1,21 +1,9 @@
 import 'dart:convert';
-
-import 'package:biomercados/auth/cambiarClavePublico.dart';
-import 'package:biomercados/auth/confirmarCodRecuperacion.dart';
 import 'package:biomercados/config.dart';
-import 'package:biomercados/models/user.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'dart:io';
-import 'package:provider/provider.dart';
-
 import '../funciones_generales.dart';
-import 'auth_block.dart';
-
 
 class Modelo {
-  final storage = FlutterSecureStorage();
   Map resJson;
   List resJsonList;
   bool citiesCargado=false;
@@ -59,57 +47,73 @@ class Modelo {
     }
   }
 */
+
   Future getCities(_regions_id) async {
     if(citiesCargado==false) {
-      String url = "$BASE_URL/api_rapida.php?evento=getCities&regions_id=$_regions_id";
-      final response = await http.get(
-          url, headers: {"Accept": "application/json"});
-      dataCities = jsonDecode(response.body);
-      if(response.statusCode==200 && dataCities!=null ) {
+      Map data = await getData('cities');
+      List lista=data['data'];
+      List listaNueva=List();
+      if (data['success']) {
+        int cant = lista.length;
+        print(cant);
+        for (int i = 0; i < cant; i++) {
+          if (lista[i]['regions_id'] == _regions_id) {
+            listaNueva.add(lista[i]);
+          }
+        }
+        dataCities = listaNueva;
         citiesCargado = true;
+      } else {
+        print(data['msj_general']);
       }
-
     }
     return dataCities;
   }
+
+
+
+
+
   Future getRegions(_states_id) async {
     if(regionsCargado==false) {
-      String url = "$BASE_URL/api_rapida.php?evento=getRegions&states_id=$_states_id";
-      final response = await http.get(
-          url, headers: {"Accept": "application/json"});
-      dataRegions = jsonDecode(response.body);
-      if(response.statusCode==200 && dataRegions!=null ) {
+      Map data = await getData('regions');
+      List lista=data['data'];
+      List listaNueva=List();
+      if (data['success']) {
+        int cant = lista.length;
+        print(cant);
+        for (int i = 0; i < cant; i++) {
+         if (lista[i]['states_id'] == _states_id) {
+           listaNueva.add(lista[i]);
+         }
+        }
+        dataRegions = listaNueva;
         regionsCargado = true;
+      } else {
+        print(data['msj_general']);
       }
-
     }
     return dataRegions;
   }
   Future getStates() async {
     if(statesCargado==false) {
-      String url = "$BASE_URL/api_rapida.php?evento=getStates";
-      final response = await http.get(
-          url, headers: {"Accept": "application/json"});
-      dataStates = jsonDecode(response.body);
-      if(response.statusCode==200 && dataStates!=null ) {
+        Map data= await getData('states');
         statesCargado = true;
-      }
+        if(data['success']==true){
+          dataStates=data['data'];
+        }else{
+          return false;
+        }
 
     }
     return dataStates;
   }
   Future getAdreess() async {
-   // if(addressCargado==false) {
-      String url=await UrlLogin('getAdreess');
-      final response = await http.get(
-          url, headers: {"Accept": "application/json"});
-      print(response.body);
-      dataAddress = jsonDecode(response.body);
-      if(response.statusCode==200 && dataAddress!=null ) {
-        addressCargado = true;
-      }
 
-   // }
+   Map data=await getData('address');
+   if(data['success']){
+     return data['data'];
+   }
     return dataAddress;
   }
   Future<Map> guardarDireccion(campo,id) async {
@@ -119,16 +123,10 @@ class Modelo {
     }else{
       url=await UrlLogin('guardarDireccion');
     }
-    final response = await http.post(url,
-        headers: {"Accept": "application/json"},
-        body: campo);
-    print(response.body);
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      resJson= jsonDecode(response.body);
-    } else {
-      resJson= jsonDecode(response.body);
-    }
+    Map res=await peticionPost(url,campo);
+//print(res['data'][0]);
+    saveData('address',res);
+    resJson=res;
   }
 
   Future<Map> eliminarDireccion(id) async {
@@ -139,12 +137,12 @@ class Modelo {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
+      await delIdData('address',id);
       resJson= jsonDecode(response.body);
     } else {
       resJson= jsonDecode(response.body);
     }
   }
-
 
 
 }

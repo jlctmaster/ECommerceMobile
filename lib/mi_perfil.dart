@@ -1,18 +1,14 @@
-import 'dart:convert';
-
 import 'package:biomercados/widget/cedula.dart';
 import 'package:biomercados/widget/sexo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'config.dart';
 import 'funciones_generales.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'blocks/auth_block.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 class MiPerfil extends StatefulWidget {
   @override
   _MiPerfilState createState() => _MiPerfilState();
@@ -46,9 +42,7 @@ class _MiPerfilState extends State<MiPerfil> {
 
     AuthBlock auth = Provider.of<AuthBlock>(context);
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Mi perfil'),
-        ),
+        appBar: AppBarBio(context, 'Mi perfil'),
         body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -152,14 +146,7 @@ class _MiPerfilState extends State<MiPerfil> {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ) : Text('Guardar'),
                 onPressed: () async {
-                  setState(() {
-                    _cargando = true;
-                  });
                   await _guardarPerfil(campo);
-                  // Navigator.pop(context);
-                  setState(() {
-                    _cargando = false;
-                  });
                 },
               );
             }),
@@ -169,13 +156,10 @@ class _MiPerfilState extends State<MiPerfil> {
   }
 
   _getUsuario() async {
-    String url = await UrlLogin('getPerfil');
-    final response = await http.post(
-        url, headers: {"Accept": "application/json"});
-    print(response.body);
-    Map res = jsonDecode(response.body)['data'][0];
-    print(res['nacionalidad']);
-    return res;
+   // String url = await UrlLogin('getPerfil');
+   // Map res=await peticionGet(url);
+    Map res= await getData('perfil');
+    return res['data'][0];
   }
 
   _guardarPerfil(campo) async {
@@ -183,26 +167,15 @@ class _MiPerfilState extends State<MiPerfil> {
     String sex = campo['sex'];
     String name = campo['name'];
     String birthdate = campo['birthdate'];
-
-
     String url = await UrlLogin('actualizarPerfil');
-    final response = await http.post(
-        url, headers: {"Accept": "application/json"},
-        body: {
-          "rif": rif,
-          "sex": sex,
-          "name": name,
-          "birthdate":birthdate
-        }
-    );
-    print("Respuesta de actualizar perfil: " + response.body);
-    Map res = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      //setState(() {
-      msj("Su perfil ha sido actualizado");
-      //_cargando=true;
-      //});
-    }
+    Map res= await peticionPost(url,{
+      'rif':     rif,
+      'sex':  sex,
+      'name':      name,
+      'birthdate':       birthdate,
+    });
+    await saveData('perfil',res);
+    msj(res['msj_general']);
   }
 
   _campoTexto(String name, String txt_label, tipo, obligatorio, val) {
@@ -236,18 +209,23 @@ class _MiPerfilState extends State<MiPerfil> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        locale: Locale('es'),
-        context: context,
-        initialDate: DateTime.parse(campo['birthdate']),
-        firstDate: DateTime(1960, 8),
-        lastDate: DateTime.now().subtract(new Duration(days: 3590)));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        primeraVez = false;
-        selectedDate = picked;
-        _actualizarFecha(selectedDate.toLocal().toString().split(' ')[0]);
-      });
+    DatePicker.showDatePicker(
+        context,
+        minDateTime:DateTime(1960, 8),
+        maxDateTime:DateTime(2010,12),
+        initialDateTime: selectedDate,
+        locale: DateTimePickerLocale.es,
+        //pickerMode: DateTimePickerMode.date,
+        dateFormat: 'dd-MMMM-yyyy',
+        onConfirm:(dateTime, selectedIndex) {
+          setState(() {
+            primeraVez=false;
+            selectedDate = dateTime;
+            _actualizarFecha(selectedDate.toLocal().toString().split(' ')[0]);
+          });
+
+        }
+    );
   }
   _actualizarFecha(value){
     campo['birthdate']=value;

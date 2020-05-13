@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:biomercados/config.dart';
 import 'package:flutter/material.dart';
-
 import 'package:biomercados/funciones_generales.dart';
 class Cedula extends StatefulWidget {
   final Map row;

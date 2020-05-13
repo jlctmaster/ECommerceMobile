@@ -1,11 +1,11 @@
+import 'package:biomercados/home/combo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:localstorage/localstorage.dart';
 import 'auth/auth.dart';
-import 'auth/signin.dart';
 import 'blocks/auth_block.dart';
 import 'categorise.dart';
 import 'home/home.dart';
-import 'localizations.dart';
 import 'product_detail.dart';
 import 'settings.dart';
 import 'shop/shop.dart';
@@ -15,26 +15,27 @@ import 'shop/buscador.dart';
 import 'wishlist.dart';
 import 'carrito.dart';
 import 'package:provider/provider.dart';
-
-import 'blocks/auth_block.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'cambiarClave.dart';
 import 'direcciones.dart';
 import 'home/producto.dart';
 import 'listadoDirecciones.dart';
 import 'mi_perfil.dart';
-
+final LocalStorage storage = new LocalStorage('todo_app');
 void main() {
+
   WidgetsFlutterBinding.ensureInitialized();
-  final Locale locale = Locale('en');
-  runApp(MultiProvider(
-    providers: [ChangeNotifierProvider<AuthBlock>.value(value: AuthBlock())],
+  final Locale locale = Locale('eu','ES'); //estaba solo en: en
+
+  runApp(Phoenix(child:
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => AuthBlock()),
+      //ChangeNotifierProvider<AuthBlock>.value(value: AuthBlock())
+    ],
     child: MaterialApp(
-      localizationsDelegates: [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
-      ],
-      supportedLocales: [Locale('en'), Locale('ar')],
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: [Locale('eu','ES')],
       locale: locale,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -42,11 +43,13 @@ void main() {
           accentColor: Colors.lightBlue[900],
           //fontFamily: locale.languageCode == 'ar' ? 'Dubai' : 'Lato'),
           fontFamily: 'Bree'),
-      initialRoute: '/',
+      initialRoute: '/analizar',
       routes: <String, WidgetBuilder>{
         '/producto': (context) => Producto(),
         '/': (BuildContext context) => Auth(1),
+        '/analizar': (BuildContext context) => Analizar(),
         '/home': (BuildContext context) => Home(),
+        '/combo': (BuildContext context) => Combo(),
         '/prueba': (BuildContext context) => SearchList(),
         '/prueba2': (BuildContext context) => Buscador(),
         '/prueba3': (BuildContext context) => HomePage(),
@@ -68,5 +71,29 @@ void main() {
         '/ListadoDirecciones': (BuildContext context) => ListadoDirecciones()
       },
     ),
-  ));
+  )
+    ,)
+    ,
+     );
+
 }
+Analizar(){
+  String data=storage.getItem('user');
+  if(data!=null) {
+    return Home();
+  }else{
+    return Auth(1);
+  }
+}
+
+class Prueba{
+
+  String _variable="inicio";
+  setVariable(value){
+    _variable=value;
+  }
+  getVariable(){
+    return _variable;
+  }
+}
+

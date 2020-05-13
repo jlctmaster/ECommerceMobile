@@ -1,11 +1,12 @@
+import 'dart:convert';
+
+import 'package:biomercados/config.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/auth/cambiarClavePublico.dart';
-import 'package:biomercados/auth/confirmarCodRecuperacion.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/models/user.dart';
 import 'package:biomercados/services/auth_service.dart';
 
-class AuthBlock extends ChangeNotifier {
+class AuthBlock with ChangeNotifier {
   Map resJson;
   AuthBlock() {
     setUser();
@@ -14,6 +15,48 @@ class AuthBlock extends ChangeNotifier {
   // Index
   int _currentIndex = 1;
   int get currentIndex => _currentIndex;
+
+  int _count = 0;
+  int get count => _count;
+  void incrementCarrito() {
+    _count++;
+    notifyListeners();
+  }
+  agregarCarrito(id,_cant) async{
+    setCarrito(id,_cant);
+    notifyListeners();
+  }
+  actualizar(){
+    notifyListeners();
+  }
+  getCarritob()async{
+    return jsonDecode(await storage.getItem('carrito'));
+  }
+  cantCarrito() async{
+    Map carrito=await getCarrito();
+    Map productos;
+    int cant=0;
+    if(carrito['productos']!=null){
+
+      productos=carrito['productos'];
+      productos.forEach((key, value) {
+        if(value>0){
+          cant+=value;
+        }
+      });
+
+      return cant.toString();
+    }else{
+      return "0";
+    }
+  }
+
+
+
+
+
+
+
   set currentIndex(int index) {
     _currentIndex = index;
     notifyListeners();
@@ -53,9 +96,13 @@ class AuthBlock extends ChangeNotifier {
     loading = true;
     loadingType = 'login';
     bool res=await _authService.login(userCredential);
+    loading = false;
     if(res) {
       await setUser();
       await iniciarCarrito();
+      return true;
+    }else{
+      return false;
     }
     //if(isLoggedIn)
     loading = false;

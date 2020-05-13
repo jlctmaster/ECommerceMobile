@@ -1,11 +1,7 @@
-import 'dart:convert';
-
-import 'package:biomercados/config.dart';
 import 'package:biomercados/enviar_pago.dart';
 import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/home/orden.dart';
+import 'package:biomercados/modelo.dart';
 import "package:flutter/material.dart";
-import 'package:http/http.dart' as http;
 class ReportarPago extends StatefulWidget{
 final int payment_methods_id;
 final int nroOrden;
@@ -20,12 +16,12 @@ class _reportarPagoState extends State<ReportarPago> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Realizar pago"),),
+      appBar: AppBarBio(context,"Realizar pago."),
       body:  Container(child: Column(
         children: <Widget>[
           Padding(padding:EdgeInsets.all(15),child: subTituloLogin("Elije una opción"),),
           FutureBuilder(
-            future: _listarMetodosDePago(),
+            future: ModeloTime().listarBancosdelMetododePago(widget.payment_methods_id),
             builder: (context, res) {
               if (res.connectionState == ConnectionState.done) {
                 return _metodosDePago(res.data);
@@ -95,17 +91,5 @@ class _reportarPagoState extends State<ReportarPago> {
       },
     );
   }
-  _listarMetodosDePago() async {
-    int payment_methods_id=widget.payment_methods_id;
-    String urlb=await UrlLogin('listarBancosdelMetododePago&payment_methods_id=$payment_methods_id');
-    final response = await http.get(urlb,headers: {"Accept": "application/json"},);
-    print(response.body);
-    Map res= jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      return res['data'];
-    }else{
-      msj(res['msj_general']);
-    }
-  }
 }

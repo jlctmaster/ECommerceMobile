@@ -1,26 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:biomercados/home/ordenes.dart';
-import 'package:biomercados/widget/cant_carrito.dart';
-import 'package:biomercados/widget/modal.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/home/principal.dart';
-import 'package:biomercados/home/producto.dart';
 import 'package:biomercados/home/productos.dart';
-import 'package:biomercados/home/productos.dart';
-import 'package:biomercados/localizations.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
-import 'package:biomercados/modelo/products.dart';
 import '../config.dart';
 import 'drawer.dart';
-import 'slider.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
+//import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class Home extends StatefulWidget {
   final int indexTab;
@@ -30,13 +20,12 @@ class Home extends StatefulWidget {
   HomeState createState() => HomeState();
 }
 
-class HomeState extends State<Home> {
+class HomeState extends State<Home>{
 int _selectedIndex = 0;
 String categories_id = null;
   bool ventana_config=false;
 String tituloProducto="Productos";
-final storage = FlutterSecureStorage();
-
+//final LocalStorage storage = new LocalStorage('todo_app');
   var evento;
 
   bool _indexActualizado=false;
@@ -46,21 +35,22 @@ String textoBuscador;
 
   @override
   Widget build(BuildContext context) {
-    final a = GlobalKey<FormState>();
+    print("ACTUALIZADO HOME");
 
+    final a = GlobalKey<FormState>();
     return Scaffold(
         endDrawer: Drawer(
         child:   AppDrawer(),
     ),
 appBar: AppBar(
-
+backgroundColor: Colors.white,
   leading: Padding(padding:EdgeInsets.only(left:7.00),child:Image(image: AssetImage("assets/images/ico2.png"))),
   automaticallyImplyLeading: false,
-
+  elevation: 0,
   // Provide a standard title.
   title: Container(
     height: 45,
-    color: Theme.of(context).primaryColor,
+
     child: new Card(
 
 
@@ -76,7 +66,7 @@ appBar: AppBar(
               ),
 
       InkWell(child: Icon(Icons.search,color: Colors.black45,),onTap: () async {
-        await setEvento('listarProductosPorBusqueda&texto='+textoBuscador,"Productos");
+        await setEvento('listarProductosPorBusqueda&texto='+textoBuscador,"Búsqueda personalizada: "+textoBuscador);
         Navigator.pushNamed(context, '/home');
       },),
             ],
@@ -93,7 +83,7 @@ appBar: AppBar(
     //GestureDetector( onTap: () {msj("sdfsd");}, child: Icon(Icons.volume_up) ),
 
     IconButton(
-      icon: Icon(Icons.favorite),
+      icon: Icon(Icons.favorite,color: Color(colorRojo),),
       onPressed: () {
         setEvento('listarFavoritos',"Mis Favoritos");
          setState(() {
@@ -103,12 +93,7 @@ appBar: AppBar(
       padding: EdgeInsets.only(left:9.00),
     ),
     //
-    IconButton(
-      icon: btnCarrito(true),
-      onPressed: () {
-        Navigator.pushNamed(context, '/cart');
-      },
-    ),
+    iconoCarrito(context,false),
     Builder(
       builder: (context) => IconButton(
         icon: Icon(Icons.menu),
@@ -155,7 +140,7 @@ body: FutureBuilder(
     }
   },
 ),
-
+backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -201,13 +186,12 @@ if(evento!=null){
   }
 }
 
-
   switch(_selectedIndex) {
     case 0:
       return Principal(actualizarHome: _actualizarEvento,);
       break;
     case 1:
-      return Productos(titulo: tituloProducto,);
+      return Productos(titulo: await getTitulo());
       break;
     case 2:
       return Ordenes();
@@ -256,47 +240,47 @@ _actualizarEvento(String evento) {
 }
 buscador(){
     return TypeAheadField(
-hideOnEmpty: true,
-     hideSuggestionsOnKeyboardHide: true,
+      hideOnEmpty: true,
+      hideSuggestionsOnKeyboardHide: true,
       //debounceDuration: Duration(milliseconds: 30),
       noItemsFoundBuilder:(v){ return Text(
           'Sin resultados.'
       );},
       textFieldConfiguration: TextFieldConfiguration(
 
-onChanged: (a){
-  textoBuscador=a;
-},
+          onChanged: (a){
+            textoBuscador=a;
+          },
           autofocus: false,
           style: TextStyle(
-             // fontStyle: FontStyle.italic,
-            fontSize: 16,
-            decoration: TextDecoration.none,
-color: Colors.black54
+            // fontStyle: FontStyle.italic,
+              fontSize: 16,
+              decoration: TextDecoration.none,
+              color: Colors.black54
           ),
 
           decoration: InputDecoration(
             hintText: 'Buscar...',
-              border: InputBorder.none,
+            border: InputBorder.none,
 
 
           ),
-        onSubmitted: (a) async {
+          onSubmitted: (a) async {
 
-          await setEvento('listarProductosPorBusqueda&texto='+a,"Resultado de la busqueda: "+a);
-          Navigator.pushNamed(context, '/home');
-        }
+            await setEvento('listarProductosPorBusqueda&texto='+a,"Resultado de la busqueda: "+a);
+            Navigator.pushNamed(context, '/home');
+          }
       ),
       hideOnError: true,
       suggestionsCallback: (pattern) async {
         return await buscarProducto(pattern);
-       // return await BackendService.getSuggestions(pattern);
+        // return await BackendService.getSuggestions(pattern);
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
-         // leading: Icon(Icons.shopping_cart),
+          // leading: Icon(Icons.shopping_cart),
           title: Text(suggestion['name']),
-         // subtitle: Text('\$${suggestion['price']}'),
+          // subtitle: Text('\$${suggestion['price']}'),
         );
       },
       onSuggestionSelected: (suggestion) async {
@@ -306,6 +290,7 @@ color: Colors.black54
 
     );
 }
+
   buscarProducto(texto) async {
     String url;
     Map res;
@@ -333,7 +318,12 @@ color: Colors.black54
       return data;
     }
   }
+
+
+
 }
+
+
 
 
 

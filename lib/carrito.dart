@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:biomercados/modelo.dart';
+import 'package:biomercados/blocks/auth_block.dart';
 import 'package:biomercados/blocks/modelo.dart';
 import 'package:biomercados/direcciones.dart';
 import 'package:biomercados/funciones_generales.dart';
@@ -9,6 +10,7 @@ import 'package:biomercados/widget/modal_orden.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'config.dart';
 import 'modelo/products.dart';
 
@@ -20,13 +22,14 @@ class Carrito extends StatefulWidget {
 class _CartListState extends State<Carrito> with TickerProviderStateMixin{
 
   double _totalDolares=0.00;
+  double _totalBolivares=0.00;
+  double _totalPeso=0.00;
   String _totalDolaresConFormato='0.00';
   String _totalBolivaresConFormato='0.00';
   Map _totalProductoD = Map();
   Map _totalProductoB = Map();
   Map _totalProductoDConFormato = Map();
   Map _totalProductoBConFormato = Map();
-  double _totalBolivares=0.00;
   final Modelo modelo = Modelo();
   int selectedRadio;
   int selectedRadioMetodoPago;
@@ -35,8 +38,11 @@ class _CartListState extends State<Carrito> with TickerProviderStateMixin{
   bool _recargo=false;
   String _varprecioEnvio="0.00";
   String _varprecioEnvioD="0.00";
+bool actualizar_pagina_anterior=false;
+bool cargadoArgumento=false;
   @override
   void initState() {
+
     super.initState();
     _tabController = TabController(vsync: this, length: 2);
     selectedRadio = 0;
@@ -70,12 +76,25 @@ class _CartListState extends State<Carrito> with TickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+
+    if(cargadoArgumento==false) {
+      cargadoArgumento=true;
+      actualizar_pagina_anterior = ModalRoute
+          .of(context)
+          .settings
+          .arguments;
+
+    }
+
+
+    final proveedor = Provider.of<AuthBlock>(context);
     return DefaultTabController(
         length: 2,
         child: new Scaffold(
           appBar: AppBar(
-
-            title: Text('Carrito de compras'),
+            leading: leadingBio(context),
+            title: titleBio('Carrito de compras'),
+            backgroundColor: colorAppBarBio(),
             actions: <Widget>[
               Padding(padding:EdgeInsets.all(10.00),child:Image(image: AssetImage("assets/images/ico2.png"),height: 5.00,))
             ],
@@ -102,288 +121,26 @@ class _CartListState extends State<Carrito> with TickerProviderStateMixin{
 
                 new Container(
                   //color: Colors.redAccent,
-                  child: FutureBuilder(
-                    future: _listarProductosCarrito(),
-                    builder: (context, projectSnap) {
-                      if (projectSnap.connectionState == ConnectionState.done) {
-                        if(projectSnap.data!=null) {
-                          List products = projectSnap.data;
+                  child:
+            FutureBuilder<Map>(
+            future: _listarProductosCarrito(), // async work
+            builder: (BuildContext context, AsyncSnapshot<Map> projectSnap) {
+              switch (projectSnap.connectionState) {
+                case ConnectionState.waiting: return new Center(child: CircularProgressIndicator(),);
+                default:
+                  if (projectSnap.hasError)
+                    return new Text('Error: ${projectSnap.error}');
+                  else
+                    return cargarCarrito(projectSnap.data);
+              }
+            },
+          )
 
 
-                          return Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 12.0, bottom: 12.0),
-                                child: Container(
-                                  child: textoTop2(
-                                      "Verifique su carrito de compras"), //Text(products.length.toString() + " Productos en tu carrito", textDirection: TextDirection.ltr, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))
-                                ),
-                              ),
-                              Flexible(
-                                child: ListView.builder(
-                                    itemCount: products.length,
-                                    itemBuilder: (context, index) {
-                                      final item = products[index];
-                                      // _totalDolares+=(double.parse(item['total_precio_dolar'])*item['cant']);
-
-                                      return Dismissible(
-                                        // Each Dismissible must contain a Key. Keys allow Flutter to
-                                        // uniquely identify widgets.
-                                        key: Key(UniqueKey().toString()),
-                                        // Provide a function that tells the app
-                                        // what to do after an item has been swiped away.
-                                        onDismissed: (direction) async {
-                                          await setCarrito(
-                                              int.parse(item['id']), 0);
 
 
-                                          // if(direction == DismissDirection.endToStart) {
-                                          // Then show a snackbar.
-                                          Scaffold.of(context)
-                                              .showSnackBar(SnackBar(
-                                              content: Text(item['name'] +
-                                                  " Eliminado del carrito"),
-                                              duration: Duration(seconds: 1)));
-                                          // } else {
-                                          // Then show a snackbar.
-                                          //  Scaffold.of(context)
-                                          //    .showSnackBar(SnackBar(content: Text(item['name'] + " added to carts"), duration: Duration(seconds: 1)));
-                                          //}
-                                          // Remove the item from the data source.
 
-                                          setState(() {
-                                            products.removeAt(index);
-                                          });
-                                        },
-                                        // Show a red background as the item is swiped away.
-                                        background: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.red),
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 20.0),
-                                                child: Icon(Icons.delete,
-                                                    color: Colors.white),
-                                              ),
-
-                                            ],
-                                          ),
-                                        ),
-                                        secondaryBackground: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.red),
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .end,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 20.0),
-                                                child: Icon(Icons.delete,
-                                                    color: Colors.white),
-                                              ),
-
-                                            ],
-                                          ),
-                                        ),
-                                        child: InkWell(
-                                          onTap: () {
-                                            String imagen_grande = item['image_grande'];
-                                            String name = item['name'];
-                                            String priceDolar = formatDolar
-                                                .format(double.parse(
-                                                item['total_precio_dolar']));
-                                            double precioDolar = double.parse(
-                                                item['total_precio_dolar']);
-                                            double precioBolivar = double.parse(
-                                                item['total_precio']);
-
-                                            String price = formatBolivar.format(
-                                                double.parse(
-                                                    item['total_precio']));
-                                            double rating = double.parse(
-                                                item['rating']);
-                                            String description_short = item['description_short'];
-                                            int id = int.parse(item['id']);
-                                            String calificado_por_mi = item['calificado_por_mi'];
-                                            int stock=int.parse(item['qty_avaliable']);
-                                            int pedidoMaximo=int.parse(item['qty_max']);
-                                            Navigator.pushNamed(
-                                              context,
-                                              '/producto',
-                                              arguments: Products(
-                                                image: imagen_grande,
-                                                name: name,
-                                                precio: priceDolar + "/" +
-                                                    price,
-                                                precioDolar: precioDolar,
-                                                precioBolivar: precioBolivar,
-                                                rating: rating,
-                                                description_short: description_short,
-                                                id: id,
-                                                stock: stock,
-                                                pedidoMax: pedidoMaximo,
-                                                calificado_por_mi: calificado_por_mi,
-
-                                                // message:'este argumento es extraido de producto.',
-                                              ),
-                                            ).then((val) =>
-                                            {
-                                              _capturarRetroceso()
-                                            });
-                                          },
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .start,
-                                            children: <Widget>[
-                                              Divider(
-                                                height: 0,
-                                              ),
-                                              ListTile(
-                                                trailing: Text(
-                                                    _totalProductoDConFormato[index] +
-                                                        " / " +
-                                                        _totalProductoBConFormato[index]),
-                                                leading: ClipRRect(
-                                                  borderRadius: BorderRadius
-                                                      .circular(5.0),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.blue
-                                                    ),
-                                                    child: CachedNetworkImage(
-                                                      fit: BoxFit.cover,
-                                                      imageUrl: BASE_URL_IMAGEN +
-                                                          item['image'],
-                                                      // placeholder: (context, url) => Center(
-                                                      //    child: CircularProgressIndicator()
-                                                      // ),
-                                                      errorWidget: (context,
-                                                          url, error) =>
-                                                      new Icon(Icons.error),
-                                                    ),
-                                                  ),
-                                                ),
-                                                title: Text(
-                                                  item['name'],
-                                                  style: TextStyle(
-                                                      fontSize: 14
-                                                  ),
-                                                ),
-                                                subtitle: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment
-                                                      .start,
-                                                  children: <Widget>[
-                                                    Row(
-                                                      children: <Widget>[
-                                                        Padding(
-                                                          padding: const EdgeInsets
-                                                              .only(top: 2.0,
-                                                              bottom: 1),
-                                                          child: Text('X ' +
-                                                              item['cant']
-                                                                  .toString(),
-                                                              style: TextStyle(
-                                                                color: Color(
-                                                                    colorRojo),
-                                                                fontWeight: FontWeight
-                                                                    .w700,
-                                                              )),
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                              ),
-                              Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20.0, right: 20),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 0.0, top: 10),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                  child: Text("TOTAL: ",
-                                                    style: TextStyle(
-                                                      fontSize: 16,),)
-                                              ),
-                                              Text(
-                                                  "$_totalDolaresConFormato / $_totalBolivaresConFormato",
-                                                  style: TextStyle(fontSize: 23,
-                                                      fontWeight: FontWeight
-                                                          .bold)),
-                                            ],
-                                          ),
-                                        ),
-
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 0.0, top: 10),
-                                          child: Row(
-                                            children: <Widget>[
-                                              InkWell(
-                                                child: Text("Vaciar carrito",
-                                                  style: TextStyle(fontSize: 16,
-                                                      color: Colors.blue),
-                                                  textAlign: TextAlign.left,),
-                                                onTap: () async {
-                                                  msj("Carrito vaciado.");
-                                                  await delCarrito();
-                                                  await iniciarCarrito();
-                                                  //setState((){
-                                                  Navigator.pop(context);
-                                                  //Navigator.pop(context);
-                                                  //});
-
-                                                },
-                                              ),
-
-                                              Expanded(
-                                                child: Text(
-                                                  "(Impuestos incluidos)",
-                                                  style: TextStyle(fontSize: 16,
-                                                      color: Colors.red),
-                                                  textAlign: TextAlign.right,),
-                                              ),
-                                              // Text("\$41.24",  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                              ),
-                              _botonContinuar()
-                            ],
-                          );
-                        }else{
-                          msj("Disculpe, su carrito se encuentra vacío");
-                          Navigator.pop(context);
-                          return Text("");
-                        }
-
-                      }else {
-                        //print(" add   $projectSnap.data");
-                        return Center(child: CircularProgressIndicator(),);
-                      }
-                    },
-                  ),
+   ,
                 ),//Carrito
                 new Container(
                   //color: Colors.greenAccent,
@@ -398,7 +155,291 @@ class _CartListState extends State<Carrito> with TickerProviderStateMixin{
   }
 
 
+  Widget cargarCarrito(data){
+  if(data['vacio']) {
+    msj("Su carrito se encuentra vacío");
+//Navigator.canPop(context);
+//Navigator.pushReplacementNamed(context, '/home');
+   // msj("Carrito vaciado.");
+//Future.delayed(Duration(seconds: 3));
+  //  Navigator.pushReplacementNamed(context, '/home');
 
+
+    //if(actualizar_pagina_anterior){
+    //  Navigator.pop(context);
+    //  Navigator.pop(context);
+    //}else{
+    //  Navigator.pop(context);
+    //}
+   return Text("");
+
+  }else{
+    List products = data['productos'];
+    return Column(
+      children: <Widget>[
+        //Padding(
+        // padding: const EdgeInsets.only(
+        //     top: 12.0, bottom: 12.0),
+        //  child: Container(
+        //    child: textoTop2(
+        //       "Verifique su carrito de compras"), //Text(products.length.toString() + " Productos en tu carrito", textDirection: TextDirection.ltr, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))
+        //  ),
+        // ),
+        Flexible(
+          child: ListView.builder(
+            //shrinkWrap: true,
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                final item = products[index];
+                // _totalDolares+=(double.parse(item['total_precio_dolar'])*item['cant']);
+
+                return Dismissible(
+                  // Each Dismissible must contain a Key. Keys allow Flutter to
+                  // uniquely identify widgets.
+                  key: Key(UniqueKey().toString()),
+                  // Provide a function that tells the app
+                  // what to do after an item has been swiped away.
+                  onDismissed: (direction) async {
+                    await setCarrito(
+                        int.parse(item['id']), 0);
+                    Scaffold.of(context)
+                        .showSnackBar(SnackBar(
+                        content: Text(item['name'] +
+                            " Eliminado del carrito"),
+                        duration: Duration(seconds: 1)));
+
+                    products.removeAt(index);
+                    if(products.length==0){
+                      msj("Carrito vaciado.");
+                      Navigator.pushReplacementNamed(context, '/home');
+                    }else {
+                      setState(() {
+
+                      });
+                    }
+                  },
+                  // Show a red background as the item is swiped away.
+                  background: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.red),
+                    padding: EdgeInsets.all(5.0),
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0),
+                          child: Icon(Icons.delete,
+                              color: Colors.white),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                  secondaryBackground: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.red),
+                    padding: EdgeInsets.all(5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment
+                          .end,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              right: 20.0),
+                          child: Icon(Icons.delete,
+                              color: Colors.white),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      String imagen_grande = item['image_grande'];
+                      String imagen = item['image'];
+                      String name = item['name'];
+                      String priceDolar = formatDolar
+                          .format(double.parse(
+                          item['total_precio_dolar']));
+                      double precioDolar = double.parse(
+                          item['total_precio_dolar']);
+                      double precioBolivar = double.parse(
+                          item['total_precio']);
+
+                      String price = formatBolivar.format(
+                          double.parse(
+                              item['total_precio']));
+                      double rating = double.parse(
+                          item['rating']);
+                      String description_short = item['description_short'];
+                      int id = int.parse(item['id']);
+                      String calificado_por_mi = item['calificado_por_mi'];
+                      int stock = int.parse(item['qty_avaliable']);
+                      int pedidoMaximo = int.parse(item['qty_max']);
+                      Navigator.pushNamed(
+                        context,
+                        '/producto',
+                        arguments: Products(
+                          image: imagen_grande,
+                          image_previa: imagen,
+                          name: name,
+                          precio: priceDolar + "/" +
+                              price,
+                          precioDolar: precioDolar,
+                          precioBolivar: precioBolivar,
+                          rating: rating,
+                          description_short: description_short,
+                          id: id,
+                          stock: stock,
+                          pedidoMax: pedidoMaximo,
+                          calificado_por_mi: calificado_por_mi,
+
+                          // message:'este argumento es extraido de producto.',
+                        ),
+                      ).then((val) =>
+                      {
+                        _capturarRetroceso()
+                      });
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment
+                          .start,
+                      children: <Widget>[
+                        Divider(
+                          height: 0,
+                        ),
+                        ListTile(
+                          trailing: Text(
+                              _totalProductoDConFormato[index] +
+                                  " / " +
+                                  _totalProductoBConFormato[index]),
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius
+                                .circular(5.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.blue
+                              ),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: BASE_URL_IMAGEN +
+                                    item['image'],
+                                // placeholder: (context, url) => Center(
+                                //    child: CircularProgressIndicator()
+                                // ),
+                                errorWidget: (context,
+                                    url, error) =>
+                                new Icon(Icons.error),
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            item['name'],
+                            style: TextStyle(
+                                fontSize: 14
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment
+                                .start,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets
+                                        .only(top: 2.0,
+                                        bottom: 1),
+                                    child: Text('X ' +
+                                        item['cant']
+                                            .toString(),
+                                        style: TextStyle(
+                                          color: Color(
+                                              colorRojo),
+                                          fontWeight: FontWeight
+                                              .w700,
+                                        )),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+        Container(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 20.0, right: 20),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 0.0, top: 10),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Text("TOTAL: ",
+                              style: TextStyle(
+                                fontSize: 16,),)
+                        ),
+                        Text(
+                            "$_totalDolaresConFormato / $_totalBolivaresConFormato",
+                            style: TextStyle(fontSize: 23,
+                                fontWeight: FontWeight
+                                    .bold)
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 0.0, top: 10),
+                    child: Row(
+                      children: <Widget>[
+                        InkWell(
+                          child: Text("Vaciar carrito",
+                            style: TextStyle(fontSize: 16,
+                                color: Colors.blue),
+                            textAlign: TextAlign.left,),
+                          onTap: () async {
+                            msj("Carrito vaciado.");
+                            await delCarrito();
+                            await iniciarCarrito();
+                            Navigator.pushReplacementNamed(context, '/home');
+                           //setState((){
+                            //Navigator.pop(context);
+                            //Navigator.pop(context);
+                        //  });
+
+                          },
+                        ),
+
+                        Expanded(
+                          child: Text(
+                            "(Impuestos incluidos)",
+                            style: TextStyle(fontSize: 16,
+                                color: Colors.red),
+                            textAlign: TextAlign.right,),
+                        ),
+                        // Text("\$41.24",  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+        ),
+        _botonContinuar()
+      ],
+    );
+  }
+}
 void _showAlert(String value ){
     showDialog(
         context: context,
@@ -406,51 +447,77 @@ void _showAlert(String value ){
         Modal(value: value,)
     );
   }
+  reVerificarProductos(int v){
 
-  _listarProductosCarrito() async {
-    Map carrito=await getCarrito();
-    List productos;
-    double totalD=0.00;
-    double totalB=0.00;
-    print("listando productos carrito");
-    if(carrito['productos']!=null){
-      //print(carrito['productos'].length);
-      print("Si hay productos pre guardados");
-      productos= await _generarListaCarrito(jsonEncode(carrito['productos']));
-      //print("ddddd");
-      for(var i = 0; i < productos.length; i++){
-        _totalProductoD[i]=double.parse( productos[i]['total_precio_dolar'])*productos[i]['cant'];
-        _totalProductoDConFormato[i]=await formatDolar.format(_totalProductoD[i]);
-        totalD+=_totalProductoD[i];
+}
+  Future<Map> _listarProductosCarrito() async {
+      Map res=Map();
+      res['vacio']=true;
+      Map carrito = await getCarrito();
+      List productos;
+      double totalD = 0.00;
+      double totalB = 0.00;
+      print("listando productos carrito");
+      if (carrito['productos']!=null) {
 
-        _totalProductoB[i]=double.parse( productos[i]['total_precio'])*productos[i]['cant'];
-        _totalProductoBConFormato[i]=await formatBolivar.format(_totalProductoB[i]);
-        totalB+=_totalProductoB[i];
+        carrito['productos'].forEach((index, value){
+          if(value>0){
+            res['vacio']=false;
+          }
+        });
+      if(res['vacio']==true){
+        return res;
       }
-      _totalDolaresConFormato= await formatDolar.format(totalD);
-      _totalBolivaresConFormato= await formatBolivar.format(totalB);
-      return productos;
-    }else{
-      print("NO hay productos pre cargados");
-      return productos;
-    }
+
+          productos = await _generarListaCarrito(jsonEncode(carrito['productos']));
+
+          _totalPeso = 0.00;
+          if (productos!=null) {
+            for (var i = 0; i < productos.length; i++) {
+              _totalProductoD[i] =
+                  double.parse(productos[i]['total_precio_dolar']) *
+                      productos[i]['cant'];
+              _totalProductoDConFormato[i] =
+              formatDolar.format(_totalProductoD[i]);
+              totalD += _totalProductoD[i];
+
+              _totalProductoB[i] =
+                  double.parse(productos[i]['total_precio']) *
+                      productos[i]['cant'];
+              _totalProductoBConFormato[i] =
+              formatBolivar.format(_totalProductoB[i]);
+              totalB += _totalProductoB[i];
+
+
+              _totalPeso+=(double.parse(productos[i]['peso']) * productos[i]['cant']);
+              print(productos[i]['id']+"->Producto"+productos[i]['name']+" "+productos[i]['peso']+" "+productos[i]['cant'].toString()+" "+_totalPeso.toString());
+            }
+            _totalDolaresConFormato = formatDolar.format(totalD);
+            _totalBolivaresConFormato = formatBolivar.format(totalB);
+            res['productos']=productos;
+            return res;
+          } else {
+            res['vacio']=true;
+            return res;
+          }
+
+        } else {
+         return res;
+        }
+
 
   }
   _generarListaCarrito(productos) async {
     _precioEnvio();
-    String urlb;
-    urlb=await UrlLogin('listarProductosCarrito&json=$productos');
-    print("peticion a url $urlb");
-    final response = await http.get(urlb,headers: {"Accept": "application/json"},
-    );
-    print(response.body);
-    Map res= jsonDecode(response.body);
+    String url=await UrlLogin('listarProductosCarrito&json=$productos');
+    print(url);
+    Map res=await peticionGetZlib(url);
 
-    if (response.statusCode == 200) {
-      //msj(res['msj_general']);
+    if (res['success']==true) {
       return res['data'];
     }else{
-      msj(res['msj_general']);
+     // msj(res['msj_general']);
+      return null;
     }
   }
   _listadoDeDirecciones(){
@@ -468,11 +535,11 @@ void _showAlert(String value ){
         Padding( padding: EdgeInsets.only(left:4,right: 4),
           child: ListTile(
 
-            title: Text("Retirar en tienda Biomercados",style: TextStyle(fontWeight: FontWeight.bold),),
+            title: Text("Retirar en zona pick up",style: TextStyle(fontWeight: FontWeight.bold),),
 
-            //subtitle:Container(
-             //   child: Text("Horario para retiros: 8:00AM a 5:00pm")
-          //  ),
+            subtitle:Container(
+                child: Text("Biomercados Mañongo, vía de servicio paralela a la autopista, Entre dito park y tienda daka, Carabobo, Venezuela.")
+          ),
 
             trailing:
             Radio(
@@ -604,8 +671,6 @@ void _showAlert(String value ){
             builder: (context) => Direcciones(id: id,address: address,urb:urb,nro_home: nro_home,reference_point: reference_point,sector: sector,zip_code: zip_code,cities_id:cities_id,states_id: states_id,regions_id: regions_id,),
           ),
         ).then((val)=>{_capturarRetroceso()});
-
-
       },
     );
   }
@@ -654,13 +719,27 @@ void _showAlert(String value ){
 
 
 _precioEnvio() async{
-  String url=await UrlLogin('recargoEnvio');
-  final response = await http.get(url,headers: {"Accept": "application/json"},);
-  //print("Respuesta Recargo envio: "+response.body);
-  Map res= jsonDecode(response.body);
-  if (response.statusCode == 200) {
-      _varprecioEnvio=formatBolivar.format(double.parse(res['data'][0]['precio_b']));
-      _varprecioEnvioD=formatDolar.format(double.parse(res['data'][0]['precio_d']));
+
+  Map res=await ModeloTime().envio();
+
+
+  if (res['success']) {
+    double peso_max=double.parse(res['data'][0]['peso_max']);
+
+    double peso_cargado=peso_max;
+    int multiplo_peso=1;
+    print("PESO"+_totalPeso.toString());
+    while(_totalPeso>peso_cargado) {
+      multiplo_peso++;
+      //if (_totalPeso > peso_max) {
+        peso_cargado+=(peso_max+peso_cargado);
+     // }
+    }
+
+      _varprecioEnvio=formatBolivar.format(double.parse(res['data'][0]['precio_b'])*multiplo_peso);
+      _varprecioEnvioD=formatDolar.format(double.parse(res['data'][0]['precio_d'])*multiplo_peso);
+  }else{
+    msj(res['msj_general']);
   }
 }
   _recargoEnvio() {

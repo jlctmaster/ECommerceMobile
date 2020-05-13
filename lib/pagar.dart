@@ -1,10 +1,8 @@
-import 'dart:convert';
-
-import 'package:biomercados/config.dart';
 import 'package:biomercados/funciones_generales.dart';
+import 'package:biomercados/modelo.dart';
 import 'package:biomercados/reportar_pago.dart';
+import 'package:biomercados/widget/modal_pagos.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 class Pagar extends StatefulWidget {
   final int nroOrden;
   final int ordenStatus;
@@ -18,8 +16,10 @@ class Pagar extends StatefulWidget {
 class _pagar extends State<Pagar>{
   int selectedRadio;
   int selectedRadioMetodoPago;
+
   @override
   Widget build(BuildContext context) {
+
     return new Container(child: Column(
                 children: <Widget>[
     Padding(padding:EdgeInsets.all(15),child: subTituloLogin("Elije un metodo de pago"),),
@@ -35,7 +35,7 @@ class _pagar extends State<Pagar>{
     switch(widget.ordenStatus){
 
       case 1: return FutureBuilder(
-        future: _listarMetodosDePago(),
+        future: ModeloTime().listarMetodosDePago(),
         builder: (context, res) {
           if (res.connectionState == ConnectionState.done) {
             return _metodosDePago(res.data);
@@ -93,13 +93,21 @@ class _pagar extends State<Pagar>{
 
       trailing: Icon(Icons.navigate_next),
       onTap: (){
-        //msj(widget.nroOrden.toString());
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) => ReportarPago(payment_methods_id: int.parse(metodo['id']),nroOrden: widget.nroOrden,),
-        ),);
+        showDialog(
+          context: context,
+          builder: (_) =>ModalPagos(value:metodo['id'],context: context,onChanged: ir,),
+
+        );
+      //  return ModalPagos();
+
 
       },
     );
+  }
+  ir(id){
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => ReportarPago(payment_methods_id: int.parse(id),nroOrden: widget.nroOrden,),
+    ),);
   }
   setSelectedRadioMetodoPago(int val) {
     setOtroCarrito('metodoPago', val.toString());
@@ -108,16 +116,5 @@ class _pagar extends State<Pagar>{
       selectedRadioMetodoPago = val;
     });
   }
-  _listarMetodosDePago() async {
-    String urlb=await UrlLogin('listarMetodosDePago');
-    final response = await http.get(urlb,headers: {"Accept": "application/json"},);
-    print(response.body);
-    Map res= jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      return res['data'];
-    }else{
-      msj(res['msj_general']);
-    }
-  }
 }

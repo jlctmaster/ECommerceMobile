@@ -1,5 +1,4 @@
 import 'package:biomercados/auth/terminos.dart';
-import 'package:biomercados/widget/calendario.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:biomercados/models/user.dart';
@@ -8,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:biomercados/funciones_generales.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
@@ -21,8 +21,6 @@ class _SignUpState extends State<SignUp> {
   int correctScore = 0;
   //bool checkBoxTerminos = false;
 bool autovalidate_calendario=false;
-
-  String _msjErrorRadio="";
   String confirmPassword;
 
 
@@ -36,19 +34,25 @@ bool autovalidate_calendario=false;
 
 
   Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        locale: Locale('es'),
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(1960, 8),
-        lastDate: DateTime.now().subtract(new Duration(days: 3590)));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        primeraVez=false;
-        selectedDate = picked;
-        _actualizarFecha(selectedDate.toLocal().toString().split(' ')[0]);
-      });
+    DatePicker.showDatePicker(
+        context,
+        minDateTime:DateTime(1960, 8),
+        maxDateTime:DateTime(2010,12),
+        initialDateTime: selectedDate,
+        locale: DateTimePickerLocale.es,
+      //pickerMode: DateTimePickerMode.date,
+      dateFormat: 'dd-MMMM-yyyy',
+      onConfirm:(dateTime, selectedIndex) {
+        setState(() {
+          primeraVez=false;
+          selectedDate = dateTime;
+          _actualizarFecha(selectedDate.toLocal().toString().split(' ')[0]);
+        });
+
+      }
+    );
   }
+
 
 
 

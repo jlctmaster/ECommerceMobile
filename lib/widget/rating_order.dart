@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 class RatingOrder extends StatefulWidget {
 
   String nombre;

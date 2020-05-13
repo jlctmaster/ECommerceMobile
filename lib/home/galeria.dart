@@ -6,8 +6,8 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 class Galeria extends StatefulWidget {
   final List galleryItems;
-
-  const Galeria({Key key, this.galleryItems}) : super(key: key);
+  final String imagenPrevia;
+  const Galeria({Key key, this.galleryItems, this.imagenPrevia}) : super(key: key);
 
   @override
   _GaleriaState createState() => _GaleriaState();
@@ -23,23 +23,45 @@ class _GaleriaState extends State<Galeria> {
             print("$BASE_URL/storage/"+widget.galleryItems[index]);
             return PhotoViewGalleryPageOptions(
               imageProvider: NetworkImage("$BASE_URL/storage/"+widget.galleryItems[index], ),//AssetImage(),
-              initialScale: PhotoViewComputedScale.contained * 0.8,
+              initialScale: PhotoViewComputedScale.contained * 1.1,
               //heroAttributes: HeroAttributes(tag: widget.galleryItems[index].id),
             );
           },
           itemCount: widget.galleryItems.length,
           loadingBuilder: (context, event) =>
               Center(
-                child: Container(
-                  width: 20.0,
-                  height: 20.0,
-                  child: CircularProgressIndicator(
-                    value: event == null
-                        ? 0
-                        : event.cumulativeBytesLoaded /
-                        event.expectedTotalBytes,
-                  ),
-                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+
+                    CachedNetworkImage(
+                      //  color: Colors.white,
+                      height: 200,
+                      fit: BoxFit.cover,
+                      imageUrl: widget.imagenPrevia,
+
+                      placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator()
+                      ),
+                      errorWidget: (context, url, error) => new Icon(Icons.error),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 180,left: 290),
+                      child: Text("HD",style: TextStyle(color: Colors.black45),),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 180,left: 290),
+                      child: Center(child: CircularProgressIndicator(
+                        value: event == null
+                            ? 0
+                            : event.cumulativeBytesLoaded /
+                            event.expectedTotalBytes,
+                      ),),
+                    )
+                    ,
+                  ],
+                )
+
               ),
           backgroundDecoration: BoxDecoration(color: Colors.white),
 
