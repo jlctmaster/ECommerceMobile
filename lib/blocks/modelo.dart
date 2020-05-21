@@ -50,7 +50,7 @@ class Modelo {
 
   Future getCities(_regions_id) async {
     if(citiesCargado==false) {
-      Map data = await getData('cities');
+      Map data = jsonDecode(await getData('cities'));
       List lista=data['data'];
       List listaNueva=List();
       if (data['success']) {
@@ -76,7 +76,7 @@ class Modelo {
 
   Future getRegions(_states_id) async {
     if(regionsCargado==false) {
-      Map data = await getData('regions');
+      Map data = jsonDecode(await getData('regions'));
       List lista=data['data'];
       List listaNueva=List();
       if (data['success']) {
@@ -97,7 +97,7 @@ class Modelo {
   }
   Future getStates() async {
     if(statesCargado==false) {
-        Map data= await getData('states');
+        Map data= jsonDecode(await getData('states'));
         statesCargado = true;
         if(data['success']==true){
           dataStates=data['data'];
@@ -110,7 +110,7 @@ class Modelo {
   }
   Future getAdreess() async {
 
-   Map data=await getData('address');
+   Map data=jsonDecode(await getData('address'));
    if(data['success']){
      return data['data'];
    }

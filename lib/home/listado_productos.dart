@@ -193,7 +193,7 @@ color: Colors.white,
 
                        style: TextStyle(
                          //fontWeight: FontWeight.bold,
-                           fontSize: 14
+                           fontSize: 13
                        ),
                      ),
                      subtitle: Column(
@@ -201,7 +201,7 @@ color: Colors.white,
                        children: <Widget>[
 
                          Padding(
-                           padding: const EdgeInsets.only(top: 2.0, bottom: 1),
+                           padding: const EdgeInsets.only(top: 2.0, bottom: 0),
                            child: Text('$priceDolar/$price', style: TextStyle(
                                color: Color(colorVerde),
                                fontWeight: FontWeight.w700,

@@ -45,11 +45,11 @@ class _principalState extends State<Principal> {
 
                   _textoTituloCentrado('Mi compra fácil'),
                     ListadoCombos(),
-                  listaPublicidadTop(),
+                  listaPublicidad('top'),
 
                   _textoTituloCentrado('Seguro que te gusta'),
                   ListadoProductos(tipoListado: 'ia',),
-                  listaPublicidadFinal(),
+                  listaPublicidad('footer'),
                   //_banner('assets/images/banner-2.png'),
                   //_textoTituloCentrado('Ofertas'),
                 ],
@@ -114,14 +114,14 @@ class _principalState extends State<Principal> {
         )
     );
   }
-  listaPublicidadTop(){
+  listaPublicidad(tipo){
 
     return  SizedBox(
         height: (MediaQuery.of(context).size.width* 0.3),
         width: double.infinity,
         //width: MediaQuery.of(context).size.width,
         child: new FutureBuilder(
-          future: ModeloTime().listarPublicidad('top'), // async work
+          future: ModeloTime().listarPublicidad(tipo), // async work
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting: return Center(child:CircularProgressIndicator());
@@ -135,7 +135,7 @@ class _principalState extends State<Principal> {
                     autoplay: true,
                     animationCurve: Curves.fastOutSlowIn,
                     //animationDuration: Duration(milliseconds: 4000),
-                    autoplayDuration: Duration(milliseconds: 5000),
+                    autoplayDuration: Duration(milliseconds: 10000),
                     dotSize: 6.0,
                     dotIncreasedColor: Color(0xFFFF335C),
                     dotBgColor: Colors.transparent,
@@ -288,7 +288,7 @@ class _principalState extends State<Principal> {
     );
   }
   listarCategorias() async{
-    Map data= await getData('categories');
+    Map data=  jsonDecode(await getData('categories'));
     if(data['success']==true){
       return data['data'];
     }else{

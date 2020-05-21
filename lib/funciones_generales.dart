@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'package:async/async.dart';
 import 'package:biomercados/blocks/auth_block.dart';
 import 'package:biomercados/widget/cant_carrito.dart';
 import 'package:biomercados/widget/cant_carritob.dart';
@@ -8,9 +9,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'config.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
   int colorVerde=0xff28b67a;
   int colorVerdeb=0xff80bc00;
@@ -129,10 +131,10 @@ subTituloLogin(String texto){
 }
 getRecordarClave() async {
    Map recuerdo=Map();
-   if(await storage.getItem('recuerdo')==null){
+   if(await getData('recuerdo')==null){
      recuerdo=null;
    }else{
-    recuerdo=jsonDecode(await storage.getItem('recuerdo') ?? []);
+    recuerdo=jsonDecode(await getData('recuerdo') ?? []);
    }
    
    return recuerdo;
@@ -143,7 +145,7 @@ setRecordarClave(String correo,String clave) async {
     recuerdo['si']=true;
     recuerdo['correo']=correo;
     recuerdo['clave']=clave;
-    await storage.setItem('recuerdo',jsonEncode(recuerdo));
+    await saveData('recuerdo',recuerdo);
 }
 peticionGetZlib(url) async {
   var data;
@@ -177,7 +179,13 @@ cerrar_sesion(context){
   Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
 }
 getData(key) async{
-  return jsonDecode(await storage.getItem(key));
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key);
+  //return jsonDecode(await storage.getItem(key));
+}
+delData(key) async{
+SharedPreferences prefs = await SharedPreferences.getInstance();
+await prefs.remove(key);
 }
 delIdData(key,id) async {
   Map l=await getData(key);
@@ -190,10 +198,19 @@ delIdData(key,id) async {
     }
   }
   l['data']=listaNueva;
-  await storage.setItem(key,jsonEncode(l));
+
+  await saveData(key,l);
+  //await storage.setItem(key,jsonEncode(l));
 }
-saveData(key,nuevaData) async {
-  await storage.setItem(key,jsonEncode(nuevaData));
+saveData(key,Map nuevaData) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //await storage.setItem(key,jsonEncode(nuevaData));
+  await prefs.setString(key, jsonEncode(nuevaData));
+}
+saveDataNoJson(key,nuevaData) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  //await storage.setItem(key,jsonEncode(nuevaData));
+  await prefs.setString(key, nuevaData);
 }
 peticionGet(url) async {
   try {
@@ -437,7 +454,7 @@ setCantPago(nroOrden) async {
   Map usuario= await getUser();
   int cantPago=usuario['cantPago'][nroOrden] ?? 0;
   usuario['cantPago'][nroOrden]=cantPago+1;
-  await storage.setItem('user',jsonEncode(usuario));
+  await saveData('user',usuario);
 }
 
 getCantPago(nroOrden) async {
@@ -453,22 +470,22 @@ if(usuario['cantPago']==null){
 
 }
 setEvento(evento,String titulo) async {
-  await storage.setItem('evento', evento);
-  await storage.setItem('titulo', titulo);
+  await saveDataNoJson('evento', evento);
+  await saveDataNoJson('titulo', titulo);
 }
 getEvento() async {
-  String evento = await storage.getItem('evento');
+  String evento = await getData('evento');
   return evento;
 }
 getTitulo() async {
-  String titulo = await storage.getItem('titulo');
+  String titulo = await getData('titulo');
   return titulo;
 }
 delEvento()async {
-  await storage.deleteItem('evento');
+  await delData('evento');
 }
 delTitulo()async {
-  await storage.deleteItem('titulo');
+  await delData('titulo');
 }
 
 _crearCarrito(idUsuario)async{
@@ -477,7 +494,7 @@ Map carrito= Map();
 carrito['estado']=idUsuario;
 carrito['productos']=null;
 
-  await storage.setItem('carrito',jsonEncode(carrito));
+  await saveData('carrito',carrito);
 print("Carrito creado");
 }
 iniciarCarrito() async {
@@ -487,9 +504,9 @@ iniciarCarrito() async {
 
     print("iniciando carrito para: $idUsuario");
 
-  String res= await storage.getItem('carrito');
+  String res= await getData('carrito');
   Map map;
-  if(res!=null){
+  if(map!=null){
     map=jsonDecode(res);
     if(map['estado']==idUsuario){
       print("Carrito ya existe");
@@ -509,7 +526,7 @@ setCarrito(int idProducto,int cant) async{
   print("Agregado al carrito $idProducto $cant");
 
 
-  carrito= await jsonDecode(await storage.getItem('carrito'));
+  carrito= await jsonDecode(await getData('carrito'));
   print(carrito);
   if(carrito['productos']==null){
     Map productos= Map();
@@ -522,24 +539,24 @@ setCarrito(int idProducto,int cant) async{
   }
 print("Cargo");
 
-  await storage.setItem('carrito',jsonEncode(carrito));
+  await saveData('carrito',carrito);
 
 }
 
 setOtroCarrito(String id,String valor) async{ //Ejemplo, metodos de pago, direccion y hora de entrega
   print("Agregado al carrito Otro iten: $id => $valor");
   Map carrito= Map();
-  carrito= jsonDecode(await storage.getItem('carrito'));
+  carrito= jsonDecode(await getData('carrito'));
   carrito[id]=valor;
-  await storage.setItem('carrito',jsonEncode(carrito));
+  await saveData('carrito',carrito);
 
 }
 
 getCarrito()async{
-  return jsonDecode(await storage.getItem('carrito'));
+  return jsonDecode(await getData('carrito'));
   }
 delCarrito()async {
-  await storage.deleteItem('carrito');
+  await delData('carrito');
 }
 class Customer {
   int id;

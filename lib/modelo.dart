@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:biomercados/config.dart';
 import 'package:biomercados/funciones_generales.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class ModeloTime{
@@ -30,10 +31,10 @@ class ModeloTime{
     await procesarEvento('get',240);
     if(res['success']!=null) {
       if (res['success']) {
-        storage.deleteItem('user');
+        await delData('user');
         await _setData(3);
-        Phoenix.rebirth(context);
-        //Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
+        //Phoenix.rebirth(context);
+        Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
        // print("SESSION INACTIVA");
       } else {
        // print("SESSION ACTIVA");
@@ -70,7 +71,7 @@ class ModeloTime{
   }
   borrarRecordarClave() async {
     Map data = Map();
-    await storage.setItem('recuerdo',jsonEncode(data));
+    await saveData('recuerdo',data);
   }
   Future listarPublicidadFinal() async{
     evento='listarPublicidadFinal';
@@ -165,15 +166,17 @@ class ModeloTime{
         }
       }else{
        // print("CACHE : "+evento);
-        res=jsonDecode(await storage.getItem('data_$evento'));
+        res=jsonDecode(await getData('data_$evento'));
       }
     }
   }
   getTiempo(tiempoActualizacion) async {
 
     DateTime time=DateTime.now();
-    String tiempo=await storage.getItem('tiempo_$evento');
+
+    String tiempo=await getData('tiempo_$evento');
     if(tiempo!=null) {
+   
       DateTime tiempoViejo= DateTime.parse(tiempo);
       if (time.isAfter(tiempoViejo)) {
         return true;
@@ -190,9 +193,9 @@ class ModeloTime{
   _setData(tiempoActualizacion) async {
     DateTime time=DateTime.now().add(Duration(seconds: tiempoActualizacion));
 
-    await storage.setItem('data_$evento',jsonEncode(res));
+    await saveData('data_$evento',res);
 
-    await storage.setItem('tiempo_$evento',time.toString());
+    await saveDataNoJson('tiempo_$evento',time.toString());
     return true;
   }
 }

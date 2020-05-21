@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:biomercados/config.dart';
 import 'package:flutter/material.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/models/user.dart';
@@ -30,7 +29,7 @@ class AuthBlock with ChangeNotifier {
     notifyListeners();
   }
   getCarritob()async{
-    return jsonDecode(await storage.getItem('carrito'));
+    return jsonDecode(await getData('carrito'));
   }
   cantCarrito() async{
     Map carrito=await getCarrito();
@@ -87,6 +86,8 @@ class AuthBlock with ChangeNotifier {
   Map _user = {};
   Map get user => _user;
   setUser() async {
+    //_user = await _authService.getUser();
+
     _user = await _authService.getUser();
     isLoggedIn = _user == null ? false : true;
     notifyListeners();

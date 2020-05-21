@@ -220,7 +220,7 @@ class _productoState extends State<Producto>{
 void consultarFavorito(int products_id) async {
     objFavorites.products_id=products_id;
     await objFavorites.consultar();
-
+//ESTABA ASI if(objFavorites.res['data'][products_id.toString()]==true){
     if(objFavorites.res['data'][products_id.toString()]==true){
       setState(() {
         _status_favorite=true;

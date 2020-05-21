@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:biomercados/config.dart';
 import 'package:biomercados/funciones_generales.dart';
 class Favorites{
@@ -17,7 +19,7 @@ class Favorites{
     print(res);
   }
   Future<Map> consultar() async {
-    res=await getData('favoritos');
+    res=jsonDecode(await getData('favoritos'));
     print("EL CONSULTADO");
     //print(res['data']['1210']);
    // String url=await UrlLogin('consultarFavorito&products_id=$products_id');

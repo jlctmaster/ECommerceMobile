@@ -25,7 +25,6 @@ int _selectedIndex = 0;
 String categories_id = null;
   bool ventana_config=false;
 String tituloProducto="Productos";
-//final LocalStorage storage = new LocalStorage('todo_app');
   var evento;
 
   bool _indexActualizado=false;

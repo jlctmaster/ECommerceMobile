@@ -6,7 +6,6 @@ import 'package:biomercados/models/user.dart';
 
 
 class AuthService {
-  //final LocalStorage storage = new LocalStorage('todo_app');
   // Create storage
   Future<bool> login(UserCredential userCredential) async {
     //var status = await Permission.storage.status;
@@ -18,7 +17,7 @@ class AuthService {
     res=await peticionGetZlib(url);
 
     if(res['success']==true){
-      await setUser(jsonEncode(res['data']['usuario']['data']));
+      await setUser(res['data']['usuario']['data']);
       await setData(res['data']);
       return true;
      // setUser(jsonEncode(res['data']['usuario']['data']));
@@ -75,24 +74,25 @@ class AuthService {
     });
   }
 
-  setUser(String value) async {
-    await storage.setItem('user',value);
+  setUser(Map value) async {
+    await saveData('user',value);
   }
   setData(Map value) async {
     value.forEach(await actualizarTodo);
   }
 
   void actualizarTodo(key, value) async{
-    await storage.setItem(key,jsonEncode(value));
+    await saveData(key,value);
   }
 
   getUser() async {
-    String user = await storage.getItem('user');
+    String user = await getData('user');
     if (user != null) {
+ 
       return jsonDecode(user);
     }
   }
   logout() async {
-    await storage.deleteItem('user');
+    await delData('user');
   }
 }

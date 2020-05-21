@@ -184,7 +184,7 @@ return Row(
 
   agregarAlCarrito(List pro,proveedor) async{
     Map carrito= Map();
-    carrito= await jsonDecode(await storage.getItem('carrito'));
+    carrito= await jsonDecode(await getData('carrito'));
 
 
     pro.forEach((e) async {
@@ -200,7 +200,7 @@ return Row(
         carrito['productos']=productos;
       }
     });
-    await storage.setItem('carrito',jsonEncode(carrito));
+    await saveData('carrito',carrito);
     proveedor.actualizar();
     msj("Agregado al carrito.");
 

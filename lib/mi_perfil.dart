@@ -1,14 +1,24 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:biomercados/camara.dart';
+import 'package:biomercados/take_picture_screen.dart';
 import 'package:biomercados/widget/cedula.dart';
 import 'package:biomercados/widget/sexo.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'config.dart';
 import 'funciones_generales.dart';
 import 'blocks/auth_block.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 class MiPerfil extends StatefulWidget {
   @override
   _MiPerfilState createState() => _MiPerfilState();
@@ -28,13 +38,53 @@ class _MiPerfilState extends State<MiPerfil> {
     'name': '',
     'birthdate':''
   };
-
+  File _image;
 
   final f = new DateFormat('dd-MM-yyyy hh:mm');
   bool primeraVez = false;
   DateTime selectedDate = DateTime.now().subtract(new Duration(days: 3600));
   TextEditingController _controller;
   String fecha;
+  bool cargandoImagen=false;
+  Future getImage() async {
+    setState(() {
+      cargandoImagen=true;
+    });
+
+
+
+    String base64Image;
+    String url= await UrlLogin('actualizarFotoPerfil');
+    var image = await ImagePicker.pickImage(source: ImageSource.camera,maxWidth: 500,
+      maxHeight: 500,);
+    if(image!=null) {
+      base64Image = base64Encode(image.readAsBytesSync());
+      //Map res=await upload("fotoPerfil",url,base64Image);
+      Map res = await peticionPost(url, {"image": base64Image});
+      print(res['data']);
+      if (res != null) {
+        saveData('perfil', res);
+      }
+    }
+
+    setState(() {
+      cargandoImagen=false;
+      _image = image;
+
+    });
+  }
+
+  upload(String fileName,url,base64Image) async {
+    http.post(url, body: {
+      "image": base64Image,
+      "name": fileName,
+    }).then((result) {
+      return jsonDecode(result.body);
+
+    }).catchError((error) {
+      return null;
+    });
+  }
 
 
   @override
@@ -77,14 +127,45 @@ class _MiPerfilState extends State<MiPerfil> {
                         };
 
                         radioCargado = true;
+                        String urlImagen=BASE_URL+'/'+(row['avatar']);
                         return Padding(
                             padding: EdgeInsets.only(right: 30, left: 30),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Center(child: Icon(
-                                    Icons.account_circle, size: 140,
-                                    color: Color(colorVerde),),),
+                                  Center(child: cargandoImagen==false ? IconButton(
+
+                                    icon:
+
+                                    CachedNetworkImage(
+                                      imageUrl: urlImagen,
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        width: 130.0,
+                                        height: 130.0,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              image: imageProvider, fit: BoxFit.cover),
+                                        ),
+                                      ),
+                                      placeholder: (context, url) => CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                    ),
+
+
+
+
+
+
+
+
+
+                                    iconSize: 140,
+                                    color: Color(colorVerde),
+                                    onPressed: getImage,
+                                    ) : CircularProgressIndicator(),
+
+                                    ),
                                   Center(child: Text(row['email'],
                                     style: TextStyle(fontSize: 20),),),
                                   _campoTexto('name', 'Nombre y apellido',
@@ -158,7 +239,7 @@ class _MiPerfilState extends State<MiPerfil> {
   _getUsuario() async {
    // String url = await UrlLogin('getPerfil');
    // Map res=await peticionGet(url);
-    Map res= await getData('perfil');
+    Map res= jsonDecode(await getData('perfil'));
     return res['data'][0];
   }
 

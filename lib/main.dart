@@ -1,7 +1,8 @@
+import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/home/combo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'auth/auth.dart';
 import 'blocks/auth_block.dart';
 import 'categorise.dart';
@@ -21,13 +22,16 @@ import 'direcciones.dart';
 import 'home/producto.dart';
 import 'listadoDirecciones.dart';
 import 'mi_perfil.dart';
-final LocalStorage storage = new LocalStorage('todo_app');
-void main() {
 
+
+Future<void> main() async{
+  
+  
   WidgetsFlutterBinding.ensureInitialized();
   final Locale locale = Locale('eu','ES'); //estaba solo en: en
-
-  runApp(Phoenix(child:
+final bool vistaPrincipal=await Analizar();
+  runApp(
+    Phoenix(child:
   MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthBlock()),
@@ -47,7 +51,7 @@ void main() {
       routes: <String, WidgetBuilder>{
         '/producto': (context) => Producto(),
         '/': (BuildContext context) => Auth(1),
-        '/analizar': (BuildContext context) => Analizar(),
+        '/analizar': (BuildContext context) => (vistaPrincipal==true ? Home() : Auth(1)),
         '/home': (BuildContext context) => Home(),
         '/combo': (BuildContext context) => Combo(),
         '/prueba': (BuildContext context) => SearchList(),
@@ -77,12 +81,12 @@ void main() {
      );
 
 }
-Analizar(){
-  String data=storage.getItem('user');
+Analizar() async {
+  String data= await getData('user');
   if(data!=null) {
-    return Home();
+    return true;
   }else{
-    return Auth(1);
+    return false;
   }
 }
 
