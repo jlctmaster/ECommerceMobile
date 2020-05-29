@@ -64,7 +64,7 @@ String opinion="";
                         Column(
                           children: <Widget>[
                             Padding(padding: EdgeInsets.only(top: 15),),
-                            Text("Felicidades tu orden ha sido entregada",style: TextStyle(color: Color(colorVerde),fontSize: 20),),
+                            Text("Felicidades su orden ha sido entregada",style: TextStyle(color: Color(colorVerde),fontSize: 20),),
                           //  Icon(Icons.check_circle,size: 50,color: Color(colorVerdeb),),
                             Padding(padding: EdgeInsets.only(top: 15),),
 
@@ -173,42 +173,43 @@ labelStyle: TextStyle(fontSize: 14),
     }
   }
   _orden(data){
-    String os_id=data['orders_status_id'];
-    List products=jsonDecode(data['productos']);
+      String os_id = data['orders_status_id'];
+      List products = jsonDecode(data['productos']);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-Padding(
-  padding: EdgeInsets.only(left: 20),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Padding(padding:EdgeInsets.only(top:15,bottom: 5),child: subTituloLogin("Datos de su orden"),),
-      Text("A nombre de: "+data['nombre_usuario']),
-      Text("Fecha de solicitud: "+data['fecha']),
-      Text("Fecha estimada de entrega: "+data['fecha_entrega']),
-      Row(
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("Estatus: "),
-          Text(data['status_tracking'], style: TextStyle(color: colorStatus(os_id)),),
-        ],
-      ),
-      Text("Dirección de entrega: "+(data['address'] ?? "Retirar en tienda Biomercados")),
-    ],
-  ),
-)
-,
+          Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(padding: EdgeInsets.only(top: 15, bottom: 5),
+                  child: subTituloLogin("Datos de su orden"),),
+                Text("A nombre de: " + data['nombre_usuario']),
+                Text("Fecha de solicitud: " + data['fecha']),
+                Text("Fecha estimada de entrega: " + data['fecha_entrega']),
+                Row(
+                  children: <Widget>[
+                    Text("Estatus: "),
+                    Text(data['status_tracking'],
+                      style: TextStyle(color: colorStatus(os_id)),),
+                  ],
+                ),
+                Text("Dirección de entrega: " +
+                    (data['address'] ?? "Retirar en tienda Biomercados")),
+              ],
+            ),
+          )
+          ,
 
 
-       Flexible(
+          Flexible(
               child: ListView.builder(
                   itemCount: products.length,
                   itemBuilder: (context, index) {
-
-
                     return Card(
-                      child:ListTile(
+                      child: ListTile(
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(5.0),
                           child: Container(
@@ -217,11 +218,13 @@ Padding(
                             ),
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
-                              imageUrl: _mostrarImagen(products[index]['image']),
+                              imageUrl: _mostrarImagen(
+                                  products[index]['image']),
                               // placeholder: (context, url) => Center(
                               //    child: CircularProgressIndicator()
                               // ),
-                              errorWidget: (context, url, error) => new Icon(Icons.error),
+                              errorWidget: (context, url, error) =>
+                              new Icon(Icons.error),
                             ),
                           ),
                         ),
@@ -237,17 +240,21 @@ Padding(
                             Row(
                               children: <Widget>[
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 2.0, bottom: 1),
-                                  child: Text('X '+products[index]['cant'].toString(), style: TextStyle(
-                                    color: Color(colorRojo),
-                                    fontWeight: FontWeight.w700,
-                                  )),
+                                  padding: const EdgeInsets.only(
+                                      top: 2.0, bottom: 1),
+                                  child: Text(
+                                      'X ' + products[index]['cant'].toString(),
+                                      style: TextStyle(
+                                        color: Color(colorRojo),
+                                        fontWeight: FontWeight.w700,
+                                      )),
                                 )
                               ],
                             )
                           ],
                         ),
-                        trailing: Text(_totalProductoDConFormato[index]+"/"+_totalProductoBConFormato[index]),
+                        trailing: Text(_totalProductoDConFormato[index] + "/" +
+                            _totalProductoBConFormato[index]),
                       ),
                       //child: _bloqueDireccion(data[index],data,index),
                     );
@@ -255,43 +262,48 @@ Padding(
               )
           ),
 
-        Container(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20),
-              child: Column(
-                children: <Widget>[
-                  totales("Productos:","$sub_total_productosD / $sub_total_productosB"),
-                  totales("Envio:","$total_transportsD / $total_transportsB"),
-                  totales("Sub total:","$subTotalD / $subTotalB"),
-                  totales("Exento:","$exentoD / $exentoB"),
-                  totales("BI:","$biD / $biB"),
-                  totales("Impuestos:","$totalTaxD / $totalTaxB"),
+          Container(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20),
+                child: Column(
+                  children: <Widget>[
+                    totales("Productos:",
+                        "$sub_total_productosD / $sub_total_productosB"),
+                    totales(
+                        "Envio:", "$total_transportsD / $total_transportsB"),
+                    totales("Sub total:", "$subTotalD / $subTotalB"),
+                    totales("Exento:", "$exentoD / $exentoB"),
+                    totales("BI:", "$biD / $biB"),
+                    totales("Impuestos:", "$totalTaxD / $totalTaxB"),
 
 
-
-Divider(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom :10.0,top:0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                            child: Text("Total a pagar: ", style: TextStyle(fontSize: 16,),)
-                        ),
-                        Text("$_totalDolaresConFormato / $_totalBolivaresConFormato",  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      ],
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0, top: 0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                              child: Text("Total a pagar: ", style: TextStyle(
+                                fontSize: 16,),)
+                          ),
+                          Text(
+                              "$_totalDolaresConFormato / $_totalBolivaresConFormato",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                     ),
-                  ),
 
 
+                  ],
+                ),
+              )
+          ),
 
-                ],
-              ),
-            )
-        ),
 
+        ],
+      );
 
-      ],
-    );
   }
 totales(name,value){
   return Row(

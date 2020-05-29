@@ -15,6 +15,7 @@ class BtnCalificarOrdern extends StatefulWidget {
 
 class _BtnCalificarOrdernState extends State<BtnCalificarOrdern> {
  bool _cargando=false;
+ bool _cargandoB=false;
  String opinion;
  bool _calificado=false;
  double v_puntos=0;
@@ -44,38 +45,83 @@ class _BtnCalificarOrdernState extends State<BtnCalificarOrdern> {
             )
         )
           ,),
-        RaisedButton(
-          shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(18.0),
-          ),
-          color: Color(0xFFe1251b),
-          textColor: Colors.white,
-          child: _cargando ? CircularProgressIndicator() : Text("Guardar"),
-          onPressed: () async{
-            if(v_puntos==0){
-              msj("Debe elegir una estrella");
-            }else if(opinion==null){
-              msj("Escríbenos tu experiencia.");
-            }else{
-              setState(() {
-                _cargando = true;
-              });
+        Center(child:
+       Container(
+           width: 270,
+           child:
+
+       Row(children: <Widget>[
+         RaisedButton(
+           shape: new RoundedRectangleBorder(
+             borderRadius: new BorderRadius.circular(18.0),
+           ),
+           color: Color(colorVerde),
+           textColor: Colors.white,
+           child: _cargandoB ? CircularProgressIndicator() : Text("Solicitar devolución"),
+           onPressed: () async{
+             setState(() {
+               _cargandoB = true;
+             });
 
 
-              if(await guardarOpinion()){
-                _calificado=true;
-              }
-              setState(() {
-                _cargando = false;
-              });
-            }
-          },
-        )
+             if(await devolucion()){
+               _calificado=true;
+             }
+             setState(() {
+               _cargandoB = false;
+             });
+
+           },
+         ),
+         Padding(padding: EdgeInsets.all(7),),
+         RaisedButton(
+           shape: new RoundedRectangleBorder(
+             borderRadius: new BorderRadius.circular(18.0),
+           ),
+           color: Color(0xFFe1251b),
+           textColor: Colors.white,
+           child: _cargando ? CircularProgressIndicator() : Text("Guardar"),
+           onPressed: () async{
+             if(v_puntos==0){
+               msj("Debe elegir una estrella");
+             }else if(opinion==null){
+               msj("Escríbenos tu experiencia.");
+             }else{
+               setState(() {
+                 _cargando = true;
+               });
+
+
+               if(await guardarOpinion()){
+                 _calificado=true;
+               }
+               setState(() {
+                 _cargando = false;
+               });
+             }
+           },
+         )
+       ],))
+    ,)
+
       ],
     );
 
 
   }
+ Future devolucion() async {
+   String url;
+   String datos='devolucion&orders_id='+widget.id.toString();
+   url=await UrlLogin(datos);
+   Map res=await peticionGet(url);
+   if (res['success']==true) {
+     msjb(res['msj_general'],context);
+     Navigator.pop(context);
+     return true;
+   }else{
+     msj(res['msj_general']);
+   }
+ }
   Future guardarOpinion() async {
     String url;
     String datos='guardarOpinionOrden&user_rating='+v_puntos.toString()+'&opinion='+opinion+'&orders_id='+widget.id.toString();
