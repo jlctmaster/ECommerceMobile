@@ -14,29 +14,47 @@ class Ordenes extends StatefulWidget{
 
 class _OrdenesState extends State<Ordenes> {
   bool _cargando=false;
-
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return  Column(children: <Widget>[
-      Padding(
-        padding: EdgeInsets.only(top:10),
-        child: textoTop2("Ordenes de compras"),
+   return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          primary: false,
+          key: scaffoldKey,
+          appBar: AppBar(
+            elevation: 0,
+            iconTheme: IconThemeData(
+              color:Color(colorVerde), //change your color here
+            ),
+            automaticallyImplyLeading: true,
+            backgroundColor: Colors.white,
+            primary: false,
+
+            title: Text("Ordenes de compras",style: TextStyle(color: Color(colorVerde))),
+          ),
+          body:Column(children: <Widget>[
+
+
+            Divider(),
+            FutureBuilder(
+              future: _listarOrdenes(),
+              builder: (context, res) {
+                if (res.connectionState == ConnectionState.done) {
+
+                  return _ordenes(res.data);
+                }else {
+                  return Center(child: CircularProgressIndicator(),);
+                }
+              },
+            ),
+          ],)
+
       ),
+    );
 
-Divider(),
-        FutureBuilder(
-          future: _listarOrdenes(),
-          builder: (context, res) {
-            if (res.connectionState == ConnectionState.done) {
 
-              return _ordenes(res.data);
-            }else {
-              return Center(child: CircularProgressIndicator(),);
-            }
-          },
-        ),
-      ],);
 
   }
   _ordenes(data){

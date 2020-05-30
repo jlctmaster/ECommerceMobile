@@ -188,7 +188,7 @@ SharedPreferences prefs = await SharedPreferences.getInstance();
 await prefs.remove(key);
 }
 delIdData(key,id) async {
-  Map l=await getData(key);
+  Map l=jsonDecode(await getData(key));
   List lista=l['data'];
   List listaNueva=List();
   int cant=lista.length;

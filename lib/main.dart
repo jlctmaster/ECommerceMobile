@@ -1,3 +1,4 @@
+import 'package:biomercados/direccion_habitacion.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/home/combo.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,7 @@ final bool vistaPrincipal=await Analizar();
         '/analizar': (BuildContext context) => (vistaPrincipal==true ? Home() : Auth(1)),
         '/home': (BuildContext context) => Home(),
         '/combo': (BuildContext context) => Combo(),
+        '/direccion_habitacion': (BuildContext context) => DireccionHabitacion(),
         '/prueba': (BuildContext context) => SearchList(),
         '/prueba2': (BuildContext context) => Buscador(),
         '/prueba3': (BuildContext context) => HomePage(),

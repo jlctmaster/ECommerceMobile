@@ -23,7 +23,7 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     AuthBlock auth = Provider.of<AuthBlock>(context);
     return Container(
-      color: Color(colorVerdeb),
+      color: Colors.white,
         child: Column(
 
 
@@ -35,23 +35,36 @@ class _AppDrawerState extends State<AppDrawer> {
               child:
               SafeArea(
                 child: Padding(
-                  padding: EdgeInsets.all(20.00),
-                  child:Column(
-                    children: <Widget>[
-                      Image(image: AssetImage('assets/images/logo-bio-en-linea.png')),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            //Divider(),
-                           // Text(auth.user['email']),
-                            //Text(auth.user['name']),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  padding: EdgeInsets.only(top: 5),
+child: Expanded(
+  child: ListView(
+    shrinkWrap: true,
+    children: <Widget>[
+      Image(image: AssetImage('assets/images/logo_peque.png'), height: 130,),
+      Padding(padding: EdgeInsets.all(10),),
+      botonMenu("Inicio",Icons.home,'/home'),
+      botonMenu("Mi perfil",Icons.account_circle,'/miPerfil'),
+      botonMenu("Direcciones de envío",Icons.edit,'/ListadoDirecciones'),
+      botonMenu("Dirección de habitación",Icons.edit,'/direccion_habitacion'),
+      botonMenu("Cambiar contraseña",Icons.vpn_key,'/cambiarClave'),
+      botonMenuCarrito("Carrito de compra",Icons.shopping_cart,'/cart'),
+      botonMenuRoute("Preguntas frecuentes",Icons.help_outline,Faq()),
+      Card(
+          child:ListTile(
+            leading: Icon(Icons.exit_to_app, color: Color(colorVerdeb), size: 28,),
+            title: Text('Cerrar sesión', style: TextStyle(color: Colors.black, fontSize: 17)),
+
+            onTap: () async {
+              await auth.logout();
+              //Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
+              Fluttertoast.showToast(msg: 'Vuelve pronto.',toastLength: Toast.LENGTH_SHORT);
+              cerrar_sesion(context);
+            },
+          )
+      ),
+    ],
+  ),
+),
                 ),
               )
 
@@ -60,115 +73,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
 
 
-        Expanded(
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.home,
-                    color: Colors.white),
-                title: _textoSubTitle("Inicio"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/home');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.shopping_cart,
-                    color: Colors.white),
-                title:  _textoSubTitle("Carrito de compra"),
-                trailing: Container(
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  child: CantCarrito(actualizar: false),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/cart');
-                },
-              ),
-              ListTile(
-                leading:
-                Icon(Icons.settings, color: Colors.white),
-                title: _textoSubTitle("Configuración"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/settings');
-                },
-              ),
-              ListTile(
-                leading:
-                Icon(Icons.help_outline, color: Colors.white),
-                title: _textoSubTitle("Preguntas frecuentes"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Faq()),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.exit_to_app,
-                    color: Colors.white),
-                title:  _textoSubTitle('Cerrar sesión'),
-                onTap: () async {
-                  await auth.logout();
-                  //Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
-                  Fluttertoast.showToast(msg: 'Vuelve pronto.',toastLength: Toast.LENGTH_SHORT);
-                  cerrar_sesion(context);
-                },
-              ),
-             // _categorias(),
-/*
-              ListTile(
-                leading: Icon(Icons.monetization_on,
-                    color: Colors.white),
-                title: _textoSubTitle("Bio Wallet"),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
 
-              ListTile(
-                leading:
-                    Icon(Icons.fastfood, color: Colors.white),
-                title: _textoSubTitle('Categorias'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/categorise');
-                },
-              ),
-
-              ListTile(
-                leading:
-                    Icon(Icons.shopping_basket, color: Colors.white),
-                title: _textoSubTitle('Combos'),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/wishlist');
-                },
-              ),
-              */
-
-
-              /*ListTile(
-                leading: Icon(Icons.favorite,
-                    color: Colors.white),
-                title:  _textoSubTitle("Conoce a Bio (en construcción)"),
-                onTap: () {
-
-                },
-              ),
-              Divider(),*/
-
-
-            ],
-          ),
-        )
       ],
     ),
     );
@@ -179,6 +84,56 @@ class _AppDrawerState extends State<AppDrawer> {
   _textoSubTitle(String texto){
     return Text(texto,style: TextStyle(color: Colors.white),);
   }
+  Widget botonMenu(String nombre,IconData icono,String vista){
+    return Card(
+        child:ListTile(
+          leading: Icon(icono, color: Color(colorVerdeb), size: 28,),
+          title: Text(nombre, style: TextStyle(color: Colors.black, fontSize: 17)),
+          trailing: null,
+          onTap: (){
+            Navigator.pop(context);
+            Navigator.pushNamed(context, vista);
+          },
+        )
+    );
+  }
+  Widget botonMenuCarrito(String nombre,IconData icono,String vista){
+    return Card(
+        child:ListTile(
+          leading: Icon(icono, color: Color(colorVerdeb), size: 28,),
+          title: Text(nombre, style: TextStyle(color: Colors.black, fontSize: 17)),
+          trailing: Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: new BoxDecoration(
+              shape: BoxShape.circle,
+
+            ),
+            child: CantCarrito(actualizar: false),
+          ),
+          onTap: (){
+            Navigator.pop(context);
+            Navigator.pushNamed(context, vista);
+          },
+        )
+    );
+  }
+
+  Widget botonMenuRoute(String nombre,IconData icono,Widget vista){
+    return Card(
+        child:ListTile(
+          leading: Icon(icono, color: Color(colorVerdeb), size: 28,),
+          title: Text(nombre, style: TextStyle(color: Colors.black, fontSize: 17)),
+          onTap: (){
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => vista),
+            );
+          },
+        )
+    );
+  }
+
 _categorias(){
   return FutureBuilder(
     future: _cargarCategorias(),

@@ -266,7 +266,7 @@ buscador(){
           ),
           onSubmitted: (a) async {
 
-            await setEvento('listarProductosPorBusqueda&texto='+a,"Resultado de la busqueda: "+a);
+            await setEvento('listarProductosPorBusqueda&texto='+a,"Resultados de: "+a);
             Navigator.pushNamed(context, '/home');
           }
       ),
@@ -283,7 +283,7 @@ buscador(){
         );
       },
       onSuggestionSelected: (suggestion) async {
-        await setEvento('listarProductosPorBusqueda&texto='+suggestion['name'],"Resultado de la busqueda: "+suggestion['name']);
+        await setEvento('listarProductosPorBusqueda&texto='+suggestion['name'],"Resultados de: "+suggestion['name']);
         Navigator.pushNamed(context, '/home');
       },
 

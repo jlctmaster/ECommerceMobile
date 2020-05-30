@@ -48,9 +48,14 @@ class Modelo {
   }
 */
 
-  Future getCities(_regions_id) async {
+  Future getCities(_regions_id,{all=false}) async {
+     Map data=Map();
     if(citiesCargado==false) {
-      Map data = jsonDecode(await getData('cities'));
+      if(all){
+        data = jsonDecode(await getData('citiesAll'));
+      }else{
+        data = jsonDecode(await getData('cities'));
+      }
       List lista=data['data'];
       List listaNueva=List();
       if (data['success']) {
@@ -74,9 +79,15 @@ class Modelo {
 
 
 
-  Future getRegions(_states_id) async {
+  Future getRegions(_states_id,{all=false}) async {
+    Map data=Map();
     if(regionsCargado==false) {
-      Map data = jsonDecode(await getData('regions'));
+      if(all){
+        data = jsonDecode(await getData('regionsAll'));
+      }else{
+        data = jsonDecode(await getData('regions'));
+      }
+    
       List lista=data['data'];
       List listaNueva=List();
       if (data['success']) {
@@ -95,9 +106,21 @@ class Modelo {
     }
     return dataRegions;
   }
-  Future getStates() async {
+
+
+
+
+  Future getStates({all=false}) async {
+
+    Map data=Map();
     if(statesCargado==false) {
-        Map data= jsonDecode(await getData('states'));
+      if(all){
+
+        data = jsonDecode(await getData('statesAll'));
+
+      }else{
+        data = jsonDecode(await getData('states'));
+      }
         statesCargado = true;
         if(data['success']==true){
           dataStates=data['data'];
@@ -128,7 +151,18 @@ class Modelo {
     saveData('address',res);
     resJson=res;
   }
-
+  Future<Map> guardarDireccionHabitacion(campo,id) async {
+    String url;
+    if(id!=null){
+      url=await UrlLogin('guardarDireccionHabitacion&id=$id');
+    }else{
+      url=await UrlLogin('guardarDireccionHabitacion');
+    }
+    Map res=await peticionPost(url,campo);
+//print(res['data'][0]);
+    saveData('addressHabitacion',res);
+    resJson=res;
+  }
   Future<Map> eliminarDireccion(id) async {
 
     String url=await UrlLogin('eliminarDireccion&id=$id');
@@ -137,6 +171,8 @@ class Modelo {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
+      var a=await getData('address');
+
       await delIdData('address',id);
       resJson= jsonDecode(response.body);
     } else {

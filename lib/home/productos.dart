@@ -44,7 +44,10 @@ bool _botonBusqueda=false;
         key: scaffoldKey,
         appBar: AppBar(
           elevation: 0,
-          automaticallyImplyLeading: false,
+          iconTheme: IconThemeData(
+            color:Color(colorVerde), //change your color here
+          ),
+          automaticallyImplyLeading: true,
           backgroundColor: Colors.white,
           primary: false,
           actions: <Widget>[
@@ -70,6 +73,7 @@ bool _botonBusqueda=false;
         body:  ListadoProductos(tipoListado: 'otros',),
 
       ),
+
     );
   }
 }
