@@ -21,7 +21,7 @@ bool _botonBusqueda=false;
     setState(() {
 
     });
-  print("capturado retroceso");
+  print("capturadoY retroceso");
   }
 
   Future _getTaskAsync;
@@ -47,6 +47,7 @@ bool _botonBusqueda=false;
           iconTheme: IconThemeData(
             color:Color(colorVerde), //change your color here
           ),
+         // leading: btnAtrasProductos(),
           automaticallyImplyLeading: true,
           backgroundColor: Colors.white,
           primary: false,
@@ -74,6 +75,16 @@ bool _botonBusqueda=false;
 
       ),
 
+    );
+  }
+  Widget btnAtrasProductos(){
+    //return null;
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: (){
+
+
+      },
     );
   }
 }

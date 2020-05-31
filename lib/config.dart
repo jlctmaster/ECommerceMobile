@@ -6,8 +6,8 @@ import 'package:biomercados/funciones_generales.dart';
 //const String BASE_URL = 'http://bio.frontuari.net';
 //const String BASE_URL = 'http://10.10.50.110';
 //const String BASE_URL = 'http://192.168.0.110';
-const String BASE_URL = 'http://192.168.0.103';
-//const String BASE_URL = 'http://199.188.204.152';
+//const String BASE_URL = 'http://192.168.43.91';
+const String BASE_URL = 'http://199.188.204.152';
 const String BASE_URL_IMAGEN="$BASE_URL/storage/"; 
 //const String BASE_URL = 'http://10.0.1.112';
 

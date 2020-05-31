@@ -36,8 +36,7 @@ class _AppDrawerState extends State<AppDrawer> {
               SafeArea(
                 child: Padding(
                   padding: EdgeInsets.only(top: 5),
-child: Expanded(
-  child: ListView(
+child: ListView(
     shrinkWrap: true,
     children: <Widget>[
       Image(image: AssetImage('assets/images/logo_peque.png'), height: 130,),
@@ -64,7 +63,7 @@ child: Expanded(
       ),
     ],
   ),
-),
+
                 ),
               )
 

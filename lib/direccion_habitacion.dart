@@ -101,62 +101,70 @@ bool _widgetRegions=true;
                             builder: (context, projectSnap) {
                               if (projectSnap.connectionState == ConnectionState
                                   .done) {
-                                Map data=jsonDecode(projectSnap.data);
                                 Map row = Map();
-                                if(data['success']==true){
-                                  row=data['data'][0];
-                                }
-                                print("ENTROOOOOOOOOO");
-                                //if(data['success']!=true){
-                                  print(data);
-                               // }
-                                print("ENTROOOOOOOOOO");
+                                try {
+                                  if(projectSnap.data!=null) {
+                                    Map data = jsonDecode(projectSnap.data);
 
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Flexible(child: StatesId(row)),
-                                        Flexible(child: RegionsId(row)),
-                                        Flexible(child: CitiesId(row)),
-                                      ],
-                                    ),
-                                    _campoTexto(
-                                        "urb", "Urbanización/Barrio/Empresa",
-                                        'todo', true, row['urb']),
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(child: Padding(
+
+                                    if (data['success'] == true) {
+                                      row = data['data'][0];
+                                    }
+                                  }
+
+
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Flexible(child: StatesId(row)),
+                                          Flexible(child: RegionsId(row)),
+                                          Flexible(child: CitiesId(row)),
+                                        ],
+                                      ),
+                                      _campoTexto(
+                                          "urb", "Urbanización/Barrio/Empresa",
+                                          'todo', true, row['urb']),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: 5),
+                                              child: _campoTexto(
+                                                  "zip_code", "Codigo postal",
+                                                  'numero', true,
+                                                  row['zip_code']))),
+                                          Expanded(child: _campoTexto(
+                                              "sector", "Sector/Avenida/Calle",
+                                              'todo', true, row['sector'])),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(child: Padding(
                                             padding: EdgeInsets.only(right: 5),
                                             child: _campoTexto(
-                                                "zip_code", "Codigo postal",
-                                                'numero', true,
-                                                row['zip_code']))),
-                                        Expanded(child: _campoTexto(
-                                            "sector", "Sector/Avenida/Calle",
-                                            'todo', true, row['sector'])),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(child: Padding(
-                                          padding: EdgeInsets.only(right: 5),
-                                          child: _campoTexto(
-                                              "nro_home", "Nro de casa/local",
-                                              'todo', true, row['nro_home']),)),
-                                        Expanded(child: _campoTexto(
-                                            "reference_point",
-                                            "Punto de referencia", 'todo', true,
-                              row['reference_point'])),
-                                      ],
-                                    ),
+                                                "nro_home", "Nro de casa/local",
+                                                'todo', true,
+                                                row['nro_home']),)),
+                                          Expanded(child: _campoTexto(
+                                              "reference_point",
+                                              "Punto de referencia", 'todo',
+                                              true,
+                                              row['reference_point'])),
+                                        ],
+                                      ),
 
-                                    _botonEnvio(row['id'])
-                                  ],
+                                      _botonEnvio(row['id'])
+                                    ],
 
 
-                                );
+                                  );
+                                }catch(e){
+                                  return Text("dddd");
+                                }
                               } else {
                                 return Center(
                                     child: CircularProgressIndicator());

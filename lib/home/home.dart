@@ -32,6 +32,8 @@ String textoBuscador;
 
   bool _aceptarTab=true;
 
+  var evento_actual;
+
   @override
   Widget build(BuildContext context) {
     print("ACTUALIZADO HOME");
@@ -65,7 +67,7 @@ backgroundColor: Colors.white,
               ),
 
       InkWell(child: Icon(Icons.search,color: Colors.black45,),onTap: () async {
-        await setEvento('listarProductosPorBusqueda&texto='+textoBuscador,"Búsqueda personalizada: "+textoBuscador);
+        await setEvento('listarProductosPorBusqueda&texto='+textoBuscador,"Resultados de: "+textoBuscador);
         Navigator.pushNamed(context, '/home');
       },),
             ],
@@ -106,16 +108,25 @@ body: FutureBuilder(
   future: vista(),
   builder: (context, projectSnap) {
     if (projectSnap.connectionState == ConnectionState.done) {
+
       return WillPopScope(
         child:projectSnap.data,
-        onWillPop: () {
+        onWillPop: () async {
 
           //return !await msj("ddd");
-          if(_selectedIndex==1){
+          if(evento_actual!='listarProductos'){
+           await setEvento('listarProductos',"Productos");
+            setState(() {
+              _selectedIndex=1;
 
+            });
+            return false;
+          }
+          if(_selectedIndex==1){
+            await setEvento('listarProductos',"Productos");
             setState(() {
               _selectedIndex=0;
-              setEvento('listarProductos',"Productos");
+
             });
           }else if(_selectedIndex==2){
 
@@ -128,7 +139,7 @@ body: FutureBuilder(
             SystemChannels.platform.invokeMethod('SystemNavigator.pop');
             //
           }
-          //return false;
+          return false;
         }
 
         ,);
@@ -184,7 +195,7 @@ if(evento!=null){
 
   }
 }
-
+  evento_actual=await getEvento();
   switch(_selectedIndex) {
     case 0:
       return Principal(actualizarHome: _actualizarEvento,);
