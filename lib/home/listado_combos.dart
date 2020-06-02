@@ -133,7 +133,7 @@ color: Colors.white,
                crossAxisAlignment: CrossAxisAlignment.start,
                children: <Widget>[
                  SizedBox(
-                   height: (MediaQuery.of(context).size.width / 2 - 5),
+                   height: (MediaQuery.of(context).size.width / 2 - 5)-10,
                    //height: 180,
                    width: double.infinity,
 

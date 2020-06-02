@@ -75,7 +75,7 @@ class _ComboState extends State<Combo>{
                                   args.precio,
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColor,
-                                    fontSize: 20,
+                                    fontSize: 17,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -183,26 +183,39 @@ return Row(
   }
 
   agregarAlCarrito(List pro,proveedor) async{
+     String msjtxt="";
     Map carrito= Map();
     carrito= await jsonDecode(await getData('carrito'));
 
+print(pro);
 
     pro.forEach((e) async {
       int idProducto=e['products_id'];
       int cant=e['cant'];
+      int stock=e['stock'];
+     
       if(carrito['productos']==null){
         Map productos= Map();
         productos["$idProducto"]=cant;
         carrito['productos']=productos;
+        msjtxt="Agregado al carrito.";
       }else{
         Map productos =carrito['productos'];
-        productos["$idProducto"]=cant;
-        carrito['productos']=productos;
+
+        print(productos);
+        if( productos["$idProducto"]==null) productos["$idProducto"]=0;
+          if(stock>=(productos["$idProducto"]+cant)){
+            productos["$idProducto"]+=cant;
+            carrito['productos']=productos;
+            msjtxt="Agregado al carrito.";
+          }else{
+            msjtxt="Agotado.";
+          }
       }
     });
     await saveData('carrito',carrito);
     proveedor.actualizar();
-    msj("Agregado al carrito.");
+    msj(msjtxt);
 
   }
 

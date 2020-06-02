@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:biomercados/config.dart';
 import 'package:biomercados/home/faq.dart';
@@ -24,10 +25,7 @@ class _AppDrawerState extends State<AppDrawer> {
     AuthBlock auth = Provider.of<AuthBlock>(context);
     return Container(
       color: Colors.white,
-        child: Column(
-
-
-      children: <Widget>[
+        child:
        // if(auth.isLoggedIn)
            Container(
               color: Colors.white,
@@ -73,8 +71,7 @@ child: ListView(
 
 
 
-      ],
-    ),
+
     );
   }
   _Titulo(){

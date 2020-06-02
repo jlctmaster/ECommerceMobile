@@ -528,7 +528,7 @@ void _showAlert(String value ){
         Padding(
           padding: const EdgeInsets.only(top: 12.0, bottom: 5.0),
           child:
-          textoTop2("¿Donde desea recibir su pedido?"),//Text(products.length.toString() + " Productos en tu carrito", textDirection: TextDirection.ltr, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))
+          textoTop2("Direcciones de entrega"),//Text(products.length.toString() + " Productos en tu carrito", textDirection: TextDirection.ltr, style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))
 
         ),Divider(),
         Padding(padding: EdgeInsets.only(top:5),),

@@ -19,7 +19,7 @@ class _modalState extends State<ModalPagos> {
 
     return new AlertDialog(
       title: new Text('Condiciones para realizar el pago',style: TextStyle(color: Colors.green),),
-      content: new Text("* Si vas a usar más de 1 método de pago incluyendo el efectivo deberás elegir 1ro el método de pago en efectivo.\n* Puede combinar un máximo de dos pagos ejemplo: (efectivo + transferencia bancaria).",
+      content: new Text("*Para realizar pagos combinados de eefctivo con otros métodos de pago, debe seleccionar primero el método de pago efectivo para continuar.\n* Puede combinar un máximo de dos pagos ejemplo: (efectivo + transferencia bancaria).",
         style: new TextStyle(fontSize: 25.0),),
       actions: <Widget>[
         new FlatButton(onPressed: () async {
