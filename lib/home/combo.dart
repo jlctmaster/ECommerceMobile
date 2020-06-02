@@ -215,7 +215,9 @@ print(pro);
     });
     await saveData('carrito',carrito);
     proveedor.actualizar();
-    msj(msjtxt);
+    if(msjtxt!=''){
+      msj(msjtxt);
+    }
 
   }
 

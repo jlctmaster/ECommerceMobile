@@ -41,7 +41,7 @@ child: ListView(
       Padding(padding: EdgeInsets.all(10),),
       botonMenu("Inicio",Icons.home,'/home'),
       botonMenu("Mi perfil",Icons.account_circle,'/miPerfil'),
-      botonMenu("Direcciones de envío",Icons.edit,'/ListadoDirecciones'),
+      botonMenu("Direcciones de entrega",Icons.edit,'/ListadoDirecciones'),
       botonMenu("Dirección de habitación",Icons.edit,'/direccion_habitacion'),
       botonMenu("Cambiar contraseña",Icons.vpn_key,'/cambiarClave'),
       botonMenuCarrito("Carrito de compra",Icons.shopping_cart,'/cart'),
