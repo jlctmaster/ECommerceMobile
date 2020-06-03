@@ -315,6 +315,7 @@ roundDown(double value){
 }
 
 peticionPost(url, Map<String, String> body) async {
+   print(body);
   try {
     final response = await http.post(
         url, headers: {"Accept": "application/json"},body:body).timeout(

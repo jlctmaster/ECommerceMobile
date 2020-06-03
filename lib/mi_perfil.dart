@@ -271,13 +271,15 @@ bool _widgetRegions=true;
     String birthdate = campo['birthdate'];
     String cities_id = campo['cities_id'];
     String url = await UrlLogin('actualizarPerfil');
+       
+    //print(res);
     Map res= await peticionPost(url,{
       'rif':     rif,
       'sex':  sex,
       'name':      name,
-      'birthdate':       birthdate,
-      'cities_id':       cities_id,
+      'birthdate':       birthdate
     });
+
     await saveData('perfil',res);
     msj(res['msj_general']);
   }
