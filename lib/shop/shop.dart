@@ -131,7 +131,7 @@ class _ShopState extends State<Shop> {
                                                     children: <Widget>[
                                                       SmoothStarRating(
                                                           allowHalfRating: false,
-                                                          onRatingChanged: (v) {
+                                                          onRated: (v) {
                                                             product['rating'] = v;
                                                             setState(() {});
                                                           },
@@ -229,7 +229,7 @@ class _ShopState extends State<Shop> {
                                                     children: <Widget>[
                                                       SmoothStarRating(
                                                           allowHalfRating: false,
-                                                          onRatingChanged: (v) {
+                                                          onRated: (v) {
                                                             products[index]['rating'] = v;
                                                             setState(() {});
                                                           },
@@ -356,7 +356,7 @@ class _ShopState extends State<Shop> {
 //                                                children: <Widget>[
 //                                                  SmoothStarRating(
 //                                                      allowHalfRating: false,
-//                                                      onRatingChanged: (v) {
+//                                                      onRated: (v) {
 //                                                        product['rating'] = v;
 //                                                        setState(() {});
 //                                                      },
@@ -454,7 +454,7 @@ class _ShopState extends State<Shop> {
 //                                                children: <Widget>[
 //                                                  SmoothStarRating(
 //                                                      allowHalfRating: false,
-//                                                      onRatingChanged: (v) {
+//                                                      onRated: (v) {
 //                                                        products[index]['rating'] = v;
 //                                                        setState(() {});
 //                                                      },

@@ -53,7 +53,7 @@ class _ratingState extends State<Rating> {
   _estrellas(){
     return SmoothStarRating(
       allowHalfRating: false,
-      onRatingChanged: (v) {
+      onRated: (v) {
         rating = v;
         calificarProducto(context,widget.products_id);
         setState(() {
@@ -73,7 +73,7 @@ class _ratingState extends State<Rating> {
 
     return Row(children: <Widget>[SmoothStarRating(
         allowHalfRating: false,
-        onRatingChanged: (v) {
+        onRated: (v) {
           setState(() {
             _miRating=v;
           });
