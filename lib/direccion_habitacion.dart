@@ -156,14 +156,15 @@ bool _widgetRegions=true;
                                               row['reference_point'])),
                                         ],
                                       ),
-
+                                      Padding(padding: EdgeInsets.only(top:10),),
+                                      Text("La dirección de habitación no aplica para el delivery, si desea registrar una dirección para delivery ingrese en el menú principal -> direcciones de entrega."),
                                       _botonEnvio(row['id'])
                                     ],
 
 
                                   );
                                 }catch(e){
-                                  return Text("dddd");
+                                  return Text("");
                                 }
                               } else {
                                 return Center(

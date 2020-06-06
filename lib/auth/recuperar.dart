@@ -32,8 +32,8 @@ class _RecuperarState extends State<Recuperar> {
           child:Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                topLoginB("Recupera tu contraseña"),
-                subTituloLogin("Ingresa el correo electrónico con el que te registraste, te enviaremos un código de verificación."),
+                topLoginB("Recupere su contraseña"),
+                subTituloLogin("Ingrese el correo electrónico que uso al registrarse, le enviaremos un código de verificación."),
                 Form(
                   key: _formKey,
                   child: SingleChildScrollView(

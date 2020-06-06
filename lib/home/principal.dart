@@ -123,6 +123,7 @@ class _principalState extends State<Principal> {
         child: new FutureBuilder(
           future: ModeloTime().listarPublicidad(tipo), // async work
           builder: (BuildContext context, AsyncSnapshot snapshot) {
+            //print(snapshot.data);
             switch (snapshot.connectionState) {
               case ConnectionState.waiting: return Center(child:CircularProgressIndicator());
               default:

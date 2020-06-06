@@ -39,6 +39,7 @@ bool _cargadoTotalPagar=false;
   String _monto;
   double total_pay=0.00;
   bool _pagado=false;
+  String total_pagar_campo='0';
   @override
   Widget build(BuildContext context) {
 
@@ -123,6 +124,19 @@ bool _cargadoTotalPagar=false;
 
     }
   }
+    _formatearMonedaSinSimbolo(double valor) {
+    int coins_id=int.parse(widget.coins_id);
+    String listo='0';
+    switch(coins_id){
+      case 1:
+       return formatDolarSinSimbolo.format(valor);
+      break;
+      default:
+        return formatBolivarSinSimbolo.format(valor);
+        break;
+
+    }
+  }
   String _tipoValidacion(){
     switch(widget.coins_id){
       case '1':
@@ -166,6 +180,8 @@ if(status>1) _pagado=true;
     total_pay=totalPagar;
     print(double.parse(totalPagar.toStringAsFixed(2)));
   if(double.parse(totalPagar.toStringAsFixed(2))>0 || _pagado==true) {
+
+    total_pagar_campo=_formatearMonedaSinSimbolo(totalPagar);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -228,7 +244,7 @@ _formularioEfectivo(){
           Center(child: subTituloLogin("¿Cuanto pagara en efectivo?"),),
           Row(children: <Widget>[
             //Expanded(child: Padding(padding:EdgeInsets.only(right: 5), child: _campoTexto_ref('Seriales','Por favor ingrese los seriales de su efectivo','todo',true),),),
-            Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que pagara en efectivo','numero',true),),
+            Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que pagara en efectivo','numero',true)),
           ],),
 
           _botonRojo()
@@ -247,7 +263,7 @@ _formularioEfectivo(){
             Row(children: <Widget>[
 
               Expanded(child: Padding(padding:EdgeInsets.only(right: 5), child: _campoTexto_ref('Nro. de Referencia','Por favor ingrese el Nro. de referencia de su pago','todo',true),),),
-              Expanded(child: _campoTexto_monto('Monto transferido','Por favor ingrese el Monto que transfirio a nuestra cuenta',_tipoValidacion(),true),),
+              Expanded(child: _campoTexto_monto('Monto transferido','Por favor ingrese el Monto que transfirio a nuestra cuenta',_tipoValidacion(),true)),
 
             ],),
 Padding(
@@ -270,7 +286,7 @@ Padding(
             Center(child: subTituloLogin("¿Cuanto pagara mediante su TDC?"),),
             Row(children: <Widget>[
 
-              Expanded(child: _campoTexto_monto('Monto a pagar','Por favor ingrese el Monto a pagar mediante su TDC',_tipoValidacion(),true),),
+              Expanded(child: _campoTexto_monto('Monto a pagar','Por favor ingrese el Monto a pagar mediante su TDC',_tipoValidacion(),true)),
 
             ],),
             _botonRojob()
@@ -325,6 +341,7 @@ Padding(
     }
     //TextInputType emailAddress = TextInputType.emailAddress;
     return TextFormField(
+      initialValue:total_pagar_campo.trim(),
 
       validator: (value) {
 
@@ -433,7 +450,7 @@ Padding(
                 textColor: Colors.white,
                 child: _cargando ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ) : Text('Reportar pago'),
+                ) : Text('Pagar'),
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     setState(() {

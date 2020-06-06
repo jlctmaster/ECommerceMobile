@@ -601,5 +601,7 @@ InkWell link(String texto,String link,context){
   );
 }
 
+final formatDolarSinSimbolo = new NumberFormat.simpleCurrency(locale: 'en_US',name:'',decimalDigits: 2);
 final formatDolar = new NumberFormat.simpleCurrency(locale: 'en_US',decimalDigits: 2);
 final formatBolivar = new NumberFormat.simpleCurrency(locale: 'es_ES',name: 'Bs',decimalDigits: 2);
+final formatBolivarSinSimbolo = new NumberFormat.simpleCurrency(locale: 'es_ES',name: '',decimalDigits: 2);
