@@ -195,7 +195,7 @@ bool _widgetRegions=true;
                                     onChanged: _actualizarCedula,),
 
                                   _Calendario(),
-
+_campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
                                   Sexo(campo: row['sex'],
                                     onChanged: _actualizarSexo,),
 
@@ -269,6 +269,7 @@ bool _widgetRegions=true;
     String sex = campo['sex'];
     String name = campo['name'];
     String birthdate = campo['birthdate'];
+    String phone = campo['phone'];
     String cities_id = campo['cities_id'];
     String url = await UrlLogin('actualizarPerfil');
        
@@ -277,7 +278,8 @@ bool _widgetRegions=true;
       'rif':     rif,
       'sex':  sex,
       'name':      name,
-      'birthdate':       birthdate
+      'birthdate':       birthdate,
+      'phone':       phone
     });
 
     await saveData('perfil',res);
@@ -292,6 +294,9 @@ bool _widgetRegions=true;
         break;
       case 'numero':
         tipoKey = TextInputType.number;
+        break;
+      case 'phone':
+        tipoKey = TextInputType.phone;
         break;
       default:
         tipoKey = TextInputType.text;
