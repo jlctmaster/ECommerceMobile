@@ -431,6 +431,10 @@ patron_validacion(tipo){
         'patron':r"^\+?\d{1,3}?[- .]?\(?(?:\d{2,3})\)?[- .]?\d\d\d[- .]?\d\d\d\d$",
         'msj':"Debe introducir un telefono valido Ej: 0255-1111222"
       },
+      'phone':{
+        'patron':r"^\+?\d{1,3}?[- .]?\(?(?:\d{2,3})\)?[- .]?\d\d\d[- .]?\d\d\d\d$",
+        'msj':"Nro. Telefónico invalido"
+      },
       'ip':{
         'patron':r"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b",
         'msj':"Debe introducir una ip valida Ej: 192.168.1.1"

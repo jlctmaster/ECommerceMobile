@@ -209,7 +209,7 @@ if(status>1) _pagado=true;
     if(pagado){
      return Column(children: <Widget>[
         Icon(Icons.check_circle, size: 50, color: Color(colorVerde),),
-        Text("Gracias por su compra, Le invitamos a conocer todas nuestras categorías y promociones.\n (Inspirados en Servirles)", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
+        Text("Gracias por su compra, Le invitamos a conocer todas nuestras categorías y promociones.\n (Inspirados en Servir)", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
         Text(
           "Es posible que algunos de sus pagos estén en proceso de verificación. En el menu Orden o Tracking puede ver en tiempo real el estatus de su orden.",
           textAlign: TextAlign.center,),

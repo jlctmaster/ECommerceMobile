@@ -195,6 +195,9 @@ Row(
       case 'correo':
         tipoKey=TextInputType.emailAddress;
         break;
+      case 'phone':
+        tipoKey=TextInputType.phone;
+        break;
       default:
         tipoKey=TextInputType.text;
     }
