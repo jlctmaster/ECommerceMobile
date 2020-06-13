@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:biomercados/auth/tdc.dart';
+import 'package:biomercados/auth/tdd.dart';
 import 'package:biomercados/config.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/home/orden.dart';
@@ -228,6 +229,9 @@ if(status>1) _pagado=true;
       case 8 :
         return _formularioTDC();
         break;
+      case 10 :
+        return _formularioTDD();
+        break;
       case 3 :
         return _formularioEfectivo();
         break;
@@ -290,6 +294,24 @@ Padding(
 
             ],),
             _botonRojob()
+
+          ],
+        )
+    );
+  }
+    _formularioTDD(){
+    return Form(
+        key: _formKey,
+        child:Column(
+          children: <Widget>[
+            Divider(),
+            Center(child: subTituloLogin("¿Cuanto pagara mediante su TDD?"),),
+            Row(children: <Widget>[
+
+              Expanded(child: _campoTexto_monto('Monto a pagar','Por favor ingrese el Monto a pagar mediante su TDD',_tipoValidacion(),true)),
+
+            ],),
+            _botonRojotdd()
 
           ],
         )
@@ -398,6 +420,41 @@ Padding(
     listo=b;
     }
     return listo;
+  }
+    _botonRojotdd() {
+
+    return Padding(
+        padding: const EdgeInsets.only(top: 25.0),
+        child: Center(
+          child: SizedBox(
+            width: 150,
+            height: 40,
+            child:RaisedButton(
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(18.0),
+              ),
+              color: Color(0xFFe1251b),
+              textColor: Colors.white,
+              child: _cargando ? CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ) : Text('Realizar pago'),
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Tdd(nroOrden: widget.nroOrden,monto: _monto,)),
+                  ).then((value){
+                    setState(() {});
+                  });
+                }
+
+
+              },
+            ),
+          ),
+        )
+    );
   }
   _botonRojob() {
 

@@ -1,4 +1,4 @@
-package com.example.biomercados;
+package com.bio.biomercados;
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity;

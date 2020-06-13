@@ -1,4 +1,4 @@
-package com.example.biomercados4
+package com.bio.biomercados4
 
 import io.flutter.embedding.android.FlutterActivity
 

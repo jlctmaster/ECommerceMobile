@@ -39,8 +39,12 @@ final bool vistaPrincipal=await Analizar();
       //ChangeNotifierProvider<AuthBlock>.value(value: AuthBlock())
     ],
     child: MaterialApp(
-      localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      supportedLocales: [Locale('eu','ES')],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [Locale('es','ES')],
       locale: locale,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
