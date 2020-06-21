@@ -142,7 +142,8 @@ bool _widgetRegions=true;
                             'tipoRif': row['nacionalidad'],
                             'sex': row['sex'],
                             'name': row['name'],
-                            'birthdate': row['birthdate']
+                            'birthdate': row['birthdate'],
+                            'phone': row['phone']
                           };
 
                           fecha = f.format(DateTime.parse(row['birthdate'])).split(' ')[0];

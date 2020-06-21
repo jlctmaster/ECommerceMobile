@@ -1,3 +1,4 @@
+import 'package:biomercados/biowallet.dart';
 import 'package:biomercados/direccion_habitacion.dart';
 import 'package:biomercados/funciones_generales.dart';
 import 'package:biomercados/home/combo.dart';
@@ -57,6 +58,7 @@ final bool vistaPrincipal=await Analizar();
         '/producto': (context) => Producto(),
         '/': (BuildContext context) => Auth(1),
         '/analizar': (BuildContext context) => (vistaPrincipal==true ? Home() : Auth(1)),
+        '/biowallet': (BuildContext context) => Biowallet(),
         '/home': (BuildContext context) => Home(),
         '/combo': (BuildContext context) => Combo(),
         '/direccion_habitacion': (BuildContext context) => DireccionHabitacion(),

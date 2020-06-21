@@ -127,6 +127,8 @@ if(products[index]['image_web']!=null) {
    String calificado_por_mi=products[index]['calificado_por_mi'];
    int stock=int.parse(products[index]['qty_avaliable']);
    int pedidoMaximo=int.parse(products[index]['qty_max']);
+   
+   int promocion=int.parse(products[index]['promocion']);
 
    return Container(
      color: Colors.white,
@@ -155,6 +157,7 @@ color: Colors.white,
                      calificado_por_mi:calificado_por_mi,
                      stock: stock,
                      pedidoMax: pedidoMaximo,
+                     promocion:promocion,
                      evento: ModeloTime().evento
 
                    // message:'este argumento es extraido de producto.',
@@ -169,7 +172,11 @@ color: Colors.white,
                    //height: 180,
                    width: double.infinity,
 
-                   child: CachedNetworkImage(
+                   child: Stack(
+                     
+                     children: <Widget>[
+                      
+                       CachedNetworkImage(
                    //  color: Colors.white,
                      fit: BoxFit.cover,
                      imageUrl: imagen,
@@ -178,6 +185,34 @@ color: Colors.white,
                      ),
                      errorWidget: (context, url, error) => new Icon(Icons.error),
                    ),
+                    Padding(padding: EdgeInsets.only(top:170),
+                    child: 
+                    Container(alignment: Alignment.center,
+                    
+                    child: promocion==1 ? new Container(
+                      width: 120,
+                      decoration: new BoxDecoration(
+
+                        color: Color(0xffF4901E),
+                        borderRadius: new BorderRadius.only(
+                          topLeft: const Radius.circular(40.0),
+                          topRight: const Radius.circular(40.0),
+                        )
+                      ),
+                      child: Center(child: Text('bio insuperable',style: TextStyle(color: Colors.white),)),
+                    ) : Text(''),
+                    
+                    
+                    
+                    
+                    
+                    )
+                    
+                    
+                    ),
+                    
+                     ],
+                   )
 
                  ),
                  Padding(

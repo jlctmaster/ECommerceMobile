@@ -41,6 +41,16 @@ bool _cargadoTotalPagar=false;
   double total_pay=0.00;
   bool _pagado=false;
   String total_pagar_campo='0';
+  Future getSaldo() async {
+    var url=await UrlLogin('saldo');
+    Map datos = await peticionGet(url);
+    print(datos);
+    if(datos['success']==true){
+      return datos['data'][0]['saldo'];
+    }else{
+      return '0.00';
+    }
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -51,12 +61,8 @@ bool _cargadoTotalPagar=false;
         child:Padding(padding:EdgeInsets.all(15),child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-           Center(child: subTituloLogin("Realice su pago a la siguiente cuenta"),),
-          Divider(),
-          _texto("Banco: ",widget.nombreBanco),
-          _texto("Moneda: ",widget.moneda),
-          _texto("Titular: ",widget.titular),
-          _texto("Datos: ", widget.description ?? '-'),
+          _datosPagos(),
+          
           Divider(),
           //_texto("Monto a pagar: ",widget.description),
           _totalPagar(),
@@ -65,7 +71,24 @@ bool _cargadoTotalPagar=false;
     );
 
   }
+_datosPagos(){
+  if(widget.payment_methods_id==5 || widget.payment_methods_id==10 || widget.payment_methods_id==8 || widget.payment_methods_id==3){
+    return Column(children: <Widget>[
+         Center(child: subTituloLogin("Realice su pago"),),
+      Divider(),  
+      ],);
+  }else{
+    return Column(children: <Widget>[
+        Center(child: subTituloLogin("Realice su pago a la siguiente cuenta"),),
+      Divider(),
+      _texto("Banco: ",widget.nombreBanco),
+      _texto("Moneda: ",widget.moneda),
+      _texto("Titular: ",widget.titular),
+      _texto("Datos: ", widget.description ?? '-'),
 
+    ],);
+  }
+}
   _totalPagar(){
    return FutureBuilder(
       future: _montoPagar(),
@@ -210,9 +233,9 @@ if(status>1) _pagado=true;
     if(pagado){
      return Column(children: <Widget>[
         Icon(Icons.check_circle, size: 50, color: Color(colorVerde),),
-        Text("Gracias por su compra, Le invitamos a conocer todas nuestras categorías y promociones.\n (Inspirados en Servir)", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
+        Text("Gracias por su compra, le invitamos a conocer todas nuestras categorías y promociones.\n (Inspirados en Servir)", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
         Text(
-          "Es posible que algunos de sus pagos estén en proceso de verificación. En el menu Orden o Tracking puede ver en tiempo real el estatus de su orden.",
+          "Es posible que algunos de sus pagos estén en proceso de verificación. En el menu Orden o Tracking puede ver el estatus de su orden.",
           textAlign: TextAlign.center,),
         link("Volver al menu principal", "/home", context)
       ],);
@@ -235,6 +258,9 @@ if(status>1) _pagado=true;
       case 3 :
         return _formularioEfectivo();
         break;
+      case 5:
+        return _formularioBiowallet();
+        break;
       default:
         return _formularioTransferencia();
     }
@@ -245,10 +271,10 @@ _formularioEfectivo(){
       child:Column(
         children: <Widget>[
           Divider(),
-          Center(child: subTituloLogin("¿Cuanto pagara en efectivo?"),),
+          Center(child: subTituloLogin("Ingrese el monto de la suma de sus billetes completo, el saldo excedente sera acreditado en su cuenta biowallet para futuras compras."),),
           Row(children: <Widget>[
             //Expanded(child: Padding(padding:EdgeInsets.only(right: 5), child: _campoTexto_ref('Seriales','Por favor ingrese los seriales de su efectivo','todo',true),),),
-            Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que pagara en efectivo','numero',true)),
+            Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que pagara en efectivo','numero',true,otroTipo: 'efectivo')),
           ],),
 
           _botonRojo()
@@ -256,6 +282,41 @@ _formularioEfectivo(){
         ],
       )
   );
+}
+_formularioBiowallet(){
+  return Form(
+      key: _formKey,
+      child:Column(
+        children: <Widget>[
+          Divider(),
+          Center(child: subTituloLogin("¿Ingrese el monto a pagar?"),),
+          Center(child: _mostrarSaldo(),),
+          Row(children: <Widget>[
+            
+            Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que pagara','thousand',true)),
+          ],),
+
+          _botonRojo()
+
+        ],
+      )
+  );
+}
+_mostrarSaldo(){
+
+return FutureBuilder(
+                  future: getSaldo(),
+                  builder: (context, res) {
+                    if (res.connectionState == ConnectionState.done) {
+                      
+                      return Text("Su saldo disponible: "+formatDolar.format(double.parse(res.data)),style: TextStyle(fontSize: 20),);
+                      
+                    }else {
+                      return Center(child: CircularProgressIndicator(),);
+                    }
+                  },
+                );
+ 
 }
   _formularioTransferencia(){
     return Form(
@@ -346,8 +407,9 @@ Padding(
     );
 
   }
-  _campoTexto_monto(String txt_label,String msj_validar,tipo,obligatorio){
+  _campoTexto_monto(String txt_label,String msj_validar,tipo,obligatorio,{otroTipo='otro'}){
     TextInputType tipoKey;
+ 
     switch(tipo){
       case 'nro_venezuela':
       case 'float':
@@ -367,7 +429,7 @@ Padding(
 
       validator: (value) {
 
-        return validarMonto(tipo, value, obligatorio);
+        return validarMonto(tipo, value, obligatorio,otroTipo: otroTipo);
 
       },
       onSaved: (value) {
@@ -515,11 +577,11 @@ Padding(
                     });
                    _formKey.currentState.save();
                     await _guardarPago(tipo);
-                setState(() {
+                  setState(() {
 
-                  _cargando=false;
-                 // msjb("Pago realizado!",context);
-                });
+                    _cargando=false;
+                  // msjb("Pago realizado!",context);
+                  });
                   }
 
 
@@ -532,12 +594,15 @@ Padding(
   _guardarPago(tipo) async {
 
     String url=await UrlLogin('guardarPago&coins_id='+widget.coins_id.toString()+'&ref=$_ref&amount=$_monto&orders_id='+widget.nroOrden.toString()+'&bank_datas_id='+widget.id.toString());
-    final response = await http.get(url,headers: {"Accept": "application/json"},
-    );
+    Map res=await peticionGet(url);
+    //final response = await http.get(url,headers: {"Accept": "application/json"},
+    //);
     //print(response.body);
    // Map res= jsonDecode(response.body);
-    if (response.statusCode == 200) {
+    if (res['success']==true) {
       msj("Su pago ha sido abonado.");
+    }else{
+      msj(res['msj_general']);
     }
   }
   _montoPagar() async {
@@ -562,13 +627,17 @@ Padding(
     }
   }
 
-  validarMonto(tipo, value, obligatorio) {
+  validarMonto(tipo, value, obligatorio,{otroTipo='otro'}) {
     if(validar(tipo, value, obligatorio)==null) {
       double monto;
       double pagar = double.parse(total_pay.toStringAsFixed(2));
 
       if (value != null && value != '') {
         monto = double.parse(set_formato_moneda(value));
+        if(otroTipo=='efectivo' && monto>pagar){
+          
+          return null;
+        }
         if (monto > pagar || monto == 0) {
           return 'Monto incorrecto.';
         } else {

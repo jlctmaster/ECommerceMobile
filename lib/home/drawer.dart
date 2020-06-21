@@ -39,15 +39,24 @@ child: ListView(
     children: <Widget>[
       Image(image: AssetImage('assets/images/logo_peque.png'), height: 130,),
       Padding(padding: EdgeInsets.all(10),),
-      botonMenu("Inicio",Icons.home,'/home'),
+      ListTile(
+          leading: Icon(Icons.home, color: Color(colorVerdeb), size: 28,),
+          title: Text("Inicio", style: TextStyle(color: Colors.black, fontSize: 17)),
+          trailing: null,
+          onTap: () async {
+            Navigator.pop(context);
+            await delEvento();
+            Navigator.pushNamed(context, '/home');
+          },
+        ),
       botonMenu("Mi perfil",Icons.account_circle,'/miPerfil'),
+      botonMenu("bio wallet",Icons.monetization_on,'/biowallet'),
       botonMenu("Direcciones de entrega",Icons.edit,'/ListadoDirecciones'),
       botonMenu("Dirección de habitación",Icons.edit,'/direccion_habitacion'),
       botonMenu("Cambiar contraseña",Icons.vpn_key,'/cambiarClave'),
       botonMenuCarrito("Carrito de compra",Icons.shopping_cart,'/cart'),
       botonMenuRoute("Preguntas frecuentes",Icons.help_outline,Faq()),
-      Card(
-          child:ListTile(
+      ListTile(
             leading: Icon(Icons.exit_to_app, color: Color(colorVerdeb), size: 28,),
             title: Text('Cerrar sesión', style: TextStyle(color: Colors.black, fontSize: 17)),
 
@@ -58,7 +67,7 @@ child: ListView(
               cerrar_sesion(context);
             },
           )
-      ),
+      ,
     ],
   ),
 
@@ -81,8 +90,7 @@ child: ListView(
     return Text(texto,style: TextStyle(color: Colors.white),);
   }
   Widget botonMenu(String nombre,IconData icono,String vista){
-    return Card(
-        child:ListTile(
+    return ListTile(
           leading: Icon(icono, color: Color(colorVerdeb), size: 28,),
           title: Text(nombre, style: TextStyle(color: Colors.black, fontSize: 17)),
           trailing: null,
@@ -90,12 +98,10 @@ child: ListView(
             Navigator.pop(context);
             Navigator.pushNamed(context, vista);
           },
-        )
-    );
+        );
   }
   Widget botonMenuCarrito(String nombre,IconData icono,String vista){
-    return Card(
-        child:ListTile(
+    return ListTile(
           leading: Icon(icono, color: Color(colorVerdeb), size: 28,),
           title: Text(nombre, style: TextStyle(color: Colors.black, fontSize: 17)),
           trailing: Container(
@@ -111,12 +117,11 @@ child: ListView(
             Navigator.pushNamed(context, vista);
           },
         )
-    );
+    ;
   }
 
   Widget botonMenuRoute(String nombre,IconData icono,Widget vista){
-    return Card(
-        child:ListTile(
+    return ListTile(
           leading: Icon(icono, color: Color(colorVerdeb), size: 28,),
           title: Text(nombre, style: TextStyle(color: Colors.black, fontSize: 17)),
           onTap: (){
@@ -127,7 +132,7 @@ child: ListView(
             );
           },
         )
-    );
+    ;
   }
 
 _categorias(){
