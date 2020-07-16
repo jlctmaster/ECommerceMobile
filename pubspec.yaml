@@ -1,6 +1,6 @@
 name: biomercados
 description: Inspirados en servir.
-version: 1.0.1+2
+version: 1.0.3+5
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
@@ -8,7 +8,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  camera: ^0.5.8+1
+  camera: ^0.5.8+2
   path_provider: ^1.6.8
   path: ^1.6.4
   intl: ^0.16.1

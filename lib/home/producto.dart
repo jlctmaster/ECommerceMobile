@@ -90,6 +90,42 @@ class _productoState extends State<Producto>{
                               )
 
                       ),
+
+                  
+                   
+                    Container(
+                      alignment: Alignment.bottomLeft,
+                    padding: EdgeInsets.all(10),
+                    child: args.promocion==1 ? new Container(
+                      width: 120,
+                      height: 20,
+                      decoration: new BoxDecoration(
+
+                        color: Color(0xffF4901E),
+                        borderRadius: new BorderRadius.all(
+                          Radius.circular(40.0),
+                         
+                        )
+                      ),
+                      child: Center(child: Text('bio insuperable',style: TextStyle(color: Colors.white),)),
+                    ) : Text(''),
+                    
+                    
+                    
+                    
+                    
+                    )
+                    
+                    
+                    ,
+
+
+
+
+
+
+
+
                     ]
                 ),
               ),

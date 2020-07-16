@@ -35,7 +35,7 @@ bool primeraVez=true;
         //mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(padding: const EdgeInsets.only(bottom: 50.0),),
-            topLoginB("Ingresa a tu cuenta"),
+            topLoginB("Ingrese a su cuenta"),
             Center(
               child: Form(
                 key: _formKey,
@@ -116,7 +116,7 @@ bool primeraVez=true;
             ),
             Divider(),
             Text("No tienes una cuenta?"),
-            _a("Registrate aquí",'/registro'),
+            _a("Registrese aquí",'/registro'),
           ]
       ),
     );

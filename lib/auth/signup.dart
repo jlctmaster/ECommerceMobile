@@ -36,7 +36,7 @@ bool autovalidate_calendario=false;
   Future<Null> _selectDate(BuildContext context) async {
     DatePicker.showDatePicker(
         context,
-        minDateTime:DateTime(1960, 8),
+        minDateTime:DateTime(1920, 8),
         maxDateTime:DateTime(2010,12),
         initialDateTime: selectedDate,
         locale: DateTimePickerLocale.es,

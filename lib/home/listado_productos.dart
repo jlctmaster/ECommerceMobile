@@ -176,7 +176,7 @@ color: Colors.white,
                      
                      children: <Widget>[
                       
-                       CachedNetworkImage(
+                       Center(child:CachedNetworkImage(
                    //  color: Colors.white,
                      fit: BoxFit.cover,
                      imageUrl: imagen,
@@ -184,19 +184,20 @@ color: Colors.white,
                          child: CircularProgressIndicator()
                      ),
                      errorWidget: (context, url, error) => new Icon(Icons.error),
-                   ),
-                    Padding(padding: EdgeInsets.only(top:170),
+                   )),
+                    Padding(padding: EdgeInsets.only(top:100),
                     child: 
                     Container(alignment: Alignment.center,
                     
                     child: promocion==1 ? new Container(
                       width: 120,
+                      height: 20,
                       decoration: new BoxDecoration(
 
                         color: Color(0xffF4901E),
-                        borderRadius: new BorderRadius.only(
-                          topLeft: const Radius.circular(40.0),
-                          topRight: const Radius.circular(40.0),
+                        borderRadius: new BorderRadius.all(
+                          Radius.circular(40.0),
+                         
                         )
                       ),
                       child: Center(child: Text('bio insuperable',style: TextStyle(color: Colors.white),)),

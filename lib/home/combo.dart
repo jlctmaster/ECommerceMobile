@@ -130,6 +130,7 @@ class _ComboState extends State<Combo>{
                                 child: ListView.builder(
                                   scrollDirection: Axis.vertical,
                                   shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
                                   // Let the ListView know how many items it needs to build.
                                   itemCount: args.json.length,
                                   // Provide a builder function. This is where the magic happens.

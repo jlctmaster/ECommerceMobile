@@ -271,7 +271,7 @@ _formularioEfectivo(){
       child:Column(
         children: <Widget>[
           Divider(),
-          Center(child: subTituloLogin("Ingrese el monto de la suma de sus billetes completo, el saldo excedente sera acreditado en su cuenta biowallet para futuras compras."),),
+          Center(child: subTituloLogin("Ingrese el monto de la suma de sus billetes, le contactaremos para coordinar su cambio."),),
           Row(children: <Widget>[
             //Expanded(child: Padding(padding:EdgeInsets.only(right: 5), child: _campoTexto_ref('Seriales','Por favor ingrese los seriales de su efectivo','todo',true),),),
             Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que pagara en efectivo','numero',true,otroTipo: 'efectivo')),

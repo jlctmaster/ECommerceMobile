@@ -63,7 +63,7 @@ child: ListView(
             onTap: () async {
               await auth.logout();
               //Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
-              Fluttertoast.showToast(msg: 'Vuelve pronto.',toastLength: Toast.LENGTH_SHORT);
+              Fluttertoast.showToast(msg: 'Vuelva pronto.',toastLength: Toast.LENGTH_SHORT);
               cerrar_sesion(context);
             },
           )

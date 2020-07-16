@@ -28,7 +28,7 @@ class _BiowalletState extends State<Biowallet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBarBio(context, 'Biowallet'),
+        appBar: AppBarBio(context, 'bio wallet'),
 
         body: SafeArea(
           child: 
