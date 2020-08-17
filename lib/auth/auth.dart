@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:biomercados/auth/cambiarClavePublico.dart';
-import 'package:biomercados/auth/confirmarCodRecuperacion.dart';
-import 'package:biomercados/auth/confirmar_registro.dart';
+import '../auth/cambiarClavePublico.dart';
+import '../auth/confirmarCodRecuperacion.dart';
+import '../auth/confirmar_registro.dart';
 import 'signin.dart';
 import 'signup.dart';
 import 'recuperar.dart';

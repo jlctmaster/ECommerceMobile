@@ -79,6 +79,7 @@ class Products extends StatelessWidget {
                                 SmoothStarRating(
                                     allowHalfRating: false,
                                     onRated: (v) {
+                                      
                                     },
                                     starCount: 5,
 //                                rating: product['rating'],

@@ -1,9 +1,9 @@
-import 'package:biomercados/home/listado_productos.dart';
-import 'package:biomercados/modelo.dart';
+import '../home/listado_productos.dart';
+import '../modelo.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/modelo/products.dart';
-import 'package:biomercados/shop/search.dart';
+import '../funciones_generales.dart';
+import '../modelo/products.dart';
+import '../shop/search.dart';
 class Productos extends StatefulWidget {
 final String titulo;
 

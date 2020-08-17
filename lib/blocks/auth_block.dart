@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/models/user.dart';
-import 'package:biomercados/services/auth_service.dart';
+import '../funciones_generales.dart';
+import '../models/user.dart';
+import '../services/auth_service.dart';
 
 class AuthBlock with ChangeNotifier {
   Map resJson;
@@ -99,8 +99,9 @@ class AuthBlock with ChangeNotifier {
     bool res=await _authService.login(userCredential);
     loading = false;
     if(res) {
+      await saveDataNoJson('noLogin', 'false');
       await setUser();
-      await iniciarCarrito();
+      //await iniciarCarrito();
       return true;
     }else{
       return false;

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:biomercados/config.dart';
+import '../config.dart';
 import 'package:http/http.dart' as http;
 import '../funciones_generales.dart';
 

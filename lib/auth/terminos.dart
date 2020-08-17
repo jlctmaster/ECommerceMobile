@@ -1,5 +1,5 @@
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../config.dart';
+import '../funciones_generales.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 class Terminos extends StatelessWidget {
@@ -13,7 +13,7 @@ class Terminos extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: btnAtras3(context),
-        title: Text("Terminos y condiciones de uso",style:TextStyle(color: Color(colorRojo),fontSize: 20,fontWeight: FontWeight.bold))
+        title: Text("Términos y condiciones de uso",style:TextStyle(color: Color(colorRojo),fontSize: 20,fontWeight: FontWeight.bold))
         ,
     ),
 

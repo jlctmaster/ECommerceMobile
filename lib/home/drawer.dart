@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:biomercados/config.dart';
-import 'package:biomercados/home/faq.dart';
-import 'package:biomercados/widget/cant_carrito.dart';
+import '../config.dart';
+import '../home/faq.dart';
+import '../widget/cant_carrito.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/blocks/auth_block.dart';
+import '../blocks/auth_block.dart';
 import 'package:provider/provider.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../funciones_generales.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 class AppDrawer extends StatefulWidget {
@@ -49,25 +49,25 @@ child: ListView(
             Navigator.pushNamed(context, '/home');
           },
         ),
-      botonMenu("Mi perfil",Icons.account_circle,'/miPerfil'),
-      botonMenu("bio wallet",Icons.monetization_on,'/biowallet'),
-      botonMenu("Direcciones de entrega",Icons.edit,'/ListadoDirecciones'),
-      botonMenu("Dirección de habitación",Icons.edit,'/direccion_habitacion'),
-      botonMenu("Cambiar contraseña",Icons.vpn_key,'/cambiarClave'),
-      botonMenuCarrito("Carrito de compra",Icons.shopping_cart,'/cart'),
-      botonMenuRoute("Preguntas frecuentes",Icons.help_outline,Faq()),
-      ListTile(
-            leading: Icon(Icons.exit_to_app, color: Color(colorVerdeb), size: 28,),
-            title: Text('Cerrar sesión', style: TextStyle(color: Colors.black, fontSize: 17)),
 
-            onTap: () async {
-              await auth.logout();
-              //Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
-              Fluttertoast.showToast(msg: 'Vuelva pronto.',toastLength: Toast.LENGTH_SHORT);
-              cerrar_sesion(context);
-            },
-          )
-      ,
+         FutureBuilder(
+          future: validarSesion(mostrarMsj: false),
+          builder: (context, projectSnap) {
+            if (projectSnap.connectionState == ConnectionState.done) {
+              return _botonesLogin(projectSnap.data,auth);
+
+            }else {
+              return CircularProgressIndicator();
+            }
+          },
+
+        ),
+
+     
+     
+      
+
+      
     ],
   ),
 
@@ -82,6 +82,41 @@ child: ListView(
 
 
     );
+  }
+  _menuCerrarSesion(auth){
+      return       ListTile(
+            leading: Icon(Icons.exit_to_app, color: Color(colorVerdeb), size: 28,),
+            title: Text('Cerrar sesión', style: TextStyle(color: Colors.black, fontSize: 17)),
+
+            onTap: () async {
+              await auth.logout();
+              //Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
+              Fluttertoast.showToast(msg: 'Vuelva pronto.',toastLength: Toast.LENGTH_SHORT);
+              cerrar_sesion(context);
+            },
+          );
+
+  }
+  _botonesLogin(isLogin,auth){
+    if(isLogin){
+      return Column(children: <Widget>[
+      botonMenu("Mi perfil",Icons.account_circle,'/miPerfil'),
+      botonMenu("Direcciones de entrega",Icons.edit,'/ListadoDirecciones'),
+      botonMenu("Dirección de habitación",Icons.edit,'/direccion_habitacion'),
+      botonMenu("Cambiar contraseña",Icons.vpn_key,'/cambiarClave'),
+ botonMenuRoute("Preguntas frecuentes",Icons.help_outline,Faq()),
+ _menuCerrarSesion(auth)
+      ],);
+
+    }else{
+      return Column(children: <Widget>[
+ botonMenu("Iniciar sesión",Icons.vpn_key,'/')
+
+      ],);
+
+    }
+
+
   }
   _Titulo(){
     return Center(child: Text("Categorias",style: TextStyle(fontWeight: FontWeight.bold,color: Color(colorRojo)),));

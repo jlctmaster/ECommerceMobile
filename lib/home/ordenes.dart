@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/home/orden.dart';
-import 'package:biomercados/widget/modal.dart';
+import '../config.dart';
+import '../funciones_generales.dart';
+import '../home/orden.dart';
+import '../widget/modal.dart';
 import "package:flutter/material.dart";
 import 'package:http/http.dart' as http;
 class Ordenes extends StatefulWidget{

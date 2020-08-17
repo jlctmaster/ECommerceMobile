@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
+import 'config.dart';
+import 'funciones_generales.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class Tracking extends StatefulWidget {

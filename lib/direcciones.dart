@@ -101,8 +101,8 @@ bool _widgetRegions=true;
                                 ),
                                 Row(
                                   children: <Widget>[
-                                    Expanded(child: Padding(padding:EdgeInsets.only(right: 5), child: _campoTexto("nro_home","Nro de casa/local",'todo',true,widget.nro_home),)),
-                                    Expanded(child: _campoTexto("reference_point","Punto de referencia",'todo',true,widget.reference_point)),
+                                    Expanded(child: Padding(padding:EdgeInsets.only(right: 5), child: _campoTexto("nro_home","Nro. de casa o local",'todo',true,widget.nro_home),)),
+                                    Expanded(child: _campoTexto("reference_point","Punto de referencia/Color casa",'todo',true,widget.reference_point)),
                                   ],
                                 ),
 

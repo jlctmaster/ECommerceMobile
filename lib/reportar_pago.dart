@@ -1,6 +1,6 @@
-import 'package:biomercados/enviar_pago.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/modelo.dart';
+import 'enviar_pago.dart';
+import 'funciones_generales.dart';
+import 'modelo.dart';
 import "package:flutter/material.dart";
 class ReportarPago extends StatefulWidget{
 final int payment_methods_id;

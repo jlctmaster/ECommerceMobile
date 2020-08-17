@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:biomercados/blocks/modelo.dart';
-import 'package:biomercados/camara.dart';
-import 'package:biomercados/take_picture_screen.dart';
-import 'package:biomercados/widget/cedula.dart';
-import 'package:biomercados/widget/sexo.dart';
+import 'blocks/modelo.dart';
+import 'camara.dart';
+import 'take_picture_screen.dart';
+import 'widget/cedula.dart';
+import 'widget/sexo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,6 +69,7 @@ bool _widgetRegions=true;
 
 
   File _image;
+  File _imageB;
 
   final f = new DateFormat('dd-MM-yyyy hh:mm');
   bool primeraVez = false;
@@ -85,10 +86,9 @@ bool _widgetRegions=true;
 
     String base64Image;
     String url= await UrlLogin('actualizarFotoPerfil');
-    var image = await ImagePicker.pickImage(source: ImageSource.camera,maxWidth: 500,
-      maxHeight: 500,);
-    if(image!=null) {
-      base64Image = base64Encode(image.readAsBytesSync());
+    await _showSelectionDialog(context);
+    if(_imageB!=null) {
+      base64Image = base64Encode(_imageB.readAsBytesSync());
       //Map res=await upload("fotoPerfil",url,base64Image);
       Map res = await peticionPost(url, {"image": base64Image});
       print(res['data']);
@@ -99,11 +99,39 @@ bool _widgetRegions=true;
 
     setState(() {
       cargandoImagen=false;
-      _image = image;
+      _image = _imageB;
 
     });
   }
-
+Future<bool> _showSelectionDialog(context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text("Seleccione su foto de perfil:"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text("Galeria"),
+                      onTap: () async {
+                            _imageB= await ImagePicker.pickImage(source: ImageSource.gallery,maxWidth: 500,maxHeight: 500,);
+                            Navigator.of(context).pop();
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(14.0)),
+                    GestureDetector(
+                      child: Text("Camara"),
+                      onTap: () async {
+                        _imageB= await ImagePicker.pickImage(source: ImageSource.camera,maxWidth: 500,maxHeight: 500,);
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
   upload(String fileName,url,base64Image) async {
     http.post(url, body: {
       "image": base64Image,

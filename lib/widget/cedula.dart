@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../funciones_generales.dart';
 class Cedula extends StatefulWidget {
   final Map row;
   final ValueChanged<Map> onChanged;

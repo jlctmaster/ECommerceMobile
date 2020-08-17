@@ -1,4 +1,4 @@
-import 'package:biomercados/funciones_generales.dart';
+import '../funciones_generales.dart';
 import 'package:flutter/material.dart';
 class Recordar extends StatefulWidget {
   final ValueChanged<bool> onChanged;

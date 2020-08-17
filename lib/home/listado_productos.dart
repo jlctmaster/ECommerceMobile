@@ -1,9 +1,11 @@
-import 'package:biomercados/modelo.dart';
+import 'package:villaspark/widget/add_carrito.dart';
+
+import '../modelo.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../funciones_generales.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:biomercados/home/rating.dart';
-import 'package:biomercados/modelo/products.dart';
+import '../home/rating.dart';
+import '../modelo/products.dart';
 import '../config.dart';
 class ListadoProductos extends StatefulWidget {
 final String tipoListado;
@@ -185,6 +187,8 @@ color: Colors.white,
                      ),
                      errorWidget: (context, url, error) => new Icon(Icons.error),
                    )),
+
+/* //BIO INSUPERABLE
                     Padding(padding: EdgeInsets.only(top:100),
                     child: 
                     Container(alignment: Alignment.center,
@@ -200,7 +204,7 @@ color: Colors.white,
                          
                         )
                       ),
-                      child: Center(child: Text('bio insuperable',style: TextStyle(color: Colors.white),)),
+                      child: Center(child: Text('Promoción',style: TextStyle(color: Colors.white),)),
                     ) : Text(''),
                     
                     
@@ -211,6 +215,16 @@ color: Colors.white,
                     
                     
                     ),
+
+*/
+
+Padding(padding: EdgeInsets.only(top:90,right: 0),
+                    child: 
+                    AddCarrito(id: id,stock:stock,pedidoMaximo:pedidoMaximo)
+),
+
+
+
                     
                      ],
                    )
@@ -273,4 +287,32 @@ color: Colors.white,
 
   }
 
+}
+
+class CircleButton extends StatelessWidget {
+  final GestureTapCallback onTap;
+  final IconData iconData;
+
+  const CircleButton({Key key, this.onTap, this.iconData}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double size = 50.0;
+
+    return new InkResponse(
+      onTap: onTap,
+      child: new Container(
+        width: size,
+        height: size,
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        child: new Icon(
+          iconData,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
 }

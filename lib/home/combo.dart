@@ -1,11 +1,13 @@
 import 'dart:convert';
-import 'package:biomercados/blocks/auth_block.dart';
-import 'package:biomercados/modelo/combos.dart';
+import 'package:villaspark/widget/icono_carrito.dart';
+
+import '../blocks/auth_block.dart';
+import '../modelo/combos.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/home/galeria.dart';
+import '../config.dart';
+import '../funciones_generales.dart';
+import '../home/galeria.dart';
 import 'package:provider/provider.dart';
 class Combo extends StatefulWidget {
   @override
@@ -25,8 +27,8 @@ class _ComboState extends State<Combo>{
         leading: leadingBio(context),
         backgroundColor: colorAppBarBio(),
         actions: <Widget>[
-
-          iconoCarrito(context,true),
+//en true el actualizar
+          IconoCarrito(),
         ],
       ),
       body: SafeArea(

@@ -1,7 +1,7 @@
-import 'package:biomercados/blocks/auth_block.dart';
+import '../blocks/auth_block.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../funciones_generales.dart';
 import 'package:provider/provider.dart';
 class AgregarProducto extends StatefulWidget {
   final double precioDolar;
@@ -40,31 +40,16 @@ class _AgregarProductoState extends State<AgregarProducto> {
     return FutureBuilder(
       future: proveedor.getCarritob(),
       builder: (context, obj) {
-       // if (obj.connectionState == ConnectionState.done) {
-         // if(productos!=null){
-           // obj.data['productos']=jsonEncode(productos);
-        //  }
         _stock=widget.stock-_cant;
         _pedidoMax=widget.pedidoMax;
           if(cargado==false) {
             if (obj.connectionState == ConnectionState.done) {
               if (obj.data['productos'] != null) {
-              //if (obj.data['productos'] ?? false) {
-              //print("producto lleno");
-            //  print(obj.data['productos']);
-              // productos=jsonDecode(obj.data['productos']);
-              // int prueba=obj.data['productos'][widget.id.toString()];
-              //print("consultando "+widget.id.toString()+" resultado: $prueba");
-              // _stock=widget.stock-_cant;
               if (obj.data['productos'][widget.id.toString()] != null) {
                 _cant = obj.data['productos'][widget.id.toString()];
-               // print("La nueva cantidad es: $_cant");
-                // setState(() {
 
                 _dolar = formatDolar.format((widget.precioDolar * _cant));
                 _bolivar = formatBolivar.format((widget.precioBolivar * _cant));
-
-                //});
               }
               } else {
               print("producto NULO");

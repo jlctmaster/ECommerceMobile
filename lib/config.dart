@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-import 'package:biomercados/funciones_generales.dart';
+import 'funciones_generales.dart';
 
 
-//const String BASE_URL = 'http://bio.frontuari.net';
-//const String BASE_URL = 'http://10.10.50.110';
-//const String BASE_URL = 'http://192.168.0.110';
-//const String BASE_URL = 'http://192.168.43.91';
-const String BASE_URL = 'http://199.188.204.152';
+
+const String BASE_URL = 'https://villasparkmarket.com';
+//const String BASE_URL = 'http://192.168.0.105';
 const String BASE_URL_IMAGEN="$BASE_URL/storage/"; 
 //const String BASE_URL = 'http://10.0.1.112';
 
@@ -24,7 +22,11 @@ Future<String> UrlLogin(String uri) async {
     return "$BASE_URL/api_rapida.php?id_sesion=0&evento='uuuuu'";
   }
 }
+String UrlNoLogin(String uri) {
 
+      return "$BASE_URL/api_rapida.php?evento=$uri";
+
+}
 getUser() async {
   String user = await getData('user');
   if (user != null) {

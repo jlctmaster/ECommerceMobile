@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/pagar.dart';
-import 'package:biomercados/tracking.dart';
-import 'package:biomercados/widget/btn_calificar_order.dart';
-import 'package:biomercados/widget/rating_order.dart';
+import '../config.dart';
+import '../funciones_generales.dart';
+import '../pagar.dart';
+import '../tracking.dart';
+import '../widget/btn_calificar_order.dart';
+import '../widget/rating_order.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
@@ -128,44 +128,47 @@ labelStyle: TextStyle(fontSize: 14),
           //msj(rate[i]['id']);
           int id_rate = int.parse(rate[i]['id']);
           _rate = double.parse(rate[i]['rate']);
-          if (id_rate == 1) break;
+          if (id_rate == 2) break;
         }
 
         for (var i = 0; i < res.length; i++) {
           print(res[i]['price']);
-          _totalProductoB[i] = res[i]['price'] * res[i]['cant'];
-          _totalProductoBConFormato[i] =
-              formatBolivar.format(_totalProductoB[i]);
-          totalB += _totalProductoB[i];
-
-          _totalProductoD[i] = _totalProductoB[i] / _rate;
+          _totalProductoD[i] =(res[i]['price'] * res[i]['cant']);
           _totalProductoDConFormato[i] = formatDolar.format(_totalProductoD[i]);
           totalD += _totalProductoD[i];
+
+
+          _totalProductoB[i] =  _totalProductoD[i]* _rate;
+          _totalProductoBConFormato[i] = formatBolivar.format(_totalProductoB[i]);
+          totalB += _totalProductoB[i];
+
+
+
         }
         _totalDolaresConFormato =
-            formatDolar.format(double.parse(resb['total_pay']) / _rate);
+            formatDolar.format(double.parse(resb['total_pay']));
         _totalBolivaresConFormato =
-            formatBolivar.format(double.parse(resb['total_pay']));
+            formatBolivar.format(double.parse(resb['total_pay'])*_rate);
 
-        exentoB = formatBolivar.format(double.parse(resb['exento']));
-        biB = formatBolivar.format(double.parse(resb['bi']));
+        exentoB = formatBolivar.format(double.parse(resb['exento']) * _rate);
+        biB = formatBolivar.format(double.parse(resb['bi'])*_rate);
         sub_total_productosB =
-            formatBolivar.format(double.parse(resb['sub_total']));
+            formatBolivar.format(double.parse(resb['sub_total'])*_rate);
         total_transportsB =
-            formatBolivar.format(double.parse(resb['total_transport']));
-        subTotalB = formatBolivar.format(double.parse(resb['sub_total']) +
-            double.parse(resb['total_transport']));
-        totalTaxB = formatBolivar.format(double.parse(resb['total_tax']));
+            formatBolivar.format(double.parse(resb['total_transport'])* _rate);
+        subTotalB = formatBolivar.format((double.parse(resb['sub_total']) +
+            double.parse(resb['total_transport']))* _rate);
+        totalTaxB = formatBolivar.format(double.parse(resb['total_tax'])*_rate);
 
-        exentoD = formatDolar.format(double.parse(resb['exento']) / _rate);
-        biD = formatDolar.format(double.parse(resb['bi']) / _rate);
+        exentoD = formatDolar.format(double.parse(resb['exento']));
+        biD = formatDolar.format(double.parse(resb['bi']));
         sub_total_productosD =
-            formatDolar.format(double.parse(resb['sub_total']) / _rate);
+            formatDolar.format(double.parse(resb['sub_total']) );
         total_transportsD =
-            formatDolar.format(double.parse(resb['total_transport']) / _rate);
+            formatDolar.format(double.parse(resb['total_transport']));
         subTotalD = formatDolar.format((double.parse(resb['sub_total']) +
-            double.parse(resb['total_transport'])) / _rate);
-        totalTaxD = formatDolar.format(double.parse(resb['total_tax']) / _rate);
+            double.parse(resb['total_transport'])) );
+        totalTaxD = formatDolar.format(double.parse(resb['total_tax']));
         return resb;
       }
     }else{
@@ -197,7 +200,7 @@ labelStyle: TextStyle(fontSize: 14),
                   ],
                 ),
                 Text("Dirección de entrega: " +
-                    (data['address'] ?? "Retirar en tienda Biomercados")),
+                    (data['address'] ?? "Retirar en tienda Villas Park Market")),
               ],
             ),
           )

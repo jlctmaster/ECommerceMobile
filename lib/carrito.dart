@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'package:biomercados/modelo.dart';
-import 'package:biomercados/blocks/auth_block.dart';
-import 'package:biomercados/blocks/modelo.dart';
-import 'package:biomercados/direcciones.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/hora_entrega.dart';
-import 'package:biomercados/widget/modal_orden.dart';
+import 'modelo.dart';
+import 'blocks/auth_block.dart';
+import 'blocks/modelo.dart';
+import 'direcciones.dart';
+import 'funciones_generales.dart';
+import 'hora_entrega.dart';
+import 'widget/modal_orden.dart';
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -63,6 +63,7 @@ bool cargadoArgumento=false;
   }
 
   void _toggleTab() {
+    
     _tabIndex = _tabController.index + 1;
     _tabController.animateTo(_tabIndex);
   }
@@ -76,7 +77,7 @@ bool cargadoArgumento=false;
 
   @override
   Widget build(BuildContext context) {
-
+ final proveedor = Provider.of<AuthBlock>(context);
     if(cargadoArgumento==false) {
       cargadoArgumento=true;
       actualizar_pagina_anterior = ModalRoute
@@ -87,7 +88,7 @@ bool cargadoArgumento=false;
     }
 
 
-    final proveedor = Provider.of<AuthBlock>(context);
+ 
     return DefaultTabController(
         length: 2,
         child: new Scaffold(
@@ -131,7 +132,7 @@ bool cargadoArgumento=false;
                   if (projectSnap.hasError)
                     return new Text('Error: ${projectSnap.error}');
                   else
-                    return cargarCarrito(projectSnap.data);
+                    return cargarCarrito(projectSnap.data,proveedor);
               }
             },
           )
@@ -155,7 +156,7 @@ bool cargadoArgumento=false;
   }
 
 
-  Widget cargarCarrito(data){
+  Widget cargarCarrito(data,proveedor){
   if(data['vacio']) {
     msj("Su carrito se encuentra vacío");
 //Navigator.canPop(context);
@@ -200,6 +201,8 @@ bool cargadoArgumento=false;
                   // Provide a function that tells the app
                   // what to do after an item has been swiped away.
                   onDismissed: (direction) async {
+                                          
+                      proveedor.notifyListeners();
                     await setCarrito(
                         int.parse(item['id']), 0);
                     Scaffold.of(context)
@@ -213,6 +216,7 @@ bool cargadoArgumento=false;
                       msj("Carrito vaciado.");
                       Navigator.pushReplacementNamed(context, '/home');
                     }else {
+
                       setState(() {
 
                       });
@@ -451,6 +455,7 @@ void _showAlert(String value ){
 
 }
   Future<Map> _listarProductosCarrito() async {
+  
       Map res=Map();
       res['vacio']=true;
       Map carrito = await getCarrito();
@@ -462,6 +467,7 @@ void _showAlert(String value ){
 
         carrito['productos'].forEach((index, value){
           if(value>0){
+          
             res['vacio']=false;
           }
         });
@@ -508,8 +514,8 @@ void _showAlert(String value ){
 
   }
   _generarListaCarrito(productos) async {
-    _precioEnvio();
-    String url=await UrlLogin('listarProductosCarrito&json=$productos');
+    //await _precioEnvio();
+    String url=UrlNoLogin('listarProductosCarrito&json=$productos');
     print(url);
     Map res=await peticionGetZlib(url);
 
@@ -521,6 +527,7 @@ void _showAlert(String value ){
     }
   }
   _listadoDeDirecciones(){
+    
     DateTime today = new DateTime.now();
     DateTime fiftyDaysAgo = today.add(new Duration(hours: 3));
     return Column(
@@ -535,10 +542,10 @@ void _showAlert(String value ){
         Padding( padding: EdgeInsets.only(left:4,right: 4),
           child: ListTile(
 
-            title: Text("Retirar en zona pick up",style: TextStyle(fontWeight: FontWeight.bold),),
+            title: Text("Retirar en tienda VP Market",style: TextStyle(fontWeight: FontWeight.bold),),
 
             subtitle:Container(
-                child: Text("Biomercados Mañongo, vía de servicio paralela a la autopista, Entre dito park y tienda daka, Carabobo, Venezuela.")
+                child: Text("Villas Park Market, Av. Circunvalación, Residencias Villas Park, Local 05 PB.")
           ),
 
             trailing:
@@ -576,20 +583,55 @@ void _showAlert(String value ){
 
               child: Column(children: <Widget>[
 
-                Center(child: a(context,"Agregar nueva dirección","/direcciones"),),
-                Row(children: <Widget>[Text("Hora aprox. de entrega: ",style: TextStyle(fontSize: 16),),Expanded(child: HoraEntrega())],),
+                Center(child: InkWell(
+                    child: Text("Agregar nueva dirección", style: TextStyle(fontSize:18,fontWeight: FontWeight.bold ,color: Color(colorVerde))),
+                      onTap: () async{
+                        if(await validarSesion()){
+                        Navigator.pushNamed(context, "/direcciones");
+                        }
+
+                      },
+                    )),
+
+              
+                Row(children: <Widget>[Text("Hora aprox. de entrega: ",style: TextStyle(fontSize: 16),),Expanded(
+                  child: HoraEntrega()
+                  )],),
     ],)
 
         ),
+        FutureBuilder(
+          future:  _precioEnvio(),
+          builder: (context, projectSnap) {
+            if (projectSnap.connectionState == ConnectionState.done) {
+              return _recargoEnvio();
 
+            }else {
+              return CircularProgressIndicator();
+            }
+          },
 
-        _recargoEnvio(),
+        ),
+       
+        
 
 
 
 
         Padding(padding: EdgeInsets.only(bottom:10),),
-        _botonPagar()
+         FutureBuilder(
+          future: validarSesion(mostrarMsj: false),
+          builder: (context, projectSnap) {
+            if (projectSnap.connectionState == ConnectionState.done) {
+              return _botonPagar(projectSnap.data);
+
+            }else {
+              return CircularProgressIndicator();
+            }
+          },
+
+        ),
+      
         //_botonContinuar()
 
       ],);
@@ -660,7 +702,9 @@ void _showAlert(String value ){
         onChanged: (val) {
           print("Radioss $val");
           _recargo=true;
+
           setSelectedRadio(val);
+
         },
       )
       ,
@@ -674,25 +718,28 @@ void _showAlert(String value ){
       },
     );
   }
-  _botonPagar(){
+  _botonPagar(data)  {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10, bottom: 10),
       child: ButtonTheme(
         buttonColor: Theme.of(context).primaryColor,
         minWidth: double.infinity,
         height: 40.0,
-        child: RaisedButton(
+        child:  RaisedButton(
           onPressed:() async {
-            _showAlert("A partir de este momento no podrá modificar su carrito, ¿está seguro de continuar?");
+            data ? _showAlert("A partir de este momento no podrá modificar su carrito, ¿está seguro de continuar?") : Navigator.pushNamed(context, '/');
           },
           child: Text(
-            "Procesar orden y pagar",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
+                  data ? "Procesar orden y pagar" : "Iniciar sesión o registrarme para continuar",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
         ),
       ),
     );
   }
+
+
+
   _botonContinuar(){
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10, bottom: 10),
@@ -718,7 +765,7 @@ void _showAlert(String value ){
   }
 
 
-_precioEnvio() async{
+  _precioEnvio() async{
 
   Map res=await ModeloTime().envio();
 
@@ -728,9 +775,10 @@ _precioEnvio() async{
 
     double peso_cargado=peso_max;
     int multiplo_peso=1;
-    print("PESO"+_totalPeso.toString());
+    print("PESO"+_totalPeso.toString()+" "+peso_cargado.toString());
     while(_totalPeso>peso_cargado) {
       multiplo_peso++;
+      print(multiplo_peso);
       //if (_totalPeso > peso_max) {
         peso_cargado+=(peso_max+peso_cargado);
      // }
@@ -738,15 +786,29 @@ _precioEnvio() async{
 
       _varprecioEnvio=formatBolivar.format(double.parse(res['data'][0]['precio_b'])*multiplo_peso);
       _varprecioEnvioD=formatDolar.format(double.parse(res['data'][0]['precio_d'])*multiplo_peso);
+      print(_varprecioEnvio);
   }else{
     msj(res['msj_general']);
   }
+  return true;
 }
   _recargoEnvio() {
+    print("MOSTRANDO PRECIO ENVIO");
+   
       if(_recargo) {
-        return Text("Costo del envío: $_varprecioEnvioD / "+_varprecioEnvio,style: TextStyle(fontSize: 20),);
+         
+        return Row(
+children: [
+Expanded(child:Text("Costo del envío: $_varprecioEnvioD / "+_varprecioEnvio,style: TextStyle(fontSize: 18,),textAlign: TextAlign.center ,)),
+IconButton(onPressed: (){setState(() {});}, icon: Icon(Icons.replay))
+//GestureDetector( onTap: () {setState(() {});}, child: Icon(Icons.replay) ) 
+
+],
+
+        );
       }else{
         return Text("");
       }
   }
+  
 }

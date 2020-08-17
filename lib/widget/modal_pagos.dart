@@ -19,7 +19,7 @@ class _modalState extends State<ModalPagos> {
 
     return new AlertDialog(
       title: new Text('Condiciones para realizar pagos',style: TextStyle(color: Colors.green),),
-      content: new Text("*Para realizar pagos combinados de efectivo con otros métodos de pago, debe seleccionar primero el método de pago efectivo.\n*Los pagos en efectivo deben realizarse con montos exactos y para el monto diferencial debe seleccionar otro método de pago.\n*Puede combinar un máximo de dos pagos.\n*Los pagos por tarjeta de crédito, deben ser procesadas por una sola tarjeta de crédito.",
+      content: new Text("Puede combinar 2 metodos de pago.\nLos pagos en dólares deben realizarse solo por nuestra tienda VP Market.",
         style: new TextStyle(fontSize: 16.0),textAlign: TextAlign.justify,),
       actions: <Widget>[
         new FlatButton(onPressed: () async {

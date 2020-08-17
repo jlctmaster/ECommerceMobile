@@ -1,5 +1,5 @@
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../config.dart';
+import '../funciones_generales.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 class Tdd extends StatelessWidget {

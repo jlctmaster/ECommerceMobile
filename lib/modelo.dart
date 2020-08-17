@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
+import 'config.dart';
+import 'funciones_generales.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
@@ -47,7 +47,7 @@ class ModeloTime{
 
       titulo = await getTitulo();
       evento = await getEvento();
-      url = await UrlLogin(evento);
+      url = await UrlNoLogin(evento);
       if(evento=='listarFavoritos') {
         res = await peticionGetZlib(url);
       }else {
@@ -65,7 +65,7 @@ class ModeloTime{
   }
   Future listarPublicidad(String tipo) async{
     evento='listarPublicidad&tipo='+tipo;
-    url=await UrlLogin(evento);
+    url=await UrlNoLogin(evento);
     await procesarEvento('get', 120);
     return res;
   }
@@ -94,14 +94,18 @@ class ModeloTime{
       case 'ia':
         evento='listarProductosIA';
         break;
+      case 'promocion':
+        evento='listarProductosPromocion';
+      break;
       default:
         titulo = await getTitulo();
         evento = await getEvento();
     }
-
-    url = await UrlLogin(evento);
+    url = UrlNoLogin(evento);
+    
 
     if(evento=='listarFavoritos') {
+      url = await UrlLogin(evento);
       res = await peticionGetZlib(url);
 
     }else {
@@ -114,7 +118,7 @@ class ModeloTime{
 
   horasDisponiblesEntrega() async {
     evento='horasDisponiblesEntrega';
-    url=await UrlLogin(evento);
+    url=UrlNoLogin(evento);
     await procesarEvento('get', 120);
     if (res['success']==true) {
       return res['data'];
@@ -149,7 +153,7 @@ class ModeloTime{
   }
   envio() async {
     evento='recargoEnvio';
-    url=await UrlLogin(evento);
+    url=UrlNoLogin(evento);
     await procesarEvento('get', 240);
     return res;
   }

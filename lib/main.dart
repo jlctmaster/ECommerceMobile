@@ -1,7 +1,11 @@
-import 'package:biomercados/biowallet.dart';
-import 'package:biomercados/direccion_habitacion.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/home/combo.dart';
+import 'dart:convert';
+
+import 'biowallet.dart';
+import 'blocks/nuevo_proveedor.dart';
+import 'config.dart';
+import 'direccion_habitacion.dart';
+import 'funciones_generales.dart';
+import 'home/combo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,19 +29,18 @@ import 'home/producto.dart';
 import 'listadoDirecciones.dart';
 import 'mi_perfil.dart';
 
-
 Future<void> main() async{
   
   
   WidgetsFlutterBinding.ensureInitialized();
   final Locale locale = Locale('eu','ES'); //estaba solo en: en
-final bool vistaPrincipal=await Analizar();
+
+//final bool vistaPrincipal=await Analizar();
   runApp(
     Phoenix(child:
   MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthBlock()),
-      //ChangeNotifierProvider<AuthBlock>.value(value: AuthBlock())
     ],
     child: MaterialApp(
       localizationsDelegates: [
@@ -57,7 +60,8 @@ final bool vistaPrincipal=await Analizar();
       routes: <String, WidgetBuilder>{
         '/producto': (context) => Producto(),
         '/': (BuildContext context) => Auth(1),
-        '/analizar': (BuildContext context) => (vistaPrincipal==true ? Home() : Auth(1)),
+        '/analizar': (BuildContext context) => AnalizarTodo(context),
+        //'/analizar': (BuildContext context) => (vistaPrincipal==true ? Home() : Auth(1)),
         '/biowallet': (BuildContext context) => Biowallet(),
         '/home': (BuildContext context) => Home(),
         '/combo': (BuildContext context) => Combo(),
@@ -89,15 +93,145 @@ final bool vistaPrincipal=await Analizar();
      );
 
 }
-Analizar() async {
-  String data= await getData('user');
-  if(data!=null) {
-    return true;
-  }else{
-    return false;
-  }
+
+
+AnalizarTodo(context){
+return FutureBuilder(
+                  future: Analizar(),
+                  builder: (context, res) {
+                    if (res.connectionState == ConnectionState.done) {
+                      if(res.data){
+                        return Home();
+                      }else{
+                        return _cargandoInicio(false,context);
+                      }
+                      
+                      
+                    }else {
+                      return _cargandoInicio(true,context);
+                     
+                    }
+                  },
+                );
+
 }
 
+_cargandoInicio(tipo,context){
+return Scaffold(
+                            body: Column(children: <Widget>[
+                              Padding(padding: EdgeInsets.only(top:100,bottom: 50),
+                              child: Center(child: Image(
+                                  image: AssetImage("assets/images/logo_peque.png")
+                                  ),),
+                              
+                              )
+                            ,
+                            Center(child: tipo ? CircularProgressIndicator() : RaisedButton(onPressed: (){ Navigator.pushReplacementNamed(context, '/analizar'); },child: Text("Reintentar"),),),
+                            Padding(padding: EdgeInsets.only(top:50) ),
+                            Center(child: Text("Supermercado Online \n Acarigua - Araure.",textAlign: TextAlign.center,),),
+
+
+                            ],),
+                      );
+
+}
+
+Analizar() async {
+ 
+  String data= await getData('user');
+ // print("USUARIO: "+data);
+  if(data!=null) {
+
+    var evento='verificarSesion';
+    var url=await UrlLogin(evento);
+    var res= await peticionGet(url);
+  
+    print(res);
+    if(res['success']!=null) { // si es true es porque no esta iniciada la sesion
+      if (res['success']) {
+          var datab= await getData('recuerdo');
+          if(datab!=null){
+            Map resData=jsonDecode(datab);
+            print(datab);
+            if(resData['si']==true){
+              print(datab);
+              String url=UrlNoLogin('&evento=theBest&email='+resData['correo']+'&password='+resData['clave']);
+              print(url);
+                Map resh=await peticionGetZlib(url);
+            
+                print(resh);
+                if(resh['success']==true){
+                    await saveDataNoJson('noLogin', 'false');
+                      
+                          await saveData('user', resh['data']['usuario']['data']);
+                          await setData(resh['data']);
+                        
+                        
+                    return true;
+
+                }else{
+                  await saveDataNoJson('noLogin', 'true');
+                  return true;    
+                }
+            }else{
+              await saveDataNoJson('noLogin', 'true');
+              return true;            
+            }
+          }
+           
+         await saveDataNoJson('noLogin', 'true');
+         return true;
+      } else {
+       
+         await saveDataNoJson('noLogin', 'false');
+        return true;
+      }
+    }
+
+
+
+
+
+
+
+    
+  }else{
+    
+    bool res=await loginNoUser();
+    if(res){
+    await saveDataNoJson('noLogin', 'true');
+    await iniciarCarrito();
+      return true;
+    }else{
+      return false;
+    }
+
+    
+  }
+}
+  Future<bool> loginNoUser() async {
+    //var status = await Permission.storage.status;
+
+    Map res=Map();
+    String url='$BASE_URL/api_rapida.php?evento=loginNoUser';
+    res=await peticionGetZlib(url);
+
+    if(res['success']==true){
+      await setData(res['data']);
+      return true;
+    }else{
+      msj(res['msj_general']);
+      return false;
+    }
+
+  }
+  setData(Map value) async {
+    value.forEach(await actualizarTodo);
+  }
+
+  void actualizarTodo(key, value) async{
+    await saveData(key,value);
+  }
 class Prueba{
 
   String _variable="inicio";

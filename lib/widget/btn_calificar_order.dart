@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:biomercados/widget/rating_order.dart';
-import 'package:biomercados/config.dart';
+import '../widget/rating_order.dart';
+import '../config.dart';
 import 'package:flutter/material.dart';
 
 import '../funciones_generales.dart';

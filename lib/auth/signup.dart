@@ -1,12 +1,12 @@
-import 'package:biomercados/auth/terminos.dart';
+import '../auth/terminos.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/models/user.dart';
-import 'package:biomercados/blocks/auth_block.dart';
+import '../models/user.dart';
+import '../blocks/auth_block.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../funciones_generales.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 class SignUp extends StatefulWidget {
   @override
@@ -424,7 +424,7 @@ Row(
             shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(18.0),
             ),
-            color: Color(0xFFe1251b),
+            color: Color(colorRojo),
             textColor: Colors.white,
             child: auth.loading && auth.loadingType == 'register' ? CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -448,7 +448,21 @@ if(user.tipo['birthdate']==''){
                   msj(auth.resJson['msj_general']);
                   userCredential.usernameOrEmail = user.tipo['email'];
                   userCredential.password = user.password;
-                  await auth.login(userCredential);
+                  bool res=await auth.login(userCredential);
+                  if(res){
+                      msj("Bienvenido.");
+                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Home()));
+                      // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Home()));
+                      Navigator.pushReplacementNamed(context, '/home');
+                    //  Navigator.pushNamedAndRemoveUntil(context,'/home', (Route<dynamic> route) => true);
+                  }else{
+                    //msj("Credenciales invalidas.");
+                    setState((){
+                    });
+                  }
+
+
+/*
                   if(auth.isLoggedIn) {
                     setState(() {
                       Navigator.pushReplacementNamed(context, '/home');
@@ -456,7 +470,7 @@ if(user.tipo['birthdate']==''){
                   }else{
                     msj(auth.resJson['msj_general']);
                   }
-
+*/
 
 
 

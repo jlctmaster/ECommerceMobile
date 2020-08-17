@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:biomercados/home/home.dart';
-import 'package:biomercados/home/orden.dart';
-import 'package:biomercados/config.dart';
+import '../home/home.dart';
+import '../home/orden.dart';
+import '../config.dart';
 import 'package:flutter/material.dart';
 
 import '../funciones_generales.dart';

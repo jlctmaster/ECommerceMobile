@@ -1,7 +1,7 @@
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/modelo.dart';
-import 'package:biomercados/reportar_pago.dart';
-import 'package:biomercados/widget/modal_pagos.dart';
+import 'funciones_generales.dart';
+import 'modelo.dart';
+import 'reportar_pago.dart';
+import 'widget/modal_pagos.dart';
 import 'package:flutter/material.dart';
 class Pagar extends StatefulWidget {
   final int nroOrden;
@@ -46,7 +46,7 @@ class _pagar extends State<Pagar>{
       );
       default:
         return Padding(padding:EdgeInsets.all(20),child: Column(children: <Widget>[
-          Text("Disculpe, no hay metodos de pagos disponibles para su orden, debido a su estatus",textAlign: TextAlign.center,style: TextStyle(fontSize: 20),),
+          Text("Disculpe, no hay metodos de pagos disponibles para su orden, su estatus actual es:\n",textAlign: TextAlign.center,style: TextStyle(fontSize: 20),),
           Text(widget.textoStatus, style: TextStyle(fontSize: 20,color:colorStatus(widget.ordenStatus.toString()),),)
 
         ],),);

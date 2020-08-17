@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:biomercados/modelo.dart';
-import 'package:biomercados/modelo/combos.dart';
+import '../modelo.dart';
+import '../modelo/combos.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../funciones_generales.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../config.dart';
 class ListadoCombos extends StatefulWidget {

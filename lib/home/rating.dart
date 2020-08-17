@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
+import '../config.dart';
+import '../funciones_generales.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -53,13 +53,17 @@ class _ratingState extends State<Rating> {
   _estrellas(){
     return SmoothStarRating(
       allowHalfRating: false,
-      onRated: (v) {
-        rating = v;
-        calificarProducto(context,widget.products_id);
-        setState(() {
-          _calificado=true;
-          _miRating=v;
-        });
+      onRated: (v) async{
+        if(await validarSesion()){
+          rating = v;
+          calificarProducto(context,widget.products_id);
+          setState(() {
+            _calificado=true;
+            _miRating=v;
+          });
+        }else{
+          return false;
+        }
       },
       starCount: 5,
       rating: widget.rating,
@@ -73,10 +77,12 @@ class _ratingState extends State<Rating> {
 
     return Row(children: <Widget>[SmoothStarRating(
         allowHalfRating: false,
-        onRated: (v) {
-          setState(() {
-            _miRating=v;
-          });
+        onRated: (v) async{
+          if(await validarSesion()){
+            setState(() {
+              _miRating=v;
+            });
+          }
         },
         starCount: 5,
         rating: rating,

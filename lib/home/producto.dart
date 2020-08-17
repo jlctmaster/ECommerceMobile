@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/home/agregarProducto.dart';
-import 'package:biomercados/home/galeria.dart';
-import 'package:biomercados/home/rating.dart';
-import 'package:biomercados/modelo/products.dart';
-import 'package:biomercados/modelo/favorites.dart';
+import 'package:villaspark/widget/icono_carrito.dart';
+import '../config.dart';
+import '../funciones_generales.dart';
+import '../home/agregarProducto.dart';
+import '../home/galeria.dart';
+import '../home/rating.dart';
+import '../modelo/products.dart';
+import '../modelo/favorites.dart';
 import 'package:http/http.dart' as http;
 class Producto extends StatefulWidget {
   @override
@@ -38,8 +39,8 @@ class _productoState extends State<Producto>{
         leading: leadingBio(context),
         backgroundColor: colorAppBarBio(),
         actions: <Widget>[
-
-          iconoCarrito(context,true),
+//en true el actualizar
+          IconoCarrito(),
         ],
       ),
       body: SafeArea(
@@ -84,8 +85,10 @@ class _productoState extends State<Producto>{
 
                                 child: Icon(Icons.favorite,color: _status_favorite==false ? Colors.grey : Colors.red,) ,
                                 backgroundColor: Colors.white,
-                                onPressed: () {
-                                  guardarFavorito(args.id);
+                                onPressed: () async{
+                                  if(await validarSesion()){
+                                    guardarFavorito(args.id);
+                                  }
                                 },
                               )
 
@@ -257,10 +260,12 @@ void consultarFavorito(int products_id) async {
     objFavorites.products_id=products_id;
     await objFavorites.consultar();
 //ESTABA ASI if(objFavorites.res['data'][products_id.toString()]==true){
+  if(objFavorites.res['success']==true){
     if(objFavorites.res['data'][products_id.toString()]==true){
       setState(() {
         _status_favorite=true;
       });
+    }
     }
     return;
   }

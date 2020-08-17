@@ -1,10 +1,12 @@
 import 'dart:convert';
-import 'package:biomercados/home/ordenes.dart';
+import 'package:villaspark/widget/icono_carrito.dart';
+
+import '../home/ordenes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/home/principal.dart';
-import 'package:biomercados/home/productos.dart';
+import '../funciones_generales.dart';
+import '../home/principal.dart';
+import '../home/productos.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
@@ -45,7 +47,27 @@ String textoBuscador;
     ),
 appBar: AppBar(
 backgroundColor: Colors.white,
-  leading: Padding(padding:EdgeInsets.only(left:7.00),child:Image(image: AssetImage("assets/images/ico2.png"))),
+  leading: Padding(
+    padding:EdgeInsets.only(left:7.00),
+    child: InkWell(
+     
+      onTap: ()async{
+     await delEvento();
+    // Navigator.pushReplacementNamed(context, '/home');
+      //Navigator.pushNamed(context, '/home');
+      setState(() {
+      _selectedIndex = 0;
+    });
+    },
+      
+     
+      child: Image(
+      image: AssetImage("assets/images/ico2.png")
+      ),
+    )
+    
+ 
+    ),
   automaticallyImplyLeading: false,
   elevation: 0,
   // Provide a standard title.
@@ -63,7 +85,7 @@ backgroundColor: Colors.white,
 
               Flexible(
                 child:
-          buscador(),
+                        buscador(),
               ),
 
       InkWell(child: Icon(Icons.search,color: Colors.black45,),onTap: () async {
@@ -85,16 +107,21 @@ backgroundColor: Colors.white,
 
     IconButton(
       icon: Icon(Icons.favorite,color: Color(colorRojo),),
-      onPressed: () {
-        setEvento('listarFavoritos',"Mis Favoritos");
-         setState(() {
-           _selectedIndex=1;
-         });
+      onPressed: () async {
+        if(await validarSesion()){
+            await setEvento('listarFavoritos',"Mis Favoritos");
+            setState(() {
+              _selectedIndex=1;
+            });
+
+        }        
+
       },
       padding: EdgeInsets.only(left:9.00),
     ),
     //
-    iconoCarrito(context,false),
+    
+    IconoCarrito(),
     Builder(
       builder: (context) => IconButton(
         icon: Icon(Icons.menu),
@@ -236,13 +263,19 @@ _actualizarEvento(String evento) {
   });
 }
   Future<void> _onItemTapped(int index) async {
-
+    if(index==2){
+if(!await validarSesion()){
+  return false;
+}
+      
+    }
     if(index==1){
       await setEvento('listarProductos',"Productos");
     }
     if(index==0){
       await delEvento();
     }
+    
     setState(() {
       _selectedIndex = index;
     });

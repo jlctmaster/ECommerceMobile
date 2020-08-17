@@ -52,7 +52,7 @@ bool _btnDireccionesCargando=false;
                 child:Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    topFormularios("Administre las direcciones para sus compras"),
+                    topFormularios("Administre sus direcciones de entrega"),
                     _listadoDeDirecciones(),
 
                   ],

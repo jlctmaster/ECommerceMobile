@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'package:biomercados/home/listado_combos.dart';
-import 'package:biomercados/home/listado_productos.dart';
-import 'package:biomercados/modelo.dart';
+import '../home/listado_combos.dart';
+import '../home/listado_productos.dart';
+import '../modelo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/home/rating.dart';
-import 'package:biomercados/modelo/products.dart';
+import '../funciones_generales.dart';
+import '../home/rating.dart';
+import '../modelo/products.dart';
 import 'package:http/http.dart' as http;
 import '../config.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -22,7 +22,7 @@ class _principalState extends State<Principal> {
 
   @override
   Widget build(BuildContext context) {
-    ModeloTime().verificarSesionN(context);
+    //ModeloTime().verificarSesionN(context);
     return CustomScrollView(
       // Add the app bar and list of items as slivers in the next steps.
         slivers: <Widget>[
@@ -37,19 +37,17 @@ class _principalState extends State<Principal> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   //_tituloConBoton('Categorias','Ver todas','/categorise'),//Titulo antes del scroll
-                 // _textoTituloCentrado('Categorias'),
+                 _textoTituloCentrado('Categorias'),
                   Categorias(),// categorias en scroll lateral
 
 
                   Padding(padding: EdgeInsets.only(top:5),),
+                 
 
-                  _textoTituloCentrado('Mi compra fácil'),
-                    ListadoCombos(),
-                  listaPublicidad('top'),
-
-                  _textoTituloCentrado('Seguro que te gusta'),
-                  ListadoProductos(tipoListado: 'ia',),
-                  listaPublicidad('footer'),
+                  _textoTituloCentrado('Promociones'),
+                  ListadoProductos(tipoListado: 'promocion',),
+                   listaPublicidad('top'),
+                  //listaPublicidad('footer'),
                   //_banner('assets/images/banner-2.png'),
                   //_textoTituloCentrado('Ofertas'),
                 ],
@@ -157,7 +155,8 @@ class _principalState extends State<Principal> {
   }
   Widget _cuadroCategoria(id,name,image){
     return Card(
-      margin: EdgeInsets.zero,
+     
+      
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
@@ -233,7 +232,8 @@ class _principalState extends State<Principal> {
   }
   _textoTituloCentrado(String titulo){
     return Center(
-        child: _textoTitulo(titulo));
+        child: _textoTitulo(titulo)
+        );
   }
   _tituloConBoton(String titulo,String textoBoton,String link){
     return Row(

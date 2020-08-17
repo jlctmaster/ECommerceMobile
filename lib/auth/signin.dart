@@ -1,10 +1,10 @@
-import 'package:biomercados/modelo.dart';
-import 'package:biomercados/widget/recordar.dart';
+import '../modelo.dart';
+import '../widget/recordar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:biomercados/blocks/auth_block.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/models/user.dart';
+import '../blocks/auth_block.dart';
+import '../funciones_generales.dart';
+import '../models/user.dart';
 import 'package:provider/provider.dart';
 class SignIn extends StatefulWidget {
   @override
@@ -35,7 +35,25 @@ bool primeraVez=true;
         //mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(padding: const EdgeInsets.only(bottom: 50.0),),
-            topLoginB("Ingrese a su cuenta"),
+        
+            Column(
+      children: <Widget>[
+
+        logoBio(),
+        Padding(padding: const EdgeInsets.only(bottom: 30.0),),
+        Center(child: 
+      Text("Automercado Online", style: TextStyle(color:Color(colorRojo), fontSize: 22, fontWeight: FontWeight.bold),),
+      
+
+        ),
+        Center(child: 
+      Text("(Acarigua-Araure)", style: TextStyle(color:Color(colorRojo), fontSize: 17, fontWeight: FontWeight.bold),),
+      
+
+        ),
+        Padding(padding: const EdgeInsets.only(bottom:20.0),),
+      ],
+    ),
             Center(
               child: Form(
                 key: _formKey,
@@ -69,7 +87,7 @@ bool primeraVez=true;
                                   shape: new RoundedRectangleBorder(
                                     borderRadius: new BorderRadius.circular(18.0),
                                   ),
-                                  color: Color(0xFFe1251b),
+                                  color: Color(colorRojo),
                                   //color: Colors.red,
                                   textColor: Colors.white,
                                   child: auth.loading && auth.loadingType == 'login' ? CircularProgressIndicator(

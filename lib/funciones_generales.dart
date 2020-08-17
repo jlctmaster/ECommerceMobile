@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:async/async.dart';
-import 'package:biomercados/blocks/auth_block.dart';
-import 'package:biomercados/widget/cant_carrito.dart';
-import 'package:biomercados/widget/cant_carritob.dart';
+import 'blocks/auth_block.dart';
+import 'widget/cant_carrito.dart';
+import 'widget/cant_carritob.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
   int colorVerde=0xff28b67a;
   int colorVerdeb=0xff80bc00;
   int colorAmarillo=0xffeba900;
-  int colorRojo=0xffe1251b;
+  int colorRojo=0xffFF6600;
   btnAtras(context){
     return Transform.rotate(
       angle:  180 * pi/180,
@@ -147,6 +147,20 @@ setRecordarClave(String correo,String clave) async {
     recuerdo['clave']=clave;
     await saveData('recuerdo',recuerdo);
 }
+Future validarSesion({mostrarMsj=true}) async{
+       var noLogin=await getData('noLogin');
+    
+        if(noLogin=='true'){
+          if(mostrarMsj==true){
+            msj("Debe iniciar sesión.");
+          }
+         
+          return false;
+        }else{
+          return true;
+        }
+}
+
 peticionGetZlib(url) async {
   var data;
   try {
@@ -202,6 +216,7 @@ delIdData(key,id) async {
   await saveData(key,l);
   //await storage.setItem(key,jsonEncode(l));
 }
+
 saveData(key,Map nuevaData) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   //await storage.setItem(key,jsonEncode(nuevaData));
@@ -245,58 +260,7 @@ leadingBio(context){
 titleBio(texto){
     return textoTop3(texto);
 }
-iconoCarrito(context,actualizar){
-  final proveedor = Provider.of<AuthBlock>(context);
-    int cant=0;
-  return IconButton(
-color: Color(colorVerde),
-    icon:Stack(children: <Widget>[Icon(Icons.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child:
-    Container(
-        width: 17.0,
-        height: 17.0,
-        // padding: const EdgeInsets.all(3.0),//I used some padding without fixed width and height
-        decoration: new BoxDecoration(
 
-          shape: BoxShape.circle,
-          // You can use like this way or like the below line
-          //borderRadius: new BorderRadius.circular(30.0),
-          color: Color(colorRojo),
-        ),
-        child: Center(child:
-        FutureBuilder(
-            future: proveedor.cantCarrito(),
-            builder: (context, projectSnap) {
-              if(projectSnap.data==0){
-                return Text('');
-              }else {
-                if(projectSnap.data!=null) {
-                  if (int.parse(projectSnap.data) > 0) {
-                    cant = int.parse(projectSnap.data);
-                  } else {
-                    cant = 0;
-                  }
-                }else{
-                  cant=0;
-                }
-                return Text(cant.toString(), style: TextStyle(color: Colors.white,
-                    fontSize: 14.0));
-              }
-            }
-        )) //) You can add a Icon instead of text also, like below.
-      //child: new Icon(Icons.arrow_forward, size: 50.0, color: Colors.black38)),
-    )
-
-    )],),
-    //icon: btnCarrito(true),
-    onPressed: () {
-  if(cant>0) {
-    Navigator.pushNamed(context, '/cart',arguments: actualizar);
-  }else{
-    msj("Su carrito se encuentra vacio..");
-  }
-    },
-  );
-}
 btnCarrito(bool actualizar){
   return Stack(children: <Widget>[Icon(Icons.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child: CantCarrito(actualizar: actualizar,))],);
   //return Icon(Icons.shopping_cart);
@@ -354,6 +318,7 @@ msj(String msj){
       gravity: ToastGravity.CENTER,
       fontSize: 16.0);
 }
+
 msjb(String msj,context){
   Scaffold.of(context)
       .showSnackBar(SnackBar(content: Text(msj)));
@@ -504,11 +469,11 @@ print("Carrito creado");
 }
 iniciarCarrito() async {
   //delCarrito();
-    Map usuario= await getUser();
-    int idUsuario=int.parse(usuario['id']);
+    //Map usuario= await getUser();
+    //int idUsuario=int.parse(usuario['id']);
 
-    print("iniciando carrito para: $idUsuario");
-
+    //print("iniciando carrito para: $idUsuario");
+int idUsuario=1;
   String res= await getData('carrito');
   Map map;
   if(map!=null){

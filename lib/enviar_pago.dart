@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:biomercados/auth/tdc.dart';
-import 'package:biomercados/auth/tdd.dart';
-import 'package:biomercados/config.dart';
-import 'package:biomercados/funciones_generales.dart';
-import 'package:biomercados/home/orden.dart';
+import 'auth/tdc.dart';
+import 'auth/tdd.dart';
+import 'config.dart';
+import 'funciones_generales.dart';
+import 'home/orden.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -74,8 +74,8 @@ bool _cargadoTotalPagar=false;
 _datosPagos(){
   if(widget.payment_methods_id==5 || widget.payment_methods_id==10 || widget.payment_methods_id==8 || widget.payment_methods_id==3){
     return Column(children: <Widget>[
-         Center(child: subTituloLogin("Realice su pago"),),
-      Divider(),  
+        // Center(child: subTituloLogin("Realice su pago"),),
+     // Divider(),  
       ],);
   }else{
     return Column(children: <Widget>[
@@ -120,7 +120,7 @@ _datosPagos(){
 
       if(int.parse(rj[i]['id'])==coins_id){
        // msj(coins_id.toString());
-        return valor/double.parse(rj[i]['rate']);
+        return valor*double.parse(rj[i]['rate']);
       }
     }
   }
@@ -206,7 +206,7 @@ if(status>1) _pagado=true;
   if(double.parse(totalPagar.toStringAsFixed(2))>0 || _pagado==true) {
 
     total_pagar_campo=_formatearMonedaSinSimbolo(totalPagar);
-    return Column(
+    return _pagado!=true ? Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
@@ -218,12 +218,19 @@ if(status>1) _pagado=true;
         //REDONDEO AL SUPERIOR
         Divider(),
         //_textoc("Total a pagar: ",_formatearMoneda(double.parse((totalPagar+0.004).toStringAsFixed(2)))),
-        _textoc("Total a pagar: ", _formatearMoneda(totalPagar)),
+        _textoc("Total a pagar: ", _formatearMoneda(totalPagar)) ,
         //_textoc("Total a pagar: ",(totalPagar+0.004).toStringAsFixed(2)),
         formu(_pagado,cant_pagos),
 
 
       ],
+    ) : Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        
+        Center(child:Text("Pago completado.",style:TextStyle(fontSize:29),)),
+        formu(_pagado,cant_pagos),],
     );
   }else{
     return Center(child: Text("Disculpe, este método de pago no se encuentra disponible para su orden. Esto puede ser debido a que el monto a pagar en la moneda seleccionada es muy bajo.",textAlign:TextAlign.center,style: TextStyle(color: Colors.red),),);
@@ -233,7 +240,7 @@ if(status>1) _pagado=true;
     if(pagado){
      return Column(children: <Widget>[
         Icon(Icons.check_circle, size: 50, color: Color(colorVerde),),
-        Text("Gracias por su compra, le invitamos a conocer todas nuestras categorías y promociones.\n (Inspirados en Servir)", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
+        Text("Gracias por preferirnos, le invitamos a conocer todas nuestras categorías y promociones.", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
         Text(
           "Es posible que algunos de sus pagos estén en proceso de verificación. En el menu Orden o Tracking puede ver el estatus de su orden.",
           textAlign: TextAlign.center,),
@@ -241,7 +248,7 @@ if(status>1) _pagado=true;
       ],);
     }else{
       if(cant_pagos>1){
-        return Center(child:Text("Disculpe, a alcanzado el límite de pagos permitidos. Diríjase a la tienda Biomercados mas cercana.",style: TextStyle(fontSize: 18,color: Colors.red)) ,);
+        return Center(child:Text("Disculpe, a alcanzado el límite de pagos permitidos. Diríjase a la tienda VP Market mas cercana.",style: TextStyle(fontSize: 18,color: Colors.red)) ,);
       }else {
         return _formularios();
       }
@@ -271,7 +278,7 @@ _formularioEfectivo(){
       child:Column(
         children: <Widget>[
           Divider(),
-          Center(child: subTituloLogin("Ingrese el monto de la suma de sus billetes, le contactaremos para coordinar su cambio."),),
+          Center(child: subTituloLogin("Ingrese el monto de la suma de sus billetes, le daremos su cambio en dólares o bolivares. (SOLO DISPONIBLE PARA RETIROS EN NUESTRA TIENDA)"),),
           Row(children: <Widget>[
             //Expanded(child: Padding(padding:EdgeInsets.only(right: 5), child: _campoTexto_ref('Seriales','Por favor ingrese los seriales de su efectivo','todo',true),),),
             Expanded(child: _campoTexto_monto('Ingrese el monto','Por favor ingrese el Monto que pagara en efectivo','numero',true,otroTipo: 'efectivo')),
@@ -333,7 +340,7 @@ return FutureBuilder(
             ],),
 Padding(
   padding: EdgeInsets.only(top:10),
-  child:Text("Biomercados no reembolsara si su pago es superior al total a pagar.",style: TextStyle(color: Colors.red),),
+  child:Text("VP Market no reembolsara si su pago es superior al total a pagar.",style: TextStyle(color: Colors.red),),
 )
 ,
             _botonRojo()
@@ -594,6 +601,7 @@ Padding(
   _guardarPago(tipo) async {
 
     String url=await UrlLogin('guardarPago&coins_id='+widget.coins_id.toString()+'&ref=$_ref&amount=$_monto&orders_id='+widget.nroOrden.toString()+'&bank_datas_id='+widget.id.toString());
+    
     Map res=await peticionGet(url);
     //final response = await http.get(url,headers: {"Accept": "application/json"},
     //);
