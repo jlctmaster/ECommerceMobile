@@ -24,7 +24,8 @@ dependencies:
   cupertino_icons: ^0.1.3
   flutter_typeahead: ^1.8.0
   flutter_phoenix: ^0.1.0
-  flutter_cupertino_date_picker: ^1.0.26+2
+  flutter_cupertino_date_picker:
+    git: https://github.com/daveleenew/flutter-cupertino-date-picker.git
   permission_handler: ^5.0.0+hotfix.4
   flutter_keyboard_visibility: ^0.7.0
   carousel_pro: ^1.0.0
@@ -63,44 +64,7 @@ flutter:
     - assets/i18n/ar.json
     - assets/images/
 
-  fonts:
-    - family: Bree
-      fonts:
-        - asset: assets/fonts/bree/Bree-Regular.woff
-    - family: Lato
-      fonts:
-        - asset: assets/fonts/lato/Lato-Regular.ttf
-        - asset: assets/fonts/lato/Lato-RegularItalic.ttf
-          style: italic
-        - asset: assets/fonts/lato/Lato-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/lato/Lato-BoldItalic.ttf
-          weight: 700
-          style: italic
-        - asset: assets/fonts/lato/Lato-Black.ttf
-          weight: 900
-        - asset: assets/fonts/lato/Lato-BlackItalic.ttf
-          weight: 900
-          style: italic
-        - asset: assets/fonts/lato/Lato-Light.ttf
-          weight: 300
-        - asset: assets/fonts/lato/Lato-LightItalic.ttf
-          weight: 300
-          style: italic
-        - asset: assets/fonts/lato/Lato-Thin.ttf
-          weight: 100
-        - asset: assets/fonts/lato/Lato-ThinItalic.ttf
-          weight: 100
-          style: italic
-    - family: Dubai
-      fonts:
-        - asset: assets/fonts/dubai/Dubai-Regular.ttf
-        - asset: assets/fonts/dubai/Dubai-Light.ttf
-          weight: 300
-        - asset: assets/fonts/dubai/Dubai-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/dubai/Dubai-Medium.ttf
-          weight: 900
+ 
 
 
 

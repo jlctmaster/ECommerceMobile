@@ -594,7 +594,7 @@ void _showAlert(String value ){
                     )),
 
               
-                Row(children: <Widget>[Text("Hora aprox. de entrega: ",style: TextStyle(fontSize: 16),),Expanded(
+                Row(children: <Widget>[Text("Hora de entrega: ",style: TextStyle(fontSize: 15),),Expanded(
                   child: HoraEntrega()
                   )],),
     ],)
