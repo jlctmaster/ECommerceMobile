@@ -19,7 +19,8 @@ class EnviarPago extends StatefulWidget{
   final double rate;
   final int nroOrden;
   final int payment_methods_id;
-  const EnviarPago({Key key, this.id, this.titular, this.description, this.nombreBanco, this.moneda, this.monto, this.coins_id, this.nroOrden, this.rate, this.payment_methods_id}) : super(key: key);
+  final String symbol;
+  const EnviarPago({Key key, this.id, this.titular, this.description, this.nombreBanco, this.moneda, this.monto, this.coins_id, this.nroOrden, this.rate, this.payment_methods_id, this.symbol}) : super(key: key);
 
 
   @override
@@ -140,10 +141,14 @@ _datosPagos(){
     String listo='0';
     switch(coins_id){
       case 1:
-       return formatDolar.format(valor);
+        return formatDolar.format(valor);
+      break;
+      case 2:
+         return formatBolivar.format(valor);
+      
       break;
       default:
-        return formatBolivar.format(valor);
+        return formatDolarSinSimbolo.format(valor)+" "+widget.symbol;
         break;
 
     }
@@ -244,10 +249,10 @@ if(status>1) _pagado=true;
         Text(
           "Es posible que algunos de sus pagos estén en proceso de verificación. En el menu Orden o Tracking puede ver el estatus de su orden.",
           textAlign: TextAlign.center,),
-        link("Volver al menu principal", "/home", context)
+        linkGrande("Volver al menu principal", "/home", context)
       ],);
     }else{
-      if(cant_pagos>1){
+      if(cant_pagos>2){
         return Center(child:Text("Disculpe, a alcanzado el límite de pagos permitidos. Diríjase a la tienda VP Market mas cercana.",style: TextStyle(fontSize: 18,color: Colors.red)) ,);
       }else {
         return _formularios();
@@ -443,13 +448,14 @@ Padding(
         value=set_formato_moneda(value);
        // msj(value);
        // msj(double.parse(value).toString());
-        if(widget.coins_id!='2') {
-          _monto = (double.parse(value) * widget.rate).toString();
-        }else{
+       // if(widget.coins_id!='2') {
+         // msj(widget.rate.toString());
+         // _monto = (double.parse(value) / widget.rate).toString();
+        //}else{
          // msj(formatDolar.format(value));
 
           _monto=value;
-        }
+        //}
 //msj(widget.rate.toString());
         //_monto=_cambiarMonedaNativa(double.parse(value),rateJson).toString();
        //

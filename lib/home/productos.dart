@@ -52,8 +52,10 @@ bool _botonBusqueda=false;
           backgroundColor: Colors.white,
           primary: false,
           actions: <Widget>[
+            
             IconButton(
-              icon: Icon(Icons.remove_red_eye,color: Color(colorVerde),),
+              icon: Icon(Icons.tune,color: Color(colorVerde),),
+
               onPressed: () {
                 if(_botonBusqueda){
                   _botonBusqueda=false;

@@ -93,11 +93,12 @@ class _pagar extends State<Pagar>{
 
       trailing: Icon(Icons.navigate_next),
       onTap: (){
-        showDialog(
+        /*showDialog(
           context: context,
           builder: (_) =>ModalPagos(value:metodo['id'],context: context,onChanged: ir,),
 
-        );
+        );*/
+        ir(metodo['id']);
       //  return ModalPagos();
 
 

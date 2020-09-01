@@ -569,6 +569,15 @@ InkWell link(String texto,String link,context){
     },
   );
 }
+InkWell linkGrande(String texto,String link,context){
+  return InkWell(
+    child: Text(texto, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20 ,color: Colors.green)),
+    onTap: () {
+
+        Navigator.pushNamed(context, link);
+    },
+  );
+}
 
 final formatDolarSinSimbolo = new NumberFormat.simpleCurrency(locale: 'en_US',name:'',decimalDigits: 2);
 final formatDolar = new NumberFormat.simpleCurrency(locale: 'en_US',decimalDigits: 2);

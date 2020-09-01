@@ -85,7 +85,7 @@ class _reportarPagoState extends State<ReportarPago> {
       trailing: Icon(Icons.navigate_next),
       onTap: (){
         Navigator.push(context, MaterialPageRoute(
-          builder: (context) => EnviarPago(payment_methods_id:widget.payment_methods_id,id: int.parse(cuenta['id']),titular: cuenta['titular'],description: cuenta['description'],moneda: cuenta['c_name'],nombreBanco: cuenta['b_name'],coins_id: cuenta['coins_id'],nroOrden: widget.nroOrden,rate: double.parse(cuenta['rate']),),
+          builder: (context) => EnviarPago(payment_methods_id:widget.payment_methods_id,id: int.parse(cuenta['id']),symbol:cuenta['symbol'], titular: cuenta['titular'],description: cuenta['description'],moneda: cuenta['c_name'],nombreBanco: cuenta['b_name'],coins_id: cuenta['coins_id'],nroOrden: widget.nroOrden,rate: double.parse(cuenta['rate']),),
         ),);
 
       },

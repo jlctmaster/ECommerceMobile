@@ -262,7 +262,7 @@ Padding(padding: EdgeInsets.only(top:90,right: 0),
 
                          Row(
                            children: <Widget>[
-                             Rating(rating: rating,nombre: name,calificado_por_mi: calificado_por_mi,products_id: id),
+                            // Rating(rating: rating,nombre: name,calificado_por_mi: calificado_por_mi,products_id: id),
                             // Expanded(child:
                             // stock<1 ? Text("Agotado",style: TextStyle(color: Colors.red),textAlign: TextAlign.right,) : Text('')
                              //  ,)

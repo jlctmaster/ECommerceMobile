@@ -54,7 +54,7 @@ class _modalState extends State<Modal> {
                 builder: (context) =>
                     Orden(id: resOrden.toString(),
                       ordenStatus: 1,
-                      textoStatus: "",),
+                      textoStatus: "",vistaInicial: 1,),
                 // builder: (context) => Pagar(ordenStatus: 1,textoStatus: "",nroOrden: resOrden,),
               ),);
             } else {

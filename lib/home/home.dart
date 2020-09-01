@@ -16,7 +16,7 @@ import 'drawer.dart';
 
 class Home extends StatefulWidget {
   final int indexTab;
-
+  //final int tipoVistaOrden;
   const Home({Key key, this.indexTab}) : super(key: key);
   @override
   HomeState createState() => HomeState();

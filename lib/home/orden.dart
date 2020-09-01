@@ -14,8 +14,9 @@ class Orden extends StatefulWidget{
   final String id;
   final int ordenStatus;
   final String textoStatus;
+  final int vistaInicial;
 
-  const Orden({Key key, this.id, this.ordenStatus, this.textoStatus}) : super(key: key);
+  const Orden({Key key, this.id, this.ordenStatus, this.textoStatus,this.vistaInicial}) : super(key: key);
 
   @override
   _OrdenState createState() => _OrdenState();
@@ -45,6 +46,7 @@ String opinion="";
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: widget.vistaInicial ?? 0,
         length: 3,
         child:  Scaffold(
         appBar: AppBarBio(context,"Orden Nro."+widget.id),
@@ -96,6 +98,7 @@ String opinion="";
 labelStyle: TextStyle(fontSize: 14),
           indicatorColor: Color(colorAmarillo),
           labelColor: Colors.white,
+
           tabs: [
             Tab(child: Column(children: <Widget>[Icon(Icons.shopping_cart),Text("Orden",)],),),
             Tab(child: Column(children: <Widget>[Icon(Icons.payment),Text("Pagar",)],),),
