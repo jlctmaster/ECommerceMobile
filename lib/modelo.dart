@@ -57,6 +57,12 @@ class ModeloTime{
       return res;
 
   }
+  Future listarCategorias() async{
+    evento='listarCombos';
+    url=await UrlLogin(evento);
+    await procesarEvento('get', 480);
+    return res;
+  }
   Future listarCombos() async{
     evento='listarCombos';
     url=await UrlLogin(evento);
@@ -65,7 +71,7 @@ class ModeloTime{
   }
   Future listarPublicidad(String tipo) async{
     evento='listarPublicidad&tipo='+tipo;
-    url=await UrlNoLogin(evento);
+    url=UrlNoLogin(evento);
     await procesarEvento('get', 120);
     return res;
   }
@@ -88,6 +94,12 @@ class ModeloTime{
   Future listarProductosNuevo(String tipo) async {
 
     switch(tipo){
+      case 'listarProductosConPromocion':
+        evento='listarProductosConPromocion';
+        break;
+      case 'listarProductos':
+        evento='listarProductos';
+        break;
       case 'compraFacil':
         evento='listarProductos';
         break;

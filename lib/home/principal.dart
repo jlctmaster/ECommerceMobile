@@ -12,51 +12,46 @@ import '../config.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 class Principal extends StatefulWidget {
   final ValueChanged<String> actualizarHome;
+  final Future publicidad;
+  final Future listadoProductos;
+  const Principal({Key key, this.actualizarHome, this.publicidad, this.listadoProductos}) : super(key: key);
 
-  const Principal({Key key, this.actualizarHome}) : super(key: key);
   @override
   _principalState createState() => _principalState();
 }
 
 class _principalState extends State<Principal> {
+ 
+
 
   @override
   Widget build(BuildContext context) {
-    //ModeloTime().verificarSesionN(context);
-    return CustomScrollView(
-      // Add the app bar and list of items as slivers in the next steps.
-        slivers: <Widget>[
 
-
-          SliverList(
-            // Use a delegate to build items as they're scrolled on screen.
-            delegate: SliverChildBuilderDelegate(
-              // The builder function returns a ListTile with a title that
-              // displays the index of the current item.
-                  (context, index) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
+    return ListView(
+           
+              shrinkWrap: true,
+             
+     
+              children: <Widget>[
+  
+               
                   //_tituloConBoton('Categorias','Ver todas','/categorise'),//Titulo antes del scroll
-                 _textoTituloCentrado('Categorias'),
-                  Categorias(),// categorias en scroll lateral
-
-
-                  Padding(padding: EdgeInsets.only(top:5),),
+                 //_textoTituloCentrado('Categorias'),
+                  // categorias en scroll lateral
+                  //Padding(padding: EdgeInsets.only(top:5),),
+                  //_textoTituloCentrado('Promociones'),
+           //ListadoProductos(tipoListado: 'promocion',),
+          // _textoTituloCentrado('Mas productos'),
+          // Padding(padding: EdgeInsets.only(top:5),),
+           listaPublicidad(),
+            ListadoProductos(tipoListado: 'listarProductosConPromocion',listadoProductos: widget.listadoProductos,),
                  
-
-                  _textoTituloCentrado('Promociones'),
-                  ListadoProductos(tipoListado: 'promocion',),
-                   listaPublicidad('top'),
-                  //listaPublicidad('footer'),
-                  //_banner('assets/images/banner-2.png'),
-                  //_textoTituloCentrado('Ofertas'),
+                  
                 ],
-              ),
-              // Builds 1000 ListTiles
-              childCount: 1,
-            ),
-          )
-        ]);
+              
+
+    );
+
 
   }
   List agregarImagenList(data){
@@ -65,7 +60,7 @@ class _principalState extends State<Principal> {
     for (var n in data['data']) {
      imagen=(n['image']).replaceAll('\\', '/');
       imgList.add(CachedNetworkImage(imageUrl: BASE_URL_IMAGEN+imagen,));
-      print(BASE_URL_IMAGEN+imagen);
+      
     }
 
     return imgList;
@@ -112,14 +107,14 @@ class _principalState extends State<Principal> {
         )
     );
   }
-  listaPublicidad(tipo){
-
+  listaPublicidad(){
+    //EL TIPO NO SE ESTA USANDO ACTUALMENTE
     return  SizedBox(
         height: (MediaQuery.of(context).size.width* 0.3),
         width: double.infinity,
         //width: MediaQuery.of(context).size.width,
         child: new FutureBuilder(
-          future: ModeloTime().listarPublicidad(tipo), // async work
+          future: widget.publicidad, // async work
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             //print(snapshot.data);
             switch (snapshot.connectionState) {
@@ -130,6 +125,7 @@ class _principalState extends State<Principal> {
                 else{
 
                   return Carousel(
+                  
                     boxFit: BoxFit.cover,
                     autoplay: true,
                     animationCurve: Curves.fastOutSlowIn,
@@ -152,6 +148,27 @@ class _principalState extends State<Principal> {
           },
         )
     );
+  }
+
+  _botonCategoriaViejo(name){
+    return FlatButton(
+      color: Colors.red,
+      
+          onPressed: null,
+          child: Text(name, style: TextStyle(
+              color: Color(colorVerde)
+            )
+          ),
+          textColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            
+            side: BorderSide(
+            color: Color(colorVerde),
+            width: 1,
+            style: BorderStyle.solid
+          ), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10),bottomRight: Radius.circular(10))
+          ),
+        );
   }
   Widget _cuadroCategoria(id,name,image){
     return Card(
@@ -255,57 +272,7 @@ class _principalState extends State<Principal> {
     );
   }
 
-  Categorias() {
-    return Container(
-        height: 140.0,
-        child:
-        new FutureBuilder(
-          future: listarCategorias(), // async work
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting: return Center(child:CircularProgressIndicator());
-              default:
-                if (snapshot.hasError)
-                  return new Text('Error: ${snapshot.error}');
-                else{
-                  return _bloqueCategorias(snapshot.data);
-                }
-                  return new Text(snapshot.data[0]['name']);
-            }
-          },
-        ),
-    );
 
-  }
-  _bloqueCategorias(data){
-    return new ListView.builder
-      (
-        scrollDirection: Axis.horizontal,
-        itemCount: data.length,
-        itemBuilder: (BuildContext ctxt, int index) {
-          var ca=data[index];
-          return _cuadroCategoria(ca['id'],ca['name'],ca['image']);
-        }
-    );
-  }
-  listarCategorias() async{
-    Map data=  jsonDecode(await getData('categories'));
-    if(data['success']==true){
-      return data['data'];
-    }else{
-      return false;
-    }
-  }
-  Future<List<Post>> fetchPosts() async {
-    http.Response response =
-    await http.get('$BASE_URL/api_rapida.php?evento=listar_categorias_movil');
-
-    List responseJson = json.decode(response.body);
-    print("CATEGORIA");
-    print(response.body);
-    return responseJson.map((m) => new Post.fromJson(m)).toList();
-   // return responseJson;
-  }
 
   cajaProductos(products) {
     //final formatCurrency = new NumberFormat("#,##0.00", "en_US");

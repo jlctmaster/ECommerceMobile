@@ -100,7 +100,7 @@ class _productoState extends State<Producto>{
                       alignment: Alignment.bottomLeft,
                     padding: EdgeInsets.all(10),
                     child: args.promocion==1 ? new Container(
-                      width: 120,
+                      width: 80,
                       height: 20,
                       decoration: new BoxDecoration(
 
@@ -110,7 +110,7 @@ class _productoState extends State<Producto>{
                          
                         )
                       ),
-                      child: Center(child: Text('bio insuperable',style: TextStyle(color: Colors.white),)),
+                      child: Center(child: Text('en oferta',style: TextStyle(color: Colors.white),)),
                     ) : Text(''),
                     
                     
@@ -259,14 +259,19 @@ class _productoState extends State<Producto>{
 void consultarFavorito(int products_id) async {
     objFavorites.products_id=products_id;
     await objFavorites.consultar();
-//ESTABA ASI if(objFavorites.res['data'][products_id.toString()]==true){
-  if(objFavorites.res['success']==true){
-    if(objFavorites.res['data'][products_id.toString()]==true){
-      setState(() {
-        _status_favorite=true;
-      });
-    }
-    }
+if(objFavorites.res['data'][products_id.toString()]==true){
+ // if(esnulo['es_nulo']==true){
+    //if(objFavorites.res['success']==true){
+       // if(objFavorites.res['data'][products_id.toString()]==true){
+          setState(() {
+            _status_favorite=true;
+          });
+      //  }
+    //}
+  //}
+
+}
+
     return;
   }
   guardarVisitaProducto(int products_id) async {

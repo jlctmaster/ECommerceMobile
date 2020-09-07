@@ -19,18 +19,17 @@ class Favorites{
     print(res);
   }
   Future<Map> consultar() async {
+    Map no;
     String dataFavorito=await getData('favoritos');
+
     if(dataFavorito!=null){
       res=jsonDecode(dataFavorito);
-      print("EL CONSULTADO");
-
+      print("SI ES FAVORITO");
+    }else{
+      res['success']=false;
     }
-    
-    
-    
     //print(res['data']['1210']);
    // String url=await UrlLogin('consultarFavorito&products_id=$products_id');
-
     //res['success']= res['data'][products_id];
 
   }

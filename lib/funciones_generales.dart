@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
   int colorVerde=0xff28b67a;
   int colorVerdeb=0xff80bc00;
-  int colorAmarillo=0xffeba900;
+  int colorAmarillo=0xffFF8C40;
   int colorRojo=0xffFF6600;
   btnAtras(context){
     return Transform.rotate(
@@ -24,7 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
       child: IconButton(
         padding: const EdgeInsets.only(bottom: 6.00),
         icon: Icon(Icons.play_circle_filled,size: 40,),
-        color: Color(colorAmarillo),
+        color: Color(colorRojo),
         onPressed: () {
           Navigator.pop(context);
           // Navigator.pushNamed(context, '/');
@@ -39,7 +39,7 @@ btnAtras3(context){
     child: IconButton(
 
       icon: Icon(Icons.play_circle_filled,size: 35,),
-      color: Color(colorAmarillo),
+      color: Color(colorRojo),
       onPressed: () {
         Navigator.pop(context);
         // Navigator.pushNamed(context, '/');

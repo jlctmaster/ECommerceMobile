@@ -32,9 +32,6 @@ class _addCarritoState extends State<AddCarrito> {
      final proveedor = Provider.of<AuthBlock>(context);
      //final proveedor = Provider.of<AuthBlock>(context,listen: false);
 
-
-
-
                   return FutureBuilder(
                   future: proveedor.getCarritob(),
                   builder: (context, res) {
@@ -67,18 +64,19 @@ class _addCarritoState extends State<AddCarrito> {
   }
 
 _todo(proveedor,rowCarrito){
-  return _cant==0 ? Container( alignment: Alignment.bottomRight,
-                    child: _btnMasCarrito(proveedor,rowCarrito) ) : 
-             Container(
-                      alignment: Alignment.bottomRight,
-                    child:      Column(
+  return Column(
 
-          children: <Widget>[
+          children: _cant==0 ? 
+          [
+            Padding(padding: EdgeInsets.only(top:100)),
+            _btnMasCarrito(proveedor,rowCarrito)
+          ] : [
+            Padding(padding: EdgeInsets.only(top:73)),
             _btnMasMenosCarrito(proveedor,rowCarrito),
             _btnMasCarrito(proveedor,rowCarrito)
           ],
 
-        ));   
+        );   
 }
 _btnMasCarrito(proveedor,rowCarrito){
 

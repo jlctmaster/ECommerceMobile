@@ -191,7 +191,7 @@ Expanded(child:FutureBuilder(
 ))
 
 
-],) ,
+],),
 backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

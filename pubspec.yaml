@@ -1,6 +1,6 @@
 name: villaspark
 description: Villas Park Market.
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
@@ -31,6 +31,7 @@ dependencies:
   carousel_pro: ^1.0.0
   image_picker: ^0.6.6+4
   async: ^2.4.1
+  flutter_staggered_grid_view: ^0.3.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

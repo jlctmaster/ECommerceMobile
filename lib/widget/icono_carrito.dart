@@ -19,7 +19,7 @@ class _IconoCarritoState extends State<IconoCarrito> {
     return Container(
        child: IconButton(
 color: Color(colorVerde),
-    icon:Stack(children: <Widget>[Icon(Icons.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child:
+    icon:Stack(children: <Widget>[Icon(Icons.shopping_cart,),Padding(padding: EdgeInsets.only(top:8,left: 14),child:
     Container(
         width: 17.0,
         height: 17.0,
