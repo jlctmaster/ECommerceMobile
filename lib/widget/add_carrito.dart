@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:villaspark/blocks/auth_block.dart';
+import '/blocks/auth_block.dart';
 
 import '../funciones_generales.dart';
 import '../modelo.dart';
@@ -10,8 +10,10 @@ class AddCarrito extends StatefulWidget {
   final int id;
   final int stock;
   final int pedidoMaximo;
+  final double priceB;
+  final double priceD;
 //COLOCAR EL REQUIRED AVERIGUAR EL MOTIVO
-  const AddCarrito({Key key, this.id, this.stock, this.pedidoMaximo}) : super(key: key);
+  const AddCarrito({Key key, this.id, this.stock, this.pedidoMaximo, this.priceB, this.priceD}) : super(key: key);
   @override
   _addCarritoState createState() => _addCarritoState();
 }
@@ -82,7 +84,10 @@ _btnMasCarrito(proveedor,rowCarrito){
 
 return RawMaterialButton(
   onPressed: () async{
+
            _cant=_cant+1;
+           //double _total=_cant*widget.priceB;
+             //  msjb("Total: "+_total.toString(),context);
            if(_cant>widget.pedidoMaximo && widget.pedidoMaximo!=0){
 
              msj("Máximo permitido.");
@@ -92,12 +97,10 @@ return RawMaterialButton(
               }else{
                   await setCarrito(widget.id,_cant);
                   proveedor.notifyListeners();
-
+                  String total=await proveedor.totalCarrito();
+                  msjb("Total:  "+total,context);
               }
            }
-
-          
-        
   },
   elevation: 2.0,
   fillColor: Color(colorVerde).withOpacity(0.9),
@@ -130,6 +133,8 @@ return       Container(
            _cant=_cant-1;
             await setCarrito(widget.id,_cant);
            proveedor.notifyListeners();
+                 String total=await proveedor.totalCarrito();
+                  msjb(total,context);
        
   },
   elevation: 2.0,

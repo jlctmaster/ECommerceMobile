@@ -17,7 +17,9 @@ class _HomePageState extends State<HomePage> {
 
   // Get json result and convert it to model. Then add
   Future<Null> getUserDetails() async {
-    final response = await http.get(url);
+    var urlb = Uri.parse(url);
+    final response = await http.get(urlb);
+    
     final responseJson = json.decode(response.body);
 
     setState(() {

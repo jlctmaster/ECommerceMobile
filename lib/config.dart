@@ -5,7 +5,7 @@ import 'funciones_generales.dart';
 
 
 const String BASE_URL = 'https://villasparkmarket.com';
-//const String BASE_URL = 'http://192.168.0.105';
+//const String BASE_URL = 'http://127.0.0.1:8000';
 const String BASE_URL_IMAGEN="$BASE_URL/storage/"; 
 //const String BASE_URL = 'http://10.0.1.112';
 

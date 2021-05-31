@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:villaspark/widget/icono_carrito.dart';
+import '/widget/icono_carrito.dart';
 import '../config.dart';
 import '../funciones_generales.dart';
 import '../home/agregarProducto.dart';
@@ -280,8 +280,9 @@ if(objFavorites.res['data'][products_id.toString()]==true){
       String datos = 'guardarVisitaProducto&products_id=' +
           products_id.toString();
       url = await UrlLogin(datos);
+      var uri = Uri.parse(url);
       final response = await http.get(
-        url, headers: {"Accept": "application/json"},);
+        uri, headers: {"Accept": "application/json"},);
       print(response.body);
       print(response.statusCode);
       guardadoVisita=true;

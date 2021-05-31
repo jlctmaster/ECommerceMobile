@@ -49,7 +49,8 @@ class _modalState extends State<Modal> {
   }
  _cancelarOrden(id) async{
    String url=await UrlLogin('cancelarOrden&orders_id=$id');
-   final response = await http.get(url,headers: {"Accept": "application/json"},);
+   var urlb = Uri.parse(url);
+   final response = await http.get(urlb,headers: {"Accept": "application/json"},);
 
    print(response.body);
    msj(jsonDecode(response.body)['msj_general']);

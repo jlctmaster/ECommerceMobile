@@ -136,7 +136,8 @@ class _OrdenesState extends State<Ordenes> {
     List a;
 
     String url=await UrlLogin('listarOrdenes');
-    final response = await http.get(url,headers: {"Accept": "application/json"},);
+    var uri = Uri.parse(url);
+    final response = await http.get(uri,headers: {"Accept": "application/json"},);
 
     print(response.body);
     Map res= jsonDecode(response.body);
@@ -180,7 +181,8 @@ class _OrdenesState extends State<Ordenes> {
 
   _cancelarOrden(id) async{
     String url=await UrlLogin('cancelarOrden&orders_id=$id');
-    final response = await http.get(url,headers: {"Accept": "application/json"},);
+    var uri = Uri.parse(url);
+    final response = await http.get(uri,headers: {"Accept": "application/json"},);
 
     print(response.body);
     msj(jsonDecode(response.body)['msj_general']);

@@ -32,10 +32,15 @@ bool primeraVez=true;
     return Container(
      // decoration: imagenFondo(),
       child: Column(
-        //mainAxisAlignment: MainAxisAlignment.center,
+       // mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(padding: const EdgeInsets.only(bottom: 50.0),),
-        
+            Padding(padding: const EdgeInsets.only(bottom: 20.0),
+            
+            child:btnAtras(context)
+            ),
+            
+         
             Column(
       children: <Widget>[
 
@@ -125,16 +130,21 @@ bool primeraVez=true;
                             ),
                           ),
                         ),
-
+            Divider(),
+            Text("No tienes una cuenta?"),
+            RaisedButton(
+              child: Text("Registrese aquí"),
+              onPressed: (){
+              Navigator.pushNamed(context, '/registro');
+            })
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            Divider(),
-            Text("No tienes una cuenta?"),
-            _a("Registrese aquí",'/registro'),
+
+           
           ]
       ),
     );

@@ -7,7 +7,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="VP Market"
+        android:label="PIDE"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         >

@@ -55,6 +55,7 @@ class _pagar extends State<Pagar>{
   }
 
   _metodosDePago(data){
+    print(data);
     if(data!=null) {
       return Flexible(
         child: ListView.builder(

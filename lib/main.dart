@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'modelo.dart';
+
 import 'biowallet.dart';
 import 'blocks/nuevo_proveedor.dart';
 import 'config.dart';
@@ -55,7 +57,7 @@ Future<void> main() async{
           primaryColor: Color(0xff80bc00),
           accentColor: Colors.lightBlue[900],
           //fontFamily: locale.languageCode == 'ar' ? 'Dubai' : 'Lato'),
-          fontFamily: 'Bree'),
+         ),
       initialRoute: '/analizar',
       routes: <String, WidgetBuilder>{
         '/producto': (context) => Producto(),
@@ -137,7 +139,8 @@ return Scaffold(
 }
 
 Analizar() async {
- 
+ var res=await ModeloTime().listarPrecios();
+ saveData('listarPrecios', res);
   String data= await getData('user');
  // print("USUARIO: "+data);
   if(data!=null) {
@@ -146,20 +149,22 @@ Analizar() async {
     var url=await UrlLogin(evento);
     var res= await peticionGet(url);
   
-    print(res);
+   print("CALOR");
     if(res['success']!=null) { // si es true es porque no esta iniciada la sesion
+     print("CHINA");
       if (res['success']) {
+         print("PARIS");
           var datab= await getData('recuerdo');
           if(datab!=null){
             Map resData=jsonDecode(datab);
-            print(datab);
+           // print(datab);
             if(resData['si']==true){
-              print(datab);
+             // print(datab);
               String url=UrlNoLogin('&evento=theBest&email='+resData['correo']+'&password='+resData['clave']);
-              print(url);
+              print("CACHICAMO");
                 Map resh=await peticionGetZlib(url);
             
-                print(resh);
+               
                 if(resh['success']==true){
                     await saveDataNoJson('noLogin', 'false');
                       
@@ -196,9 +201,10 @@ Analizar() async {
 
     
   }else{
-    
+    print("TORPEDO");
     bool res=await loginNoUser();
     if(res){
+      print("TRINO");
     await saveDataNoJson('noLogin', 'true');
     await iniciarCarrito();
       return true;
@@ -214,8 +220,9 @@ Analizar() async {
 
     Map res=Map();
     String url='$BASE_URL/api_rapida.php?evento=loginNoUser';
+    print(url);
     res=await peticionGetZlib(url);
-
+    print(res);
     if(res['success']==true){
       await setData(res['data']);
       return true;

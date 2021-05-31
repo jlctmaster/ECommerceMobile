@@ -1,5 +1,5 @@
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:villaspark/widget/add_carrito.dart';
+import '/widget/add_carrito.dart';
 
 import '../modelo.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +51,7 @@ bool _botonBusqueda=false;
             if (projectSnap.connectionState == ConnectionState.done) {
                 try {
                   if (projectSnap.data['success'] == true) {
+                    print("entro caja de productos nuevar");
                     return cajaProductosNueva(projectSnap.data['data']);
 
                   } else {
@@ -91,19 +92,34 @@ bool _botonBusqueda=false;
 
   
   cajaProductosNueva(products) {
-    return new StaggeredGridView.countBuilder(
-      padding: EdgeInsets.only(top:10),
-      shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
-      crossAxisCount: 4,
-      itemCount: products.length,
-      itemBuilder: (BuildContext context, int index) => _productoDeLista(products,index),
-      staggeredTileBuilder: (int index) => StaggeredTile.fit(2),
+    var size = MediaQuery.of(context).size;
+
+    final double itemHeight = (size.height - kToolbarHeight ) / 3;
+  //  final double itemWidth = size.width / 2;
+    double width=MediaQuery.of(context).size.width;
+    print("MEDIA QUERY");
+    print(width);
+int widthCard= 180;    
+
+int countRow=width~/widthCard;
+return GridView.count(
+ 
+  //childAspectRatio: (itemWidth / 220),
+  childAspectRatio: (widthCard / 220),
+  shrinkWrap: true,
+  physics: ClampingScrollPhysics(),
+  // Create a grid with 2 columns. If you change the scrollDirection to
+  // horizontal, this produces 2 rows.
+  crossAxisCount: countRow,
+  // Generate 100 widgets that display their index in the List.
+  children: List.generate(products.length, (index) {
+
+    return Center(
+      child: _productoDeLista(products,index)
       
-      mainAxisSpacing:33.0,
-      crossAxisSpacing: 0.0,
     );
-    //final formatCurrency = new NumberFormat("#,##0.00", "en_US");
+  }),
+);
 
   }
   cajaProductosNuevaFlexible(products) {
@@ -130,7 +146,7 @@ _productoDeLista(products,index){
     }else{
       imagen ="$BASE_URL/storage/" + products[index]['image'];
     }
-      print("ENTRO");
+      //print("ENTRO");
       String imagen_grande=products[index]['image_grande'];
 
       String name=products[index]['name'];
@@ -159,6 +175,7 @@ _productoDeLista(products,index){
      // int descuento=int.parse(products[index]['discount'] ?? '0');
 
       return Card(
+
 margin: EdgeInsets.zero,
 elevation: 0,
 
@@ -190,6 +207,7 @@ elevation: 0,
                   ).then((val)=>{_capturarRetroceso()});
                 },
                 child: Column(
+
                   
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -211,7 +229,7 @@ elevation: 0,
                         alignment: Alignment.bottomRight,
                     
                       
-                      child: AddCarrito(id: id,stock:stock,pedidoMaximo:pedidoMaximo)
+                      child: AddCarrito(id: id,stock:stock,pedidoMaximo:pedidoMaximo,priceB: precioBolivar,priceD: precioDolar)
                       ),
                     Padding(padding: EdgeInsets.only(top:130),
                     child: 

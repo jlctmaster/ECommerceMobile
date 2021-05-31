@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import '/main.dart';
 import '../funciones_generales.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
@@ -28,23 +29,65 @@ class AuthBlock with ChangeNotifier {
   actualizar(){
     notifyListeners();
   }
-  getCarritob()async{
+  getCarritob({contexto})async{
     return jsonDecode(await getData('carrito'));
   }
   cantCarrito() async{
     Map carrito=await getCarrito();
+    Map precios=jsonDecode(await getData('listarPrecios'))['data'];
     Map productos;
     int cant=0;
+    double totalD=0.00;
+    double totalB=0.00;
     if(carrito['productos']!=null){
-
+//print(precios);
       productos=carrito['productos'];
       productos.forEach((key, value) {
         if(value>0){
-          cant+=value;
-        }
-      });
 
+         
+          cant+=value;
+           if(precios[key]!=null){
+            totalD+=double.parse(precios[key]['d'])*value;
+            totalB+=double.parse(precios[key]['b'])*value;
+          }
+        }
+        
+       
+      });
+     // print("TOTAL:"+totalD.toString());
+      await saveDataNoJson('total', "$totalD / $totalB");
+     // msj(total.toString());
       return cant.toString();
+    }else{
+      return "0";
+    }
+  }
+
+    totalCarrito() async{
+    Map carrito=await getCarrito();
+    Map precios=jsonDecode(await getData('listarPrecios'))['data'];
+    Map productos;
+    int cant=0;
+    double totalD=0.00;
+    double totalB=0.00;
+    if(carrito['productos']!=null){
+//print(precios);
+      productos=carrito['productos'];
+      productos.forEach((key, value) {
+        if(value>0){
+
+         
+          cant+=value;
+           if(precios[key]!=null){
+            totalD+=double.parse(precios[key]['d'])*value;
+            totalB+=double.parse(precios[key]['b'])*value;
+          }
+        }
+        
+       
+      });
+      return formatDolar.format(totalD)+" / "+formatBolivar.format(totalB);
     }else{
       return "0";
     }

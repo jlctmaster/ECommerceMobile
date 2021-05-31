@@ -10,9 +10,11 @@ class Camara extends StatefulWidget {
 
 class _MyHomePageState extends State<Camara> {
   File _image;
-
+  final picker = ImagePicker();
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+          final pickedFile=await picker.getImage(source: ImageSource.camera);
+          var image= File(pickedFile.path);
+  
 
     setState(() {
       _image = image;

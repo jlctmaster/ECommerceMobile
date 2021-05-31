@@ -93,7 +93,7 @@ class _RecuperarState extends State<confirmar_registro> {
                                           user.tipo['password']=await _getPassword();
                                           await auth.confirmarCorreo(user);
                                           if(auth.resJson['success']==true){
-                                            msj("Bienvenido a VP Market.");
+                                            msj("Bienvenido a PIDE.");
 
                                             userCredential.usernameOrEmail = user.tipo['email'];
                                             userCredential.password = user.tipo['password'];

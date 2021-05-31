@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:villaspark/funciones_generales.dart';
-import 'package:villaspark/modelo.dart';
+import '/funciones_generales.dart';
+import '/modelo.dart';
 
 class MenuCategorias extends StatefulWidget {
   final ValueChanged<String> actualizarHome;
@@ -28,7 +28,9 @@ class _MenuCategoriasState extends State<MenuCategorias> {
     Categorias() {
     return Container(
       alignment: Alignment.center,
+      
         height: 40.0,
+       // width:  MediaQuery.of(context).size.width,
         child:
         new FutureBuilder(
           future: _listarCategorias, // async work
@@ -49,16 +51,18 @@ class _MenuCategoriasState extends State<MenuCategorias> {
 
   }
   _bloqueCategorias(data){
-    return new ListView.builder
+    return new Center(child:ListView.builder
       (
-
+        
+shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemCount: data.length,
+        
         itemBuilder: (BuildContext ctxt, int index) {
           var ca=data[index];
           return _cuadroCategoriaNuevo(ca['id'],ca['name'],ca['image']);
         }
-    );
+    ));
   }
   listarCategorias() async{
     Map data=  jsonDecode(await getData('categories'));
@@ -70,6 +74,11 @@ class _MenuCategoriasState extends State<MenuCategorias> {
   }
 
       Widget _cuadroCategoriaNuevo(id,name,image){
+
+       /*  double width= MediaQuery.of(context).size.width;
+         int widthCard= 100;  
+         double espacio=width/widthCard;
+          */
     return InkWell(
       
       
@@ -78,7 +87,7 @@ class _MenuCategoriasState extends State<MenuCategorias> {
           widget.actualizarHome('');
 
         },
-        child: Padding(child:_botonCategoria(name,id),padding: EdgeInsets.all(2)),
+        child: Padding(child:_botonCategoria(name,id),padding:  EdgeInsets.only(top:0,bottom: 2, left: 4, right: 4)),
                 
               
           

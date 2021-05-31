@@ -110,7 +110,8 @@ child: ListView(
 
     }else{
       return Column(children: <Widget>[
- botonMenu("Iniciar sesión",Icons.vpn_key,'/')
+        botonMenu("Iniciar sesión",Icons.vpn_key,'/'),
+        botonMenu("Registrarme",Icons.app_registration,'/registro')
 
       ],);
 
@@ -219,8 +220,10 @@ _categorias(){
   );
 }
   _cargarCategorias() async {
+    String url='$BASE_URL/api_rapida.php?evento=listar_categorias_movil';
+     var uri = Uri.parse(url);
     http.Response response =
-    await http.get('$BASE_URL/api_rapida.php?evento=listar_categorias_movil');
+    await http.get(uri);
     List responseJson = json.decode(response.body);
 
     return responseJson;

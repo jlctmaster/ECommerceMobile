@@ -26,7 +26,7 @@ class Auth extends StatelessWidget {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
+     // resizeToAvoidBottomPadding: false,
       body: SingleChildScrollView(
         padding: EdgeInsets.only(bottom: bottom),
         reverse: true,

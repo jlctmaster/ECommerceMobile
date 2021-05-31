@@ -19,7 +19,8 @@ class Modelo {
   Future<Map> cambiarClave(String password,String passwordActual) async {
 
     String url=await UrlLogin('cambiarClave');
-    final response = await http.post(url,
+    var uri = Uri.parse(url);
+    final response = await http.post(uri,
         headers: {"Accept": "application/json"},
         body: {
           'password':     password,
@@ -166,7 +167,8 @@ class Modelo {
   Future<Map> eliminarDireccion(id) async {
 
     String url=await UrlLogin('eliminarDireccion&id=$id');
-    final response = await http.get(url,
+    var uri = Uri.parse(url);
+    final response = await http.get(uri,
         headers: {"Accept": "application/json"});
     print(response.body);
     print(response.statusCode);

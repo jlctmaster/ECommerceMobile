@@ -141,7 +141,8 @@ class _ratingState extends State<Rating> {
     String url;
     String datos='guardarOpinion&opinion=$opinion&products_id='+widget.products_id.toString();
     url=await UrlLogin(datos);
-    final response = await http.get(url,headers: {"Accept": "application/json"},);
+    var uri = Uri.parse(url);
+    final response = await http.get(uri,headers: {"Accept": "application/json"},);
     if (response.statusCode == 200) {
       msj(res['msj_general']);
     }else{
@@ -153,7 +154,8 @@ class _ratingState extends State<Rating> {
     String url;
     String datos='guardarCalificacion&products_id='+widget.products_id.toString()+'&rating='+rating.round().toString();
     url=await UrlLogin(datos);
-    final response = await http.get(url,
+    var uri = Uri.parse(url);
+    final response = await http.get(uri,
         headers: {"Accept": "application/json"},);
     print(response.body);
     print(response.statusCode);

@@ -203,7 +203,7 @@ labelStyle: TextStyle(fontSize: 14),
                   ],
                 ),
                 Text("Dirección de entrega: " +
-                    (data['address'] ?? "Retirar en tienda Villas Park Market")),
+                    (data['address'] ?? "Retirar en tienda PIDE")),
               ],
             ),
           )

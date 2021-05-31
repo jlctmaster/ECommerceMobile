@@ -161,7 +161,7 @@ bool cargadoArgumento=false;
     msj("Su carrito se encuentra vacío");
 //Navigator.canPop(context);
 //Navigator.pushReplacementNamed(context, '/home');
-   // msj("Carrito vaciado.");
+   // msj("Carrito vacío.");
 //Future.delayed(Duration(seconds: 3));
   //  Navigator.pushReplacementNamed(context, '/home');
 
@@ -213,7 +213,7 @@ bool cargadoArgumento=false;
 
                     products.removeAt(index);
                     if(products.length==0){
-                      msj("Carrito vaciado.");
+                      msj("Carrito vacío.");
                       Navigator.pushReplacementNamed(context, '/home');
                     }else {
 
@@ -412,7 +412,7 @@ bool cargadoArgumento=false;
                                 color: Colors.blue),
                             textAlign: TextAlign.left,),
                           onTap: () async {
-                            msj("Carrito vaciado.");
+                            msj("Carrito vacío.");
                             await delCarrito();
                             await iniciarCarrito();
                             Navigator.pushReplacementNamed(context, '/home');
@@ -515,6 +515,7 @@ void _showAlert(String value ){
   }
   _generarListaCarrito(productos) async {
     //await _precioEnvio();
+    
     String url=UrlNoLogin('listarProductosCarrito&json=$productos');
     print(url);
     Map res=await peticionGetZlib(url);
@@ -542,7 +543,7 @@ void _showAlert(String value ){
         Padding( padding: EdgeInsets.only(left:4,right: 4),
           child: ListTile(
 
-            title: Text("Retirar en tienda VP Market",style: TextStyle(fontWeight: FontWeight.bold),),
+            title: Text("Retirar en tienda PIDE",style: TextStyle(fontWeight: FontWeight.bold),),
 
             subtitle:Container(
                 child: Text("Villas Park Market, Av. Circunvalación, Residencias Villas Park, Local 05 PB.")
@@ -623,7 +624,24 @@ void _showAlert(String value ){
           future: validarSesion(mostrarMsj: false),
           builder: (context, projectSnap) {
             if (projectSnap.connectionState == ConnectionState.done) {
-              return _botonPagar(projectSnap.data);
+              if(projectSnap.data){
+                return _botonPagar(projectSnap.data);
+              }else{
+                return Column(children: [
+                          Center(child:Text("Para continuar debe iniciar sesión o registrarse.")),
+                         SizedBox(height: 5,),
+                          Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  
+                                _btnIniciarSesion(),
+                                Padding(padding: EdgeInsets.only(left:20),),
+                                _btnRegistrarme()
+                                ]
+                              )
+                ]);
+              }
+              
 
             }else {
               return CircularProgressIndicator();
@@ -666,11 +684,7 @@ void _showAlert(String value ){
         ),
       );
     }else {
-      return Padding(padding: EdgeInsets.all(20),child: Text(
-        "No tienes direcciones registradas, agregue una para recibir despachos.",
-        style: TextStyle(fontSize: 20,),
-        textAlign: TextAlign.justify,
-      ),);
+      return SizedBox();
     }
   }
   _bloqueDireccion(data,datab,index){
@@ -727,7 +741,7 @@ void _showAlert(String value ){
         height: 40.0,
         child:  RaisedButton(
           onPressed:() async {
-            data ? _showAlert("A partir de este momento no podrá modificar su carrito, ¿está seguro de continuar?") : Navigator.pushNamed(context, '/');
+            data ? _showAlert("A partir de este momento no podrá modificar su carrito, ¿está seguro de continuar?") : _irIniciarSesion();
           },
           child: Text(
                   data ? "Procesar orden y pagar" : "Iniciar sesión o registrarme para continuar",
@@ -739,6 +753,52 @@ void _showAlert(String value ){
   }
 
 
+  _btnIniciarSesion(){
+        return ElevatedButton(
+      child: Text(
+        "Iniciar sesión",
+        style: TextStyle(fontSize: 14)
+      ),
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        backgroundColor: MaterialStateProperty.all<Color>(Color(colorRojo)),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(7.0),
+           // side: BorderSide(color: Color(colorRojo))
+          )
+        )
+      ),
+      onPressed:() async {
+                _irIniciarSesion();
+          },
+    );
+  }
+  _btnRegistrarme(){
+        return ElevatedButton(
+      child: Text(
+        "Registrarme",
+        style: TextStyle(fontSize: 14)
+      ),
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        backgroundColor: MaterialStateProperty.all<Color>(Color(colorVerde)),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(7.0),
+           // side: BorderSide(color: Color(colorVerde))
+          )
+        )
+      ),
+      onPressed:() async {
+                Navigator.pushNamed(context, '/registro');
+          },
+    );
+  }
+
+  _irIniciarSesion(){
+    Navigator.pushNamed(context, '/');
+  }
 
   _botonContinuar(){
     return Padding(

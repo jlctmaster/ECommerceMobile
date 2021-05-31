@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:villaspark/widget/icono_carrito.dart';
+import '/widget/icono_carrito.dart';
 
 import '../blocks/auth_block.dart';
 import '../modelo/combos.dart';

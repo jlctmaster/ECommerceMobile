@@ -64,7 +64,7 @@ bool _widgetRegions=true;
     final bottom = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
+       // resizeToAvoidBottomPadding: false,
         appBar: AppBarBio(context, 'Mis direcciones'),
         body:SingleChildScrollView(
         padding: EdgeInsets.only(bottom: bottom),

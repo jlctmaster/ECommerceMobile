@@ -13,7 +13,7 @@ import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:archive/archive.dart';
   int colorVerde=0xff28b67a;
   int colorVerdeb=0xff80bc00;
   int colorAmarillo=0xffFF8C40;
@@ -152,7 +152,7 @@ Future validarSesion({mostrarMsj=true}) async{
     
         if(noLogin=='true'){
           if(mostrarMsj==true){
-            msj("Debe iniciar sesión.");
+            msj("Debes iniciar sesión.");
           }
          
           return false;
@@ -164,16 +164,23 @@ Future validarSesion({mostrarMsj=true}) async{
 peticionGetZlib(url) async {
   var data;
   try {
+    print("Entro44");
+    print(url);
+    var urlB = Uri.parse(url);
     final response = await http.get(
-        url, headers: {"Accept": "application/json"}).timeout(
+        urlB, headers: {"Accept": "application/json"}).timeout(
         Duration(seconds: 20));
 
     try {
       var bytes = response.bodyBytes;
-      var inflated = zlib.decode(bytes);
-     data = utf8.decode(inflated);
+     // var inflated = zlib.decode(bytes);
+      final inflated = ZLibDecoder().decodeBytes(bytes, verify: true);
+      data = utf8.decode(inflated);
 
-    }catch(_){
+      print("bueno");
+    }catch(e){
+      print(e);
+      print("malo");
       data=response.body;
     }
 
@@ -193,6 +200,11 @@ cerrar_sesion(context){
   Navigator.pushNamedAndRemoveUntil(context,'/', (Route<dynamic> route) => false);
 }
 getData(key) async{
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString(key);
+  //return jsonDecode(await storage.getItem(key));
+}
+getDataInt(key) async{
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString(key);
   //return jsonDecode(await storage.getItem(key));
@@ -224,13 +236,17 @@ saveData(key,Map nuevaData) async {
 }
 saveDataNoJson(key,nuevaData) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //await storage.setItem(key,jsonEncode(nuevaData));
   await prefs.setString(key, nuevaData);
+}
+saveDataNoJsonInt(key,nuevaData) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setInt(key, nuevaData);
 }
 peticionGet(url) async {
   try {
+    var uri = Uri.parse(url);
     final response = await http.get(
-        url, headers: {"Accept": "application/json"}).timeout(
+        uri, headers: {"Accept": "application/json"}).timeout(
         Duration(seconds: 20),);
     print(response.body);
     if (response.statusCode == 200 || response.statusCode ==409) {
@@ -281,8 +297,9 @@ roundDown(double value){
 peticionPost(url, Map<String, String> body) async {
    print(body);
   try {
+    var uri = Uri.parse(url);
     final response = await http.post(
-        url, headers: {"Accept": "application/json"},body:body).timeout(
+        uri, headers: {"Accept": "application/json"},body:body).timeout(
         Duration(seconds: 20));
     print(response.body);
     if (response.statusCode == 200) {
@@ -290,7 +307,8 @@ peticionPost(url, Map<String, String> body) async {
     } else {
       return jsonDecode(response.body);
     }
-  } catch (_) {
+  } catch (e) {
+    print(e);
     return msjConexion();
   }
 }
@@ -320,8 +338,17 @@ msj(String msj){
 }
 
 msjb(String msj,context){
+  Scaffold.of(context).removeCurrentSnackBar();
   Scaffold.of(context)
-      .showSnackBar(SnackBar(content: Text(msj)));
+      .showSnackBar(
+
+        SnackBar(
+        
+          duration: Duration(seconds: 4),
+          content: Text(msj)
+          )
+      );
+      
 }
 noInternet(){
     return Center(child: Text("Verifique su conexión a internet",style: TextStyle(color: Colors.red),),);
@@ -493,7 +520,7 @@ int idUsuario=1;
 }
 setCarrito(int idProducto,int cant) async{
   Map carrito= Map();
-  print("Agregado al carrito $idProducto $cant");
+  //print("Agregado al carrito $idProducto $cant");
 
 
   carrito= await jsonDecode(await getData('carrito'));
@@ -507,7 +534,7 @@ setCarrito(int idProducto,int cant) async{
     productos["$idProducto"]=cant;
     carrito['productos']=productos;
   }
-print("Cargo");
+
 
   await saveData('carrito',carrito);
 

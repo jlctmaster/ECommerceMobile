@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
 import 'blocks/modelo.dart';
 import 'camara.dart';
 import 'take_picture_screen.dart';
@@ -11,7 +13,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,6 +27,7 @@ class MiPerfil extends StatefulWidget {
 }
 
 class _MiPerfilState extends State<MiPerfil> {
+  final picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
   final Modelo modelo = Modelo();
   int _radioValue1 = -1;
@@ -115,7 +117,8 @@ Future<bool> _showSelectionDialog(context) {
                     GestureDetector(
                       child: Text("Galeria"),
                       onTap: () async {
-                            _imageB= await ImagePicker.pickImage(source: ImageSource.gallery,maxWidth: 500,maxHeight: 500,);
+                            final pickedFile=await picker.getImage(source: ImageSource.gallery,maxWidth: 500,maxHeight: 500);
+                            _imageB= File(pickedFile.path);
                             Navigator.of(context).pop();
                       },
                     ),
@@ -123,7 +126,8 @@ Future<bool> _showSelectionDialog(context) {
                     GestureDetector(
                       child: Text("Camara"),
                       onTap: () async {
-                        _imageB= await ImagePicker.pickImage(source: ImageSource.camera,maxWidth: 500,maxHeight: 500,);
+                        final pickedFile=await picker.getImage(source: ImageSource.camera,maxWidth: 500,maxHeight: 500,);
+                        _imageB= File(pickedFile.path);
                         Navigator.of(context).pop();
                       },
                     )
@@ -349,6 +353,22 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
   }
 
   Future<Null> _selectDate(BuildContext context) async {
+     DatePicker.showDatePicker(context,
+                              showTitleActions: true,
+                              
+                              minTime: DateTime(1960, 8),
+                              maxTime:DateTime(2010,12), onChanged: (date) {
+                            print('change $date');
+                          }, onConfirm: (date) {
+                            print('confirm $date');
+                                  setState(() {
+                                    primeraVez=false;
+                                    selectedDate = date;
+                                    _actualizarFecha(selectedDate.toLocal().toString().split(' ')[0]);
+                                  });
+                          }, currentTime: selectedDate, locale: LocaleType.es);
+
+/*
     DatePicker.showDatePicker(
         context,
         minDateTime:DateTime(1960, 8),
@@ -366,6 +386,7 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
 
         }
     );
+    */
   }
   _actualizarFecha(value){
     campo['birthdate']=value;

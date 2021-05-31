@@ -63,15 +63,23 @@ class ModeloTime{
     await procesarEvento('get', 480);
     return res;
   }
+  Future listarPrecios() async{
+    evento='listarPrecios';
+    url=UrlNoLogin(evento);
+    await procesarEvento('get', 480);
+    return res;
+  }
   Future listarCombos() async{
     evento='listarCombos';
     url=await UrlLogin(evento);
     await procesarEvento('get', 120);
     return res;
   }
+
   Future listarPublicidad(String tipo) async{
     evento='listarPublicidad&tipo='+tipo;
     url=UrlNoLogin(evento);
+    print(url);
     await procesarEvento('get', 120);
     return res;
   }

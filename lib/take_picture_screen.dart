@@ -84,7 +84,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             );
 
             // Attempt to take a picture and log where it's been saved
-            await _controller.takePicture(path);
+            await _controller.takePicture();
+            //PARECE QUE SE DEBE USAR XFile file
             // En este ejemplo, guarda la imagen en el directorio temporal. Encuentra 
             // el directorio temporal usando el plugin `path_provider`.
             Navigator.push(

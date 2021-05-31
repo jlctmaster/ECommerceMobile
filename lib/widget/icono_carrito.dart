@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:villaspark/blocks/auth_block.dart';
+import '/blocks/auth_block.dart';
 
 import '../funciones_generales.dart';
 
@@ -19,10 +19,17 @@ class _IconoCarritoState extends State<IconoCarrito> {
     return Container(
        child: IconButton(
 color: Color(colorVerde),
-    icon:Stack(children: <Widget>[Icon(Icons.shopping_cart,),Padding(padding: EdgeInsets.only(top:8,left: 14),child:
+    icon:Stack(
+      
+      children: <Widget>[
+      Icon(Icons.shopping_cart,),
+      Padding(padding: EdgeInsets.only(top:8,left: 10),child:
     Container(
         width: 17.0,
         height: 17.0,
+        
+       
+        
         // padding: const EdgeInsets.all(3.0),//I used some padding without fixed width and height
         decoration: new BoxDecoration(
 
@@ -48,7 +55,7 @@ color: Color(colorVerde),
                   cant=0;
                 }
                 return Text(cant.toString(), style: TextStyle(color: Colors.white,
-                    fontSize: 14.0));
+                    fontSize: 10.0));
               }
             }
         )) //) You can add a Icon instead of text also, like below.

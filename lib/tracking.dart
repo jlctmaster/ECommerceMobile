@@ -73,8 +73,10 @@ class _tracking extends State<Tracking>{
 
 
   _listarTracking() async {
-    String urlb=await UrlLogin('listarTracking&orders_id='+widget.nroOrden.toString());
+    String urlR=await UrlLogin('listarTracking&orders_id='+widget.nroOrden.toString());
+    var urlb = Uri.parse(urlR);
     final response = await http.get(urlb,headers: {"Accept": "application/json"},);
+    
     print(response.body);
     Map res= jsonDecode(response.body);
 

@@ -1,3 +1,5 @@
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
 import '../auth/terminos.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../funciones_generales.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
@@ -20,7 +21,7 @@ class _SignUpState extends State<SignUp> {
   int _radioValue1 = -1;
   int correctScore = 0;
   //bool checkBoxTerminos = false;
-bool autovalidate_calendario=false;
+  bool autovalidate_calendario=false;
   String confirmPassword;
 
 
@@ -34,9 +35,26 @@ bool autovalidate_calendario=false;
 
 
   Future<Null> _selectDate(BuildContext context) async {
+
+     DatePicker.showDatePicker(context,
+                              showTitleActions: true,
+                              
+                              minTime: DateTime(1960, 8),
+                              maxTime:DateTime(2010,12), onChanged: (date) {
+                            print('change $date');
+                          }, onConfirm: (date) {
+                            print('confirm $date');
+                                  setState(() {
+                                    primeraVez=false;
+                                    selectedDate = date;
+                                    _actualizarFecha(selectedDate.toLocal().toString().split(' ')[0]);
+                                  });
+                          }, currentTime: selectedDate, locale: LocaleType.es);
+/*
+
     DatePicker.showDatePicker(
         context,
-        minDateTime:DateTime(1920, 8),
+        minDateTime:DateTime(1960, 8),
         maxDateTime:DateTime(2010,12),
         initialDateTime: selectedDate,
         locale: DateTimePickerLocale.es,
@@ -51,6 +69,10 @@ bool autovalidate_calendario=false;
 
       }
     );
+*/
+
+
+    
   }
 
 

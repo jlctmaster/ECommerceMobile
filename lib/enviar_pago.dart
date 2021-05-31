@@ -37,7 +37,7 @@ bool _cargadoTotalPagar=false;
   };
   List rateJson;
   String _ref;
-
+  String horaEntrega="";
   String _monto;
   double total_pay=0.00;
   bool _pagado=false;
@@ -56,7 +56,7 @@ bool _cargadoTotalPagar=false;
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBarBio(context,"Realizar pago."),
+      appBar: AppBarBio(context,"Modulo de pago."),
       body:  SingleChildScrollView( child: Container(
 
         child:Padding(padding:EdgeInsets.all(15),child: Column(
@@ -73,7 +73,7 @@ bool _cargadoTotalPagar=false;
 
   }
 _datosPagos(){
-  if(widget.payment_methods_id==5 || widget.payment_methods_id==10 || widget.payment_methods_id==8 || widget.payment_methods_id==3){
+  if(widget.payment_methods_id==5 || widget.payment_methods_id==10 || widget.payment_methods_id==12 || widget.payment_methods_id==8 || widget.payment_methods_id==3){
     return Column(children: <Widget>[
         // Center(child: subTituloLogin("Realice su pago"),),
      // Divider(),  
@@ -187,6 +187,7 @@ _datosPagos(){
     abono=0.00;
   }else{
     List r=jsonDecode(data[0]['pago_json']);
+    horaEntrega=data[0]['delivery_time_date'];
     String _status;
     double _amount;
     for(int i=0; i<r.length; i++){
@@ -216,10 +217,10 @@ if(status>1) _pagado=true;
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         //   _textod("Orden: ",_futureFormateo(orden)),
-        _textob("Orden: ", "+ " + _formatearMoneda(orden)),
+        abono>0 ? _textob("Orden: ", "+ " + _formatearMoneda(orden)) : SizedBox(),
         //_textob("Envío: ","+ "+_formatearMoneda(transporte)),
         //    _textob("Embalaje: ","+ "+_formatearMoneda(embalaje)),
-        _textob("Abonos: ", "- " + _formatearMoneda(abono)),
+       abono>0 ? _textob("Abonos: ", "- " + _formatearMoneda(abono)) : SizedBox(),
         //REDONDEO AL SUPERIOR
         Divider(),
         //_textoc("Total a pagar: ",_formatearMoneda(double.parse((totalPagar+0.004).toStringAsFixed(2)))),
@@ -234,26 +235,40 @@ if(status>1) _pagado=true;
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         
-        Center(child:Text("Pago completado.",style:TextStyle(fontSize:29),)),
+        Center(child:Text("Orden procesada!",style:TextStyle(fontSize:29),)),
         formu(_pagado,cant_pagos),],
     );
   }else{
     return Center(child: Text("Disculpe, este método de pago no se encuentra disponible para su orden. Esto puede ser debido a que el monto a pagar en la moneda seleccionada es muy bajo.",textAlign:TextAlign.center,style: TextStyle(color: Colors.red),),);
   }
   }
+  _horaEntrega(){
+    return Column(
+      children: [
+        Text("Su orden Nro. "+widget.nroOrden.toString()+" será entregada aproximadamente a las:"),
+        Text(horaEntrega,style:TextStyle(fontSize:18)),
+      ],
+    );
+  }
   formu(bool pagado,cant_pagos){
     if(pagado){
-     return Column(children: <Widget>[
+     return Center(child:Column(
+       mainAxisAlignment: MainAxisAlignment.center,
+       children: <Widget>[
         Icon(Icons.check_circle, size: 50, color: Color(colorVerde),),
-        Text("Gracias por preferirnos, le invitamos a conocer todas nuestras categorías y promociones.", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
-        Text(
-          "Es posible que algunos de sus pagos estén en proceso de verificación. En el menu Orden o Tracking puede ver el estatus de su orden.",
-          textAlign: TextAlign.center,),
-        linkGrande("Volver al menu principal", "/home", context)
-      ],);
+        Text("Gracias por preferirnos.", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
+          SizedBox(
+            height: 10,
+          ),
+          _horaEntrega(),
+          Text("Para mayor información puede comunicarse via WhatsApp al Nro.",textAlign: TextAlign.center,),
+          Text("+58 412 1507327", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
+          SizedBox(height: 10,),
+        linkGrande("Salir al menú principal", "/home", context)
+      ],));
     }else{
       if(cant_pagos>2){
-        return Center(child:Text("Disculpe, a alcanzado el límite de pagos permitidos. Diríjase a la tienda VP Market mas cercana.",style: TextStyle(fontSize: 18,color: Colors.red)) ,);
+        return Center(child:Text("Disculpe, a alcanzado el límite de pagos permitidos. Diríjase a la tienda PIDE mas cercana.",style: TextStyle(fontSize: 18,color: Colors.red)) ,);
       }else {
         return _formularios();
       }
@@ -272,6 +287,9 @@ if(status>1) _pagado=true;
         break;
       case 5:
         return _formularioBiowallet();
+        break;
+      case 12:
+        return _formularioPagoEnCasa();
         break;
       default:
         return _formularioTransferencia();
@@ -314,6 +332,24 @@ _formularioBiowallet(){
       )
   );
 }
+_formularioPagoEnCasa(){
+  return Form(
+      key: _formKey,
+      child:Column(
+        children: <Widget>[
+          Divider(),
+          Center(child: subTituloLogin("Verifique el monto y presione aceptar"),),
+          Row(children: <Widget>[
+            
+            Expanded(child: _campoTexto_monto('Monto a pagar','Verifique su monto a pagar','nro_venezuela',true)),
+          ],),
+
+          _botonRojo(texto:"Aceptar")
+
+        ],
+      )
+  );
+}
 _mostrarSaldo(){
 
 return FutureBuilder(
@@ -345,7 +381,7 @@ return FutureBuilder(
             ],),
 Padding(
   padding: EdgeInsets.only(top:10),
-  child:Text("VP Market no reembolsara si su pago es superior al total a pagar.",style: TextStyle(color: Colors.red),),
+  child:Text("PIDE no reembolsara dinero si su pago es superior al total a pagar.",style: TextStyle(color: Colors.red),),
 )
 ,
             _botonRojo()
@@ -566,7 +602,7 @@ Padding(
         )
     );
   }
-  _botonRojo() {
+  _botonRojo({texto:'Pagar'}) {
 
     return Padding(
         padding: const EdgeInsets.only(top: 25.0),
@@ -582,7 +618,7 @@ Padding(
                 textColor: Colors.white,
                 child: _cargando ? CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ) : Text('Pagar'),
+                ) : Text(texto),
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     setState(() {

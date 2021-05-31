@@ -29,25 +29,11 @@ class _principalState extends State<Principal> {
 
     return ListView(
            
-              shrinkWrap: true,
-             
-     
+   
               children: <Widget>[
-  
-               
-                  //_tituloConBoton('Categorias','Ver todas','/categorise'),//Titulo antes del scroll
-                 //_textoTituloCentrado('Categorias'),
-                  // categorias en scroll lateral
-                  //Padding(padding: EdgeInsets.only(top:5),),
-                  //_textoTituloCentrado('Promociones'),
-           //ListadoProductos(tipoListado: 'promocion',),
-          // _textoTituloCentrado('Mas productos'),
-          // Padding(padding: EdgeInsets.only(top:5),),
            listaPublicidad(),
             ListadoProductos(tipoListado: 'listarProductosConPromocion',listadoProductos: widget.listadoProductos,),
-                 
-                  
-                ],
+            ],
               
 
     );

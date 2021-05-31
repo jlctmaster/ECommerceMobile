@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:villaspark/home/menuCategorias.dart';
-import 'package:villaspark/modelo.dart';
-import 'package:villaspark/widget/icono_carrito.dart';
+import '/home/menuCategorias.dart';
+import '/modelo.dart';
+import '/widget/icono_carrito.dart';
 
 import '../home/ordenes.dart';
 import 'package:flutter/cupertino.dart';
@@ -114,7 +114,7 @@ backgroundColor: Colors.white,
     //GestureDetector( onTap: () {msj("sdfsd");}, child: Icon(Icons.volume_up) ),
 
     IconButton(
-      icon: Icon(Icons.favorite_border,color: Color(colorRojo),),
+      icon: Icon(Icons.favorite,color: Color(colorRojo),),
       onPressed: () async {
         if(await validarSesion()){
             await setEvento('listarFavoritos',"Mis Favoritos");
@@ -279,9 +279,9 @@ _actualizarEvento(String evento) {
 }
   Future<void> _onItemTapped(int index) async {
     if(index==2){
-if(!await validarSesion()){
-  return false;
-}
+        if(!await validarSesion()){
+          return false;
+        }
       
     }
     if(index==1){
@@ -361,8 +361,9 @@ buscador(){
     if(texto.length>2) {
 
       url = await UrlLogin(datos);
+      var uri = Uri.parse(url);
       final response = await http.get(
-        url, headers: {"Accept": "application/json"},);
+        uri, headers: {"Accept": "application/json"},);
       res = jsonDecode(response.body);
       if (response.statusCode == 200) {
         print(res['msj_general']);
