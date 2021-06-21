@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/blocks/auth_block.dart';
-
+import 'package:Pide/pide_icons.dart';
 import '../funciones_generales.dart';
 import '../modelo.dart';
 class AddCarrito extends StatefulWidget {
@@ -66,24 +66,89 @@ class _addCarritoState extends State<AddCarrito> {
   }
 
 _todo(proveedor,rowCarrito){
-  return Column(
-
-          children: _cant==0 ? 
-          [
-            Padding(padding: EdgeInsets.only(top:100)),
+  return _cant==0 ? 
+          
+           
+            _btnAgregarCarrito(proveedor,rowCarrito)
+           :Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children:[
+_btnMasMenosCarrito(proveedor,rowCarrito),
+_cantidad(proveedor,rowCarrito),
             _btnMasCarrito(proveedor,rowCarrito)
-          ] : [
-            Padding(padding: EdgeInsets.only(top:73)),
-            _btnMasMenosCarrito(proveedor,rowCarrito),
-            _btnMasCarrito(proveedor,rowCarrito)
-          ],
-
-        );   
+             ]
+           ) 
+        ;   
 }
-_btnMasCarrito(proveedor,rowCarrito){
+final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+ // backgroundColor:  Color(colorVerde).withOpacity(0.9),
+  backgroundColor:  Color(0xFFA2BF26),
+  primary: Colors.white,
 
+//textStyle: ,
+ // minimumSize: Size(88, 36),
+  padding: EdgeInsets.symmetric(horizontal: 16.0),
+  
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    //borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10.0),bottomRight: Radius.circular(10.0)),
+  ),
+);
+_btnMasCarrito(proveedor,rowCarrito){
 return RawMaterialButton(
   onPressed: () async{
+
+          
+           //double _total=_cant*widget.priceB;
+             //  msjb("Total: "+_total.toString(),context);
+           if(_cant>widget.pedidoMaximo && widget.pedidoMaximo!=0){
+
+             msj("Máximo permitido.");
+           }else{
+              if(_cant>widget.stock){
+                msj("Stock Agotado.");
+              }else{
+                 _cant=_cant+1;
+                  await setCarrito(widget.id,_cant);
+                  proveedor.notifyListeners();
+                  String total=await proveedor.totalCarrito();
+                  msjb("Total:  "+total,context);
+              }
+           }
+  },
+  elevation: 2.0,
+  fillColor: Color(colorVerde).withOpacity(0.9),
+  child: Icon(
+    Pide.add,
+    size: 20.0,
+    color: Colors.white,
+  ) ,
+
+
+    
+  padding: EdgeInsets.all(0.0),
+
+  shape: CircleBorder(),
+);
+              
+                    
+
+}
+_cantidad(proveedor,rowCarrito){
+return Text(_cant.toString());
+              
+                    
+
+}
+_btnAgregarCarrito(proveedor,rowCarrito){
+return Container(
+  margin: const EdgeInsets.only(left: 5.0,bottom: 5,right: 5),
+width: double.infinity,
+  // height: double.infinity,
+  child:TextButton(
+
+  style: flatButtonStyle,
+    onPressed: () async{
 
            _cant=_cant+1;
            //double _total=_cant*widget.priceB;
@@ -102,23 +167,10 @@ return RawMaterialButton(
               }
            }
   },
-  elevation: 2.0,
-  fillColor: Color(colorVerde).withOpacity(0.9),
-  child: _cant==0 ? Icon(
-    Icons.add,
-    size: 20.0,
-    color: Colors.white,
-  ) : 
-      Text("+ "+_cant.toString(),style: TextStyle(color: Colors.white),),
+  child: Text('Agregar'),
+));
 
-
-    
-  padding: EdgeInsets.all(0.0),
-
-  shape: CircleBorder(),
-);
-              
-                    
+                           
 
 }
 _btnMasMenosCarrito(proveedor,rowCarrito){
@@ -140,7 +192,7 @@ return       Container(
   elevation: 2.0,
   fillColor: Color(colorRojo).withOpacity(0.7),
   child:Icon(
-    Icons.remove,
+    Pide.remove,
     size: 20.0,
     color: Colors.white,
   ) ,

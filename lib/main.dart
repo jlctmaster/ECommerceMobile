@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:Pide/home/ordenes.dart';
+
 import 'modelo.dart';
 
 import 'biowallet.dart';
@@ -30,7 +32,7 @@ import 'direcciones.dart';
 import 'home/producto.dart';
 import 'listadoDirecciones.dart';
 import 'mi_perfil.dart';
-
+import 'package:responsive_framework/responsive_framework.dart';
 Future<void> main() async{
   
   
@@ -45,6 +47,20 @@ Future<void> main() async{
       ChangeNotifierProvider(create: (_) => AuthBlock()),
     ],
     child: MaterialApp(
+      builder: (context, widget) => ResponsiveWrapper.builder(
+          BouncingScrollWrapper.builder(context, widget),
+          maxWidth: 1200,
+          minWidth: 450,
+          defaultScale: true,
+          breakpoints: [
+            ResponsiveBreakpoint.resize(450, name: MOBILE),
+            ResponsiveBreakpoint.autoScale(800, name: TABLET),
+            ResponsiveBreakpoint.autoScale(1000, name: TABLET),
+            ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+            ResponsiveBreakpoint.autoScale(2460, name: "4K"),
+          ],
+          background: Container(color: Color(0xFFF5F5F5))),
+
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -56,6 +72,7 @@ Future<void> main() async{
       theme: ThemeData(
           primaryColor: Color(0xff80bc00),
           accentColor: Colors.lightBlue[900],
+          
           //fontFamily: locale.languageCode == 'ar' ? 'Dubai' : 'Lato'),
          ),
       initialRoute: '/analizar',
@@ -83,6 +100,7 @@ Future<void> main() async{
         '/wishlist': (BuildContext context) => WishList(),
         '/cart': (BuildContext context) => Carrito(),
         '/settings': (BuildContext context) => Settings(),
+        '/ordenes' :(BuildContext context) => Ordenes(),
         '/products': (BuildContext context) => Products(),
         '/miPerfil': (BuildContext context) => MiPerfil(),
         '/direcciones': (BuildContext context) => Direcciones(),
@@ -130,7 +148,7 @@ return Scaffold(
                             ,
                             Center(child: tipo ? CircularProgressIndicator() : RaisedButton(onPressed: (){ Navigator.pushReplacementNamed(context, '/analizar'); },child: Text("Reintentar"),),),
                             Padding(padding: EdgeInsets.only(top:50) ),
-                            Center(child: Text("Supermercado Online \n Acarigua - Araure.",textAlign: TextAlign.center,),),
+                            Center(child: Text("Automercado Online \n Acarigua - Araure.",textAlign: TextAlign.center,),),
 
 
                             ],),

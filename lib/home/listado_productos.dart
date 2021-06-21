@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../home/rating.dart';
 import '../modelo/products.dart';
 import '../config.dart';
+import 'package:Pide/pide_icons.dart';
 class ListadoProductos extends StatefulWidget {
 final String tipoListado;
 final Future listadoProductos;
@@ -52,6 +53,7 @@ bool _botonBusqueda=false;
                 try {
                   if (projectSnap.data['success'] == true) {
                     print("entro caja de productos nuevar");
+                    //return cajaProductosNueva(projectSnap.data['data']);
                     return cajaProductosNueva(projectSnap.data['data']);
 
                   } else {
@@ -60,7 +62,7 @@ bool _botonBusqueda=false;
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            //Icon(Icons.do_not_disturb,size: 50,),
+                            //Icon(Pide.do_not_disturb,size: 50,),
 
                             //"Ups, nos hemos encontrado productos que coincidan con tu búsqueda, intenta más tarde."
                             Center(child: Text(projectSnap.data['msj_general'],
@@ -94,7 +96,7 @@ bool _botonBusqueda=false;
   cajaProductosNueva(products) {
     var size = MediaQuery.of(context).size;
 
-    final double itemHeight = (size.height - kToolbarHeight ) / 3;
+  //  final double itemHeight = (size.height - kToolbarHeight ) / 3;
   //  final double itemWidth = size.width / 2;
     double width=MediaQuery.of(context).size.width;
     print("MEDIA QUERY");
@@ -102,11 +104,14 @@ bool _botonBusqueda=false;
 int widthCard= 180;    
 
 int countRow=width~/widthCard;
+
+
 return GridView.count(
- 
+
   //childAspectRatio: (itemWidth / 220),
   childAspectRatio: (widthCard / 220),
   shrinkWrap: true,
+ 
   physics: ClampingScrollPhysics(),
   // Create a grid with 2 columns. If you change the scrollDirection to
   // horizontal, this produces 2 rows.
@@ -122,6 +127,8 @@ return GridView.count(
 );
 
   }
+
+  
   cajaProductosNuevaFlexible(products) {
     return new StaggeredGridView.countBuilder(
       padding: EdgeInsets.only(top:10),
@@ -142,9 +149,9 @@ return GridView.count(
 _productoDeLista(products,index){
       String imagen='';
     if(products[index]['image_web']!=null) {
-      imagen = "$BASE_URL/storage/" + products[index]['image_web'];
+      imagen = "$BASE_URL_IMAGEN" + products[index]['image_web'];
     }else{
-      imagen ="$BASE_URL/storage/" + products[index]['image'];
+      imagen ="$BASE_URL_IMAGEN" + products[index]['image'];
     }
       //print("ENTRO");
       String imagen_grande=products[index]['image_grande'];
@@ -176,12 +183,23 @@ _productoDeLista(products,index){
 
       return Card(
 
-margin: EdgeInsets.zero,
-elevation: 0,
+ shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10),
+    side: BorderSide(width: 1, color: Color(0xFFDDDDDD))
+    ),
+margin: EdgeInsets.all(5),
+
+//elevation: 2,
 
         semanticContainer: false,
 
-        child: InkWell(
+        child:  Column(
+
+                  
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    InkWell(
+
                 onTap: () {
                   Navigator.pushNamed(
                     context,
@@ -206,31 +224,26 @@ elevation: 0,
                     ),
                   ).then((val)=>{_capturarRetroceso()});
                 },
-                child: Column(
+                child: Stack(   
 
-                  
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                     
-                      child: Stack(     
                         children: <Widget>[
-                          Center(child:CachedNetworkImage(
+                          Container(
+                            margin: EdgeInsets.all(5),
+child:Center(
+                            
+                            child:CachedNetworkImage(
+
                             width: 140,
-                        fit: BoxFit.cover,
+                        //fit: BoxFit.cover,
                         imageUrl: imagen,
                         placeholder: (context, url) => Center(
                             child: CircularProgressIndicator()
                         ),
-                        errorWidget: (context, url, error) => new Icon(Icons.error),
-                      )),
-                      Container(
-                        
-                        alignment: Alignment.bottomRight,
-                    
-                      
-                      child: AddCarrito(id: id,stock:stock,pedidoMaximo:pedidoMaximo,priceB: precioBolivar,priceD: precioDolar)
-                      ),
+                        errorWidget: (context, url, error) => new Icon(Pide.error),
+                      ))
+                          )
+                          ,
+
                     Padding(padding: EdgeInsets.only(top:130),
                     child: 
                     Container(alignment: Alignment.center,
@@ -263,14 +276,15 @@ elevation: 0,
 
                     ),
                     Center(child:Text(name,maxLines: 2,style: TextStyle(fontSize: 13),textAlign: TextAlign.center,)),
-                   promocion==1 ? _precioOferta('$precioDolarSinDescuento/$precioBolivarSinDescuento','$priceDolar/$price') :  SizedBox(),
+                  // promocion==1 ? _precioOferta('$precioDolarSinDescuento/$precioBolivarSinDescuento','$priceDolar/$price') :  SizedBox(),
                     _precioNormal('$priceDolar/$price'),
-                  
-                   
+                   Spacer(),
+                    AddCarrito(id: id,stock:stock,pedidoMaximo:pedidoMaximo,priceB: precioBolivar,priceD: precioDolar)
+                     
                   ],
                 ),
 
-              )
+              
 
 );
               

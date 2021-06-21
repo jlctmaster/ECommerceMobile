@@ -1,5 +1,6 @@
 import '../funciones_generales.dart';
 import 'package:flutter/material.dart';
+import 'package:Pide/pide_icons.dart';
 
 class ShopSearch extends StatefulWidget {
   @override
@@ -45,7 +46,7 @@ class _ShopSearchState extends State<ShopSearch> {
                     child: DropdownButton<String>(
                       isExpanded: true,
                       value: dropdownValue,
-                      icon: Icon(Icons.keyboard_arrow_down),
+                      icon: Icon(Pide.keyboard_arrow_down),
                       style: TextStyle(
                           color: Colors.black
                       ),

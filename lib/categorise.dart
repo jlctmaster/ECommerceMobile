@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:Pide/pide_icons.dart';
 class Categorise extends StatefulWidget {
   @override
   _CategoriseState createState() => _CategoriseState();
@@ -51,7 +51,7 @@ class _CategoriseState extends State<Categorise> {
                               placeholder: (context, url) => Center(
                                   child: CircularProgressIndicator()
                               ),
-                              errorWidget: (context, url, error) => new Icon(Icons.error),
+                              errorWidget: (context, url, error) => new Icon(Pide.error),
                             ),
                           ),
                           ListTile(

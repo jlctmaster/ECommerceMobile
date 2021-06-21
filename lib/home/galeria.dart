@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../config.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:Pide/pide_icons.dart';
 
 class Galeria extends StatefulWidget {
   final List galleryItems;
@@ -20,9 +21,9 @@ class _GaleriaState extends State<Galeria> {
         child: PhotoViewGallery.builder(
           scrollPhysics: const BouncingScrollPhysics(),
           builder: (BuildContext context, int index) {
-            print("$BASE_URL/storage/"+widget.galleryItems[index]);
+            print("$BASE_URL_IMAGEN"+widget.galleryItems[index]);
             return PhotoViewGalleryPageOptions(
-              imageProvider: NetworkImage("$BASE_URL/storage/"+widget.galleryItems[index], ),//AssetImage(),
+              imageProvider: NetworkImage("$BASE_URL_IMAGEN"+widget.galleryItems[index], ),//AssetImage(),
               initialScale: PhotoViewComputedScale.contained * 1.1,
               //heroAttributes: HeroAttributes(tag: widget.galleryItems[index].id),
             );
@@ -43,7 +44,7 @@ class _GaleriaState extends State<Galeria> {
                       placeholder: (context, url) => Center(
                           child: CircularProgressIndicator()
                       ),
-                      errorWidget: (context, url, error) => new Icon(Icons.error),
+                      errorWidget: (context, url, error) => new Icon(Pide.error),
                     ),
                     Padding(
                       padding: EdgeInsets.only(bottom: 180,left: 290),

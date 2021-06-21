@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../funciones_generales.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:Pide/pide_icons.dart';
 class AppDrawer extends StatefulWidget {
   final List categorias;
 
@@ -40,7 +41,7 @@ child: ListView(
       Image(image: AssetImage('assets/images/logo_peque.png'), height: 130,),
       Padding(padding: EdgeInsets.all(10),),
       ListTile(
-          leading: Icon(Icons.home, color: Color(colorVerdeb), size: 28,),
+          leading: Icon(Pide.home, color: Color(colorVerdeb), size: 28,),
           title: Text("Inicio", style: TextStyle(color: Colors.black, fontSize: 17)),
           trailing: null,
           onTap: () async {
@@ -85,7 +86,7 @@ child: ListView(
   }
   _menuCerrarSesion(auth){
       return       ListTile(
-            leading: Icon(Icons.exit_to_app, color: Color(colorVerdeb), size: 28,),
+            leading: Icon(Pide.exit_to_app, color: Color(colorVerdeb), size: 28,),
             title: Text('Cerrar sesión', style: TextStyle(color: Colors.black, fontSize: 17)),
 
             onTap: () async {
@@ -100,18 +101,19 @@ child: ListView(
   _botonesLogin(isLogin,auth){
     if(isLogin){
       return Column(children: <Widget>[
-      botonMenu("Mi perfil",Icons.account_circle,'/miPerfil'),
-      botonMenu("Direcciones de entrega",Icons.edit,'/ListadoDirecciones'),
-      botonMenu("Dirección de habitación",Icons.edit,'/direccion_habitacion'),
-      botonMenu("Cambiar contraseña",Icons.vpn_key,'/cambiarClave'),
- botonMenuRoute("Preguntas frecuentes",Icons.help_outline,Faq()),
- _menuCerrarSesion(auth)
+      botonMenu("Mi perfil",Pide.account_circle,'/miPerfil'),
+      botonMenu("Direcciones de entrega",Pide.edit,'/ListadoDirecciones'),
+      botonMenu("Dirección de habitación",Pide.edit,'/direccion_habitacion'),
+      botonMenu("Cambiar contraseña",Pide.vpn_key,'/cambiarClave'),
+      botonMenu("Cambiar contraseña",Pide.local_shipping,'/ordenes'),
+      botonMenuRoute("Preguntas frecuentes",Pide.help_outline,Faq()),
+      _menuCerrarSesion(auth)
       ],);
 
     }else{
       return Column(children: <Widget>[
-        botonMenu("Iniciar sesión",Icons.vpn_key,'/'),
-        botonMenu("Registrarme",Icons.app_registration,'/registro')
+        botonMenu("Iniciar sesión",Pide.vpn_key,'/'),
+        botonMenu("Registrarme",Pide.edit,'/registro')
 
       ],);
 
@@ -187,7 +189,7 @@ _categorias(){
             final item = res.data[index];
             return ListTile(
 
-              leading: Icon(Icons.shopping_basket,
+              leading: Icon(Pide.shopping_basket,
                   color: Colors.white),
               title: _textoSubTitle(item['name']),
               onTap: () {

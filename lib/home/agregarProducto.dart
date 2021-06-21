@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../funciones_generales.dart';
 import 'package:provider/provider.dart';
+import 'package:Pide/pide_icons.dart';
 class AgregarProducto extends StatefulWidget {
   final double precioDolar;
   final double precioBolivar;
@@ -76,7 +77,7 @@ Column(
               ),
 
 
-              FlatButton(child: Icon(Icons.do_not_disturb_on),
+              FlatButton(child: Icon(Pide.do_not_disturb_on),
 
                   onPressed: () async {
 
@@ -104,10 +105,10 @@ Column(
                   }
 
               }),
-              Icon(Icons.shopping_cart,size: 16,),
+              Icon(Pide.shopping_cart,size: 16,),
               Text("$_cant",style: TextStyle(fontSize: 21),),
               FlatButton(
-                child: Icon(Icons.add_circle),
+                child: Icon(Pide.add_circle),
                 onPressed: () async {
 
 if(_stock>0 && (_pedidoMax>_cant || widget.pedidoMax==0) && widget.stock>_cant) {

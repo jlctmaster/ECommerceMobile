@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-
+import 'package:Pide/pide_icons.dart';
 class Products extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class Products extends StatelessWidget {
                       imageUrl: args,
                       placeholder: (context, url) =>
                           Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => new Icon(Icons.error),
+                      errorWidget: (context, url, error) => new Icon(Pide.error),
                     ),
                   ),
                 ),

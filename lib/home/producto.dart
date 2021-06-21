@@ -10,6 +10,7 @@ import '../home/rating.dart';
 import '../modelo/products.dart';
 import '../modelo/favorites.dart';
 import 'package:http/http.dart' as http;
+import 'package:Pide/pide_icons.dart';
 class Producto extends StatefulWidget {
   @override
   _productoState createState() => _productoState();
@@ -83,7 +84,7 @@ class _productoState extends State<Producto>{
                           child: FloatingActionButton(
                                 mini: true,
 
-                                child: Icon(Icons.favorite,color: _status_favorite==false ? Colors.grey : Colors.red,) ,
+                                child: Icon(Pide.favorite,color: _status_favorite==false ? Colors.grey : Colors.red,) ,
                                 backgroundColor: Colors.white,
                                 onPressed: () async{
                                   if(await validarSesion()){

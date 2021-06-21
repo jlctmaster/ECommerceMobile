@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/blocks/auth_block.dart';
-
+import 'package:Pide/pide_icons.dart';
 import '../funciones_generales.dart';
 
 class IconoCarrito extends StatefulWidget {
@@ -22,7 +22,7 @@ color: Color(colorVerde),
     icon:Stack(
       
       children: <Widget>[
-      Icon(Icons.shopping_cart,),
+      Icon(Pide.shopping_cart,),
       Padding(padding: EdgeInsets.only(top:8,left: 10),child:
     Container(
         width: 17.0,
@@ -59,7 +59,7 @@ color: Color(colorVerde),
               }
             }
         )) //) You can add a Icon instead of text also, like below.
-      //child: new Icon(Icons.arrow_forward, size: 50.0, color: Colors.black38)),
+      //child: new Icon(Pide.arrow_forward, size: 50.0, color: Colors.black38)),
     )
 
     )],),

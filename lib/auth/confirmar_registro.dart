@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/index.dart';
 import '../funciones_generales.dart';
 import '../models/user.dart';
 import '../blocks/auth_block.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'countDownTimer.dart';
 class confirmar_registro extends StatefulWidget {
 
   @override
@@ -179,18 +179,23 @@ class _RecuperarState extends State<confirmar_registro> {
   }
   Widget cuentaRegresiva(){
     if(statusReenvio==0) {
-      return CountDownTimer(
-        secondsRemaining: tiempoRestante,
-        whenTimeExpires: () {
-          setState(() {
-            //tiempoRestante=180;
-            statusReenvio = 1;
-          });
-        },
+int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * tiempoRestante;
 
-      );
+return CountdownTimer(
+  endTime: endTime,
+  onEnd: onEnd,
+);
+
     }else{
       return Text("");
     }
   }
+
+void onEnd() {
+    setState(() {
+    statusReenvio = 1;
+  });
+}
+
+
 }

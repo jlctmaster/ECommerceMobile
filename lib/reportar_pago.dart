@@ -2,6 +2,7 @@ import 'enviar_pago.dart';
 import 'funciones_generales.dart';
 import 'modelo.dart';
 import "package:flutter/material.dart";
+import 'package:Pide/pide_icons.dart';
 class ReportarPago extends StatefulWidget{
 final int payment_methods_id;
 final int nroOrden;
@@ -82,7 +83,7 @@ class _reportarPagoState extends State<ReportarPago> {
           child: Text(cuenta['c_name'])
       ),
 
-      trailing: Icon(Icons.navigate_next),
+      trailing: Icon(Pide.navigate_next),
       onTap: (){
         Navigator.push(context, MaterialPageRoute(
           builder: (context) => EnviarPago(payment_methods_id:widget.payment_methods_id,id: int.parse(cuenta['id']),symbol:cuenta['symbol'], titular: cuenta['titular'],description: cuenta['description'],moneda: cuenta['c_name'],nombreBanco: cuenta['b_name'],coins_id: cuenta['coins_id'],nroOrden: widget.nroOrden,rate: double.parse(cuenta['rate']),),

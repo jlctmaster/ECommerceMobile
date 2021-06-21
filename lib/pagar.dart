@@ -3,6 +3,7 @@ import 'modelo.dart';
 import 'reportar_pago.dart';
 import 'widget/modal_pagos.dart';
 import 'package:flutter/material.dart';
+import 'package:Pide/pide_icons.dart';
 class Pagar extends StatefulWidget {
   final int nroOrden;
   final int ordenStatus;
@@ -92,7 +93,7 @@ class _pagar extends State<Pagar>{
           child: Text(metodo['description'])
       ),
 
-      trailing: Icon(Icons.navigate_next),
+      trailing: Icon(Pide.navigate_next),
       onTap: (){
         /*showDialog(
           context: context,

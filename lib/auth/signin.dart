@@ -6,6 +6,7 @@ import '../blocks/auth_block.dart';
 import '../funciones_generales.dart';
 import '../models/user.dart';
 import 'package:provider/provider.dart';
+import 'package:Pide/pide_icons.dart';
 class SignIn extends StatefulWidget {
   @override
   _SignInState createState() => _SignInState();
@@ -206,8 +207,8 @@ initialValue: valorInicial ?? '',
             icon: Icon(
               // Based on passwordVisible state choose the icon
               passwordVisible
-                  ? Icons.visibility
-                  : Icons.visibility_off,
+                  ? Pide.visibility
+                  : Pide.visibility_off,
               color: Color(0xffcccccc),
             ),
             onPressed: () {

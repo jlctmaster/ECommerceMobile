@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:Pide/pide_icons.dart';
+
 import '/home/menuCategorias.dart';
 import '/modelo.dart';
 import '/widget/icono_carrito.dart';
@@ -96,7 +98,7 @@ backgroundColor: Colors.white,
                         buscador(),
               ),
 
-      InkWell(child: Icon(Icons.search,color: Colors.black45,),onTap: () async {
+      InkWell(child: Icon(Pide.search,color: Colors.black45,),onTap: () async {
         await setEvento('listarProductosPorBusqueda&texto='+textoBuscador,"Resultados de: "+textoBuscador);
         Navigator.pushNamed(context, '/home');
       },),
@@ -111,10 +113,10 @@ backgroundColor: Colors.white,
   titleSpacing: 0.00,
 
   actions: <Widget>[
-    //GestureDetector( onTap: () {msj("sdfsd");}, child: Icon(Icons.volume_up) ),
+    //GestureDetector( onTap: () {msj("sdfsd");}, child: Icon(Pide.volume_up) ),
 
     IconButton(
-      icon: Icon(Icons.favorite,color: Color(colorRojo),),
+      icon: Icon(Pide.favorite,color: Color(colorRojo),),
       onPressed: () async {
         if(await validarSesion()){
             await setEvento('listarFavoritos',"Mis Favoritos");
@@ -132,7 +134,7 @@ backgroundColor: Colors.white,
     IconoCarrito(),
     Builder(
       builder: (context) => IconButton(
-        icon: Icon(Icons.menu),
+        icon: Icon(Pide.menu),
         onPressed: () => Scaffold.of(context).openEndDrawer(),
         tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
       ),
@@ -193,30 +195,7 @@ Expanded(child:FutureBuilder(
 
 ],) ,
 backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Inicio'),
 
-
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_basket),
-            title: Text('Productos'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_shipping),
-            title: Text('Ordenes'),
-          ),
-
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Color(0xff6A9D00),
-        selectedFontSize: 15,
-
-        onTap: _onItemTapped,
-      ),
     );
 
   }
@@ -336,7 +315,7 @@ buscador(){
       },
       itemBuilder: (context, suggestion) {
         return ListTile(
-          // leading: Icon(Icons.shopping_cart),
+          // leading: Icon(Pide.shopping_cart),
           title: Text(suggestion['name']),
           // subtitle: Text('\$${suggestion['price']}'),
         );

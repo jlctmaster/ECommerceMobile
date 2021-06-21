@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:http/http.dart' as http;
+import 'package:Pide/pide_icons.dart';
 class Orden extends StatefulWidget{
   final String id;
   final int ordenStatus;
@@ -67,7 +68,7 @@ String opinion="";
                           children: <Widget>[
                             Padding(padding: EdgeInsets.only(top: 15),),
                             Text("Felicidades su orden ha sido entregada",style: TextStyle(color: Color(colorVerde),fontSize: 20),),
-                          //  Icon(Icons.check_circle,size: 50,color: Color(colorVerdeb),),
+                          //  Icon(Pide.check_circle,size: 50,color: Color(colorVerdeb),),
                             Padding(padding: EdgeInsets.only(top: 15),),
 
 
@@ -100,11 +101,11 @@ labelStyle: TextStyle(fontSize: 14),
           labelColor: Colors.white,
 
           tabs: [
-            Tab(child: Column(children: <Widget>[Icon(Icons.shopping_cart),Text("Orden",)],),),
-            Tab(child: Column(children: <Widget>[Icon(Icons.payment),Text("Pagar",)],),),
-            Tab(child: Column(children: <Widget>[Icon(Icons.call_split),Text("Tracking",)],),),
-           // Tab(icon: Icon(Icons.),child: Text("Pagar",),),
-           // Tab(icon: Icon(Icons.call_split),child: Text("Tracking",),),
+            Tab(child: Column(children: <Widget>[Icon(Pide.shopping_cart),Text("Orden",)],),),
+            Tab(child: Column(children: <Widget>[Icon(Pide.payment),Text("Pagar",)],),),
+            Tab(child: Column(children: <Widget>[Icon(Pide.call_split),Text("Tracking",)],),),
+           // Tab(icon: Icon(Pide.),child: Text("Pagar",),),
+           // Tab(icon: Icon(Pide.call_split),child: Text("Tracking",),),
           ],
         ),),
     ),);
@@ -230,7 +231,7 @@ labelStyle: TextStyle(fontSize: 14),
                               //    child: CircularProgressIndicator()
                               // ),
                               errorWidget: (context, url, error) =>
-                              new Icon(Icons.error),
+                              new Icon(Pide.error),
                             ),
                           ),
                         ),

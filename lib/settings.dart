@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'funciones_generales.dart';
 import 'blocks/auth_block.dart';
 import 'package:provider/provider.dart';
+import 'package:Pide/pide_icons.dart';
 class Settings extends StatefulWidget {
   @override
   _SettingsState createState() => _SettingsState();
@@ -25,9 +26,9 @@ class _SettingsState extends State<Settings> {
                     child:  ListView(
                       shrinkWrap: true,
                       children: <Widget>[
-                        botonMenu("Mi perfil",Icons.account_circle,'/miPerfil'),
-                        botonMenu("Direcciones",Icons.edit,'/ListadoDirecciones'),
-                        botonMenu("Cambiar contraseña",Icons.vpn_key,'/cambiarClave'),
+                        botonMenu("Mi perfil",Pide.account_circle,'/miPerfil'),
+                        botonMenu("Direcciones",Pide.edit,'/ListadoDirecciones'),
+                        botonMenu("Cambiar contraseña",Pide.vpn_key,'/cambiarClave'),
 
                       ],
                     ),
@@ -43,7 +44,7 @@ class _SettingsState extends State<Settings> {
         child:ListTile(
       leading: Icon(icono, color: Color(colorVerdeb), size: 28,),
       title: Text(nombre, style: TextStyle(color: Colors.black, fontSize: 17)),
-      trailing: Icon(Icons.keyboard_arrow_right, color: Color(colorVerdeb)),
+      trailing: Icon(Pide.keyboard_arrow_right, color: Color(colorVerdeb)),
           onTap: (){
             //Navigator.pop(context);
             Navigator.pushNamed(context, vista);

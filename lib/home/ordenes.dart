@@ -6,6 +6,7 @@ import '../home/orden.dart';
 import '../widget/modal.dart';
 import "package:flutter/material.dart";
 import 'package:http/http.dart' as http;
+import 'package:Pide/pide_icons.dart';
 class Ordenes extends StatefulWidget{
 
   @override
@@ -105,7 +106,7 @@ class _OrdenesState extends State<Ordenes> {
           child: Text(row['fecha'])
       ),
 
-      trailing: os_id=='1' ? IconButton(icon: Icon(Icons.highlight_off,color: Color(colorRojo), ),onPressed: (){
+      trailing: os_id=='1' ? IconButton(icon: Icon(Pide.highlight_off,color: Color(colorRojo), ),onPressed: (){
         //_showAlert("¿Esta seguro de cancelar la orden Nro. "+row['id']+"?",data,index);
         showDialog(
             context: context,
@@ -113,7 +114,7 @@ class _OrdenesState extends State<Ordenes> {
 
         );
 
-      },) : Icon(Icons.navigate_next,) //IconButton(icon: Icon(Icons.navigate_next,),)
+      },) : Icon(Pide.navigate_next,) //IconButton(icon: Icon(Pide.navigate_next,),)
       ,
       onTap: (){
         Navigator.push(

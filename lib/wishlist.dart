@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:Pide/pide_icons.dart';
 
 class WishList extends StatefulWidget {
   @override
@@ -61,7 +62,7 @@ class _WishlistState extends State<WishList> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: 20.0),
-                    child: Icon(Icons.add_shopping_cart, color: Colors.white),
+                    child: Icon(Pide.add_shopping_cart, color: Colors.white),
                   ),
 
                 ],
@@ -75,7 +76,7 @@ class _WishlistState extends State<WishList> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
-                    child: Icon(Icons.delete, color: Colors.white),
+                    child: Icon(Pide.delete, color: Colors.white),
                   ),
 
                 ],
@@ -94,7 +95,7 @@ class _WishlistState extends State<WishList> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                     child: ListTile(
-                      trailing: Icon(Icons.swap_horiz),
+                      trailing: Icon(Pide.swap_horiz),
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(5.0),
                         child: Container(
@@ -107,7 +108,7 @@ class _WishlistState extends State<WishList> {
                             placeholder: (context, url) => Center(
                                 child: CircularProgressIndicator()
                             ),
-                            errorWidget: (context, url, error) => new Icon(Icons.error),
+                            errorWidget: (context, url, error) => new Icon(Pide.error),
                           ),
                         ),
                       ),

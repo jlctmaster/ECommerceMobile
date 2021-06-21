@@ -54,7 +54,7 @@ class _CountDownTimerState extends State<CountDownTimer>
         duration = new Duration(seconds: widget.secondsRemaining);
         _controller.dispose();
         _controller = new AnimationController(
-       //   vsync: this,
+          vsync: this,
           duration: duration,
         );
         _controller.reverse(from: widget.secondsRemaining.toDouble());

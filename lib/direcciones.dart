@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'funciones_generales.dart';
-
+import 'package:Pide/pide_icons.dart';
 import 'blocks/modelo.dart';
 class Direcciones extends StatefulWidget {
   final String id;
@@ -166,7 +166,7 @@ _botonEnvio(id){
       return Padding(padding: EdgeInsets.all(0.00),);
     }
     if(data==null){
-      return Row(children: <Widget>[Text("Parroquias:"),IconButton(icon: Icon(Icons.autorenew),onPressed: (){setState(() {});},)],);
+      return Row(children: <Widget>[Text("Parroquias:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
     }
       return DropdownButton(
         items: data?.map((item) {
@@ -214,7 +214,7 @@ _botonEnvio(id){
       return Padding(padding: EdgeInsets.all(0.00),);
     }
     if(data==null){
-      return Row(children: <Widget>[Text("Municipios:"),IconButton(icon: Icon(Icons.autorenew),onPressed: (){setState(() {});},)],);
+      return Row(children: <Widget>[Text("Municipios:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
     }
     return DropdownButton(
       items: data?.map((item) {
@@ -260,7 +260,7 @@ _botonEnvio(id){
   }
   Widget _selectStatesId(List data){
     if(data==null){
-      return Row(children: <Widget>[Text("Estados:"),IconButton(icon: Icon(Icons.autorenew),onPressed: (){setState(() {});},)],);
+      return Row(children: <Widget>[Text("Estados:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
     }
 
     return DropdownButton(

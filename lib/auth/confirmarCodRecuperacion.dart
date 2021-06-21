@@ -4,8 +4,8 @@ import '../models/user.dart';
 import '../blocks/auth_block.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'countDownTimer.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+//import 'countDownTimer2.dart';
 class confirmarCodRecuperacion extends StatefulWidget {
 
   @override
@@ -134,20 +134,21 @@ class _RecuperarState extends State<confirmarCodRecuperacion> {
   }
   Widget cuentaRegresiva(){
     if(statusReenvio==0) {
-      return CountDownTimer(
-        secondsRemaining: tiempoRestante,
-        whenTimeExpires: () {
-          setState(() {
-            //tiempoRestante=180;
-            statusReenvio = 1;
-          });
-        },
+int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * tiempoRestante;
 
-      );
+return CountdownTimer(
+  endTime: endTime,
+  onEnd: onEnd,
+);
     }else{
       return Text("");
     }
   }
+void onEnd() {
+    setState(() {
+    statusReenvio = 1;
+  });
+}
 Widget msjCorreoReenviado(){
     switch(statusReenvio){
       case 1: return Consumer<AuthBlock>(builder:

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Pide/pide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -99,7 +100,7 @@ class _InputDropdown extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             new Text(valueText, style: valueStyle),
-            new Icon(Icons.arrow_drop_down,
+            new Icon(Pide.arrow_drop_down,
                 color: Theme.of(context).brightness == Brightness.light
                     ? Colors.grey.shade700
                     : Colors.white70),

@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:archive/archive.dart';
+import 'package:Pide/pide_icons.dart';
   int colorVerde=0xff28b67a;
   int colorVerdeb=0xff80bc00;
   int colorAmarillo=0xffFF8C40;
@@ -23,7 +24,8 @@ import 'package:archive/archive.dart';
       angle:  180 * pi/180,
       child: IconButton(
         padding: const EdgeInsets.only(bottom: 6.00),
-        icon: Icon(Icons.play_circle_filled,size: 40,),
+        //icon: Icon(Pide.play_circle_filled,size: 40,),
+        icon: Icon(Pide.play_circle_filled,size: 40,),
         color: Color(colorRojo),
         onPressed: () {
           Navigator.pop(context);
@@ -38,7 +40,7 @@ btnAtras3(context){
     angle:  180 * pi/180,
     child: IconButton(
 
-      icon: Icon(Icons.play_circle_filled,size: 35,),
+      icon: Icon(Pide.play_circle_filled,size: 35,),
       color: Color(colorRojo),
       onPressed: () {
         Navigator.pop(context);
@@ -278,13 +280,13 @@ titleBio(texto){
 }
 
 btnCarrito(bool actualizar){
-  return Stack(children: <Widget>[Icon(Icons.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child: CantCarrito(actualizar: actualizar,))],);
-  //return Icon(Icons.shopping_cart);
+  return Stack(children: <Widget>[Icon(Pide.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child: CantCarrito(actualizar: actualizar,))],);
+  //return Icon(Pide.shopping_cart);
 
 }
 btnCarritob(){
-  return Stack(children: <Widget>[Icon(Icons.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child: CantCarritob())],);
-  //return Icon(Icons.shopping_cart);
+  return Stack(children: <Widget>[Icon(Pide.shopping_cart),Padding(padding: EdgeInsets.only(top:8,left: 14),child: CantCarritob())],);
+  //return Icon(Pide.shopping_cart);
 
 }
 roundUp(double value){

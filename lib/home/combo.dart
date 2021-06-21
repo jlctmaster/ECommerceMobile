@@ -9,6 +9,7 @@ import '../config.dart';
 import '../funciones_generales.dart';
 import '../home/galeria.dart';
 import 'package:provider/provider.dart';
+import 'package:Pide/pide_icons.dart';
 class Combo extends StatefulWidget {
   @override
   _ComboState createState() => _ComboState();
@@ -99,7 +100,7 @@ class _ComboState extends State<Combo>{
                         fontSize: 16,
                       ),
 
-                    ), Icon(Icons.add_circle)
+                    ), Icon(Pide.add_circle)
                 ],
               ),
                             onPressed: () async {

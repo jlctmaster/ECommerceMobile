@@ -5,6 +5,7 @@ import 'blocks/modelo.dart';
 import 'direcciones.dart';
 import 'funciones_generales.dart';
 import 'hora_entrega.dart';
+import 'pide_icons.dart';
 import 'widget/modal_orden.dart';
 
 import 'package:flutter/material.dart';
@@ -104,9 +105,9 @@ bool cargadoArgumento=false;
                 indicatorColor: Color(colorRojo),
                 tabs:
                 [
-                  Tab(icon: Icon(Icons.shopping_cart),),
-                  Tab(icon: Icon(Icons.local_shipping),),
-                  //Tab(icon: Icon(Icons.payment),),
+                  Tab(icon: Icon(Pide.shopping_cart),),
+                  Tab(icon: Icon(Pide.local_shipping),),
+                  //Tab(icon: Icon(Pide.payment),),
 
 
 
@@ -232,7 +233,7 @@ bool cargadoArgumento=false;
                         Padding(
                           padding: const EdgeInsets.only(
                               left: 20.0),
-                          child: Icon(Icons.delete,
+                          child: Icon(Pide.delete,
                               color: Colors.white),
                         ),
 
@@ -250,7 +251,7 @@ bool cargadoArgumento=false;
                         Padding(
                           padding: const EdgeInsets.only(
                               right: 20.0),
-                          child: Icon(Icons.delete,
+                          child: Icon(Pide.delete,
                               color: Colors.white),
                         ),
 
@@ -333,7 +334,7 @@ bool cargadoArgumento=false;
                                 // ),
                                 errorWidget: (context,
                                     url, error) =>
-                                new Icon(Icons.error),
+                                new Icon(Pide.error),
                               ),
                             ),
                           ),
@@ -595,7 +596,7 @@ void _showAlert(String value ){
                     )),
 
               
-                Row(children: <Widget>[Text("Hora de entrega: ",style: TextStyle(fontSize: 15),),Expanded(
+                Row(children: <Widget>[Text("Hora de entrega o retiro: ",style: TextStyle(fontSize: 15),),Expanded(
                   child: HoraEntrega()
                   )],),
     ],)
@@ -859,9 +860,9 @@ void _showAlert(String value ){
          
         return Row(
 children: [
-Expanded(child:Text("Costo del envío: $_varprecioEnvioD / "+_varprecioEnvio,style: TextStyle(fontSize: 18,),textAlign: TextAlign.center ,)),
-IconButton(onPressed: (){setState(() {});}, icon: Icon(Icons.replay))
-//GestureDetector( onTap: () {setState(() {});}, child: Icon(Icons.replay) ) 
+Expanded(child:Text("Costo de envío: $_varprecioEnvioD / "+_varprecioEnvio,style: TextStyle(fontSize: 18,),textAlign: TextAlign.center ,)),
+IconButton(onPressed: (){setState(() {});}, icon: Icon(Pide.replay))
+//GestureDetector( onTap: () {setState(() {});}, child: Icon(Pide.replay) ) 
 
 ],
 

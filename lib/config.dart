@@ -4,9 +4,11 @@ import 'funciones_generales.dart';
 
 
 
-const String BASE_URL = 'https://villasparkmarket.com';
+const String BASE_URL = 'https://pide.com.ve/data';
 //const String BASE_URL = 'http://127.0.0.1:8000';
-const String BASE_URL_IMAGEN="$BASE_URL/storage/"; 
+//const String BASE_URL_IMAGEN="http://127.0.0.1:8000/storage/";  //se usa para evitar CROSS
+const String BASE_URL_IMAGEN="https://pide.com.ve/storage/";  //se usa para evitar CROSS
+
 //const String BASE_URL = 'http://10.0.1.112';
 
 Future<String> UrlLogin(String uri) async {

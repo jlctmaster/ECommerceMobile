@@ -1,23 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <base href="/">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Mercado Online en Acarigua - Araure ❤️ Comodidad y calidad de vida para ti y tu familia - Alimentos frescos y de Máxima calidad con servicio Delivery">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="vpmarket">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" href="assets/assets/images/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/png" href="favicon.png"/>
 
-  <title>- PIDE - Automercado online.</title>
+  <title>PIDE - Automercado online.</title>
   <link rel="manifest" href="manifest.json">
 </head>
+<style>
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+svg {
+  display: none;
+}
+
+.loader-container{
+  width: 50%;
+  height: 50%;
+  position: relative;
+  filter: url(#gooey);
+}
+
+.loader-container > * {
+  position: absolute;
+  display: inline-block;
+  left: 0;
+  width: 4rem;
+  height: 4rem;
+  background: #FF6600;
+  top: 25%;
+  border-radius: 50%;
+  animation: loading 4s infinite;
+  transform: scale(0.1);
+  opacity: 0;
+}
+.loader-container > *:nth-child(1) {
+  animation-delay: 0.5s;
+}
+.loader-container > *:nth-child(2) {
+  animation-delay: 1s;
+}
+.loader-container > *:nth-child(3) {
+  animation-delay: 1.5s;
+}
+.loader-container > *:nth-child(4) {
+  animation-delay: 2s;
+}
+
+@keyframes loading {
+  50% {
+    transform: scale(1.25);
+    left: 50%;
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.1);
+    left: 100%;
+    opacity: 0;
+  }
+}
+#my-div {
+   position: absolute;
+   bottom: 200px;
+   text-align: center;
+   width: 100%;
+}
+
+</style>
 <body>
+  <div class='container'>
+	
+    <div class='loader-container'>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      
+    </div>
+    <div id="my-div">Cargando...</div>
+  </div>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
@@ -26,6 +107,14 @@
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('flutter_service_worker.js');
       });
+    }
+  </script>
+   <script type="text/javascript">
+    let useHtml = true;
+    if(useHtml) {
+      window.flutterWebRenderer = "html";
+    } else {
+      window.flutterWebRenderer = "canvaskit";
     }
   </script>
   <script src="main.dart.js" type="application/javascript"></script>

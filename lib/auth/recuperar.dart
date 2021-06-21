@@ -4,6 +4,8 @@ import '../models/user.dart';
 import '../blocks/auth_block.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'auth.dart';
 class Recuperar extends StatefulWidget {
   const Recuperar({ Key key }) : super(key: key);
 
@@ -79,10 +81,10 @@ class _RecuperarState extends State<Recuperar> {
 
                                     await auth.recuperar(user);
                                     if(auth.resJson['success']==true){
-                                      setState((){
+                                     // setState((){
                                         _setEmail(user.email);
-                                        Navigator.pushNamed(context, '/confirmarCodRecuperacion');
-                                      });
+                                       Navigator.pushNamed(context, '/confirmarCodRecuperacion');
+                                     // });
                                     }else{
                                       msj(auth.resJson['msj_general']);
                                     }

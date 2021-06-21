@@ -31,7 +31,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     lintOptions {
         disable 'InvalidPackage'
@@ -46,7 +46,13 @@ android {
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']

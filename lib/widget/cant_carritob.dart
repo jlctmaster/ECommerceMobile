@@ -46,7 +46,7 @@ class _cantCarritobState extends State<CantCarritob> {
                   child: Center(child: Text(snapshot.data.toString(),
                       style: TextStyle(color: Colors.white,
                           fontSize: 14.0)),) // You can add a Icon instead of text also, like below.
-                //child: new Icon(Icons.arrow_forward, size: 50.0, color: Colors.black38)),
+                //child: new Icon(Pide.arrow_forward, size: 50.0, color: Colors.black38)),
               );
 
 

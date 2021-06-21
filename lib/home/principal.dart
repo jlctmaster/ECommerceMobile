@@ -10,6 +10,7 @@ import '../modelo/products.dart';
 import 'package:http/http.dart' as http;
 import '../config.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:Pide/pide_icons.dart';
 class Principal extends StatefulWidget {
   final ValueChanged<String> actualizarHome;
   final Future publicidad;
@@ -177,7 +178,7 @@ class _principalState extends State<Principal> {
                   tag: "$id",
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
-                    imageUrl: "$BASE_URL/storage/$image",
+                    imageUrl: "$BASE_URL_IMAGEN$image",
                     // imageUrl: "https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80",
                     placeholder: (context, url) =>
                         Center(
@@ -185,7 +186,7 @@ class _principalState extends State<Principal> {
                             CircularProgressIndicator()),
                     errorWidget:
                         (context, url, error) =>
-                    new Icon(Icons.error),
+                    new Icon(Pide.error),
                   ),
                 ),
               ),
@@ -263,7 +264,7 @@ class _principalState extends State<Principal> {
   cajaProductos(products) {
     //final formatCurrency = new NumberFormat("#,##0.00", "en_US");
     return List.generate(products.length, (index) {
-      String imagen="$BASE_URL/storage/"+products[index]['image'];
+      String imagen="$BASE_URL_IMAGEN"+products[index]['image'];
       String imagen_grande=products[index]['image_grande'];
       String name=products[index]['name'];
       String priceDolar=formatDolar.format(double.parse(products[index]['total_precio_dolar']));
@@ -324,7 +325,7 @@ class _principalState extends State<Principal> {
                     placeholder: (context, url) => Center(
                         child: CircularProgressIndicator()
                     ),
-                    errorWidget: (context, url, error) => new Icon(Icons.error),
+                    errorWidget: (context, url, error) => new Icon(Pide.error),
                   ),
                 ),
                 Padding(
@@ -358,7 +359,7 @@ class _principalState extends State<Principal> {
                           children: <Widget>[
                             new Rating(rating: rating,nombre: name,calificado_por_mi: calificado_por_mi,products_id: id),
 
-                            // IconButton(icon:Icon(Icons.favorite))
+                            // IconButton(icon:Icon(Pide.favorite))
 
                           ],
                         ),

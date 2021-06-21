@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../funciones_generales.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../config.dart';
+import 'package:Pide/pide_icons.dart';
 class ListadoCombos extends StatefulWidget {
   const ListadoCombos({Key key}) : super(key: key);
   @override
@@ -47,7 +48,7 @@ class _CombosState extends State<ListadoCombos> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            //Icon(Icons.do_not_disturb,size: 50,),
+                            //Icon(Pide.do_not_disturb,size: 50,),
 
                             //"Ups, nos hemos encontrado Combos que coincidan con tu búsqueda, intenta más tarde."
                             Center(child: Text(projectSnap.data['msj_general'],
@@ -86,7 +87,7 @@ class _CombosState extends State<ListadoCombos> {
     //final formatCurrency = new NumberFormat("#,##0.00", "en_US");
  return List.generate(combos.length, (index) {
     List json=List();
-   String imagen="$BASE_URL/storage/"+combos[index]['image'].replaceAll('\\', '/');
+   String imagen="$BASE_URL_IMAGEN"+combos[index]['image'].replaceAll('\\', '/');
    String imagen_grande='["'+combos[index]['image_grande'].replaceAll('\\', '/')+'"]';
    String name=combos[index]['name'];
 
@@ -144,7 +145,7 @@ color: Colors.white,
                      placeholder: (context, url) => Center(
                          child: CircularProgressIndicator()
                      ),
-                     errorWidget: (context, url, error) => new Icon(Icons.error),
+                     errorWidget: (context, url, error) => new Icon(Pide.error),
                    ),
 
                  ),

@@ -8,6 +8,7 @@ import 'home/orden.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:Pide/pide_icons.dart';
 class EnviarPago extends StatefulWidget{
   final int id;
   final String titular;
@@ -255,7 +256,7 @@ if(status>1) _pagado=true;
      return Center(child:Column(
        mainAxisAlignment: MainAxisAlignment.center,
        children: <Widget>[
-        Icon(Icons.check_circle, size: 50, color: Color(colorVerde),),
+        Icon(Pide.check_circle, size: 50, color: Color(colorVerde),),
         Text("Gracias por preferirnos.", style: TextStyle(fontSize: 20),textAlign: TextAlign.center,),
           SizedBox(
             height: 10,

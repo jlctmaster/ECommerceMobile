@@ -5,20 +5,18 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'blocks/modelo.dart';
 import 'camara.dart';
-import 'take_picture_screen.dart';
 import 'widget/cedula.dart';
 import 'widget/sexo.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'config.dart';
 import 'funciones_generales.dart';
 import 'blocks/auth_block.dart';
+import 'package:Pide/pide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 class MiPerfil extends StatefulWidget {
@@ -212,7 +210,7 @@ Future<bool> _showSelectionDialog(context) {
                                         ),
                                       ),
                                       placeholder: (context, url) => CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                      errorWidget: (context, url, error) => Icon(Pide.error),
                                     ),
                                     iconSize: 140,
                                     color: Color(colorVerde),
@@ -464,7 +462,7 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
       return Padding(padding: EdgeInsets.all(0.00),);
     }
     if(data==null){
-      return Row(children: <Widget>[Text("Parroquias:"),IconButton(icon: Icon(Icons.autorenew),onPressed: (){setState(() {});},)],);
+      return Row(children: <Widget>[Text("Parroquias:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
     }
       return DropdownButton(
         items: data?.map((item) {
@@ -500,7 +498,7 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
       return Padding(padding: EdgeInsets.all(0.00),);
     }
     if(data==null){
-      return Row(children: <Widget>[Text("Municipios:"),IconButton(icon: Icon(Icons.autorenew),onPressed: (){setState(() {});},)],);
+      return Row(children: <Widget>[Text("Municipios:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
     }
     return DropdownButton(
       items: data?.map((item) {
@@ -546,7 +544,7 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
   }
   Widget _selectStatesId(List data){
     if(data==null){
-      return Row(children: <Widget>[Text("Estados:"),IconButton(icon: Icon(Icons.autorenew),onPressed: (){setState(() {});},)],);
+      return Row(children: <Widget>[Text("Estados:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
     }
 
     return DropdownButton(

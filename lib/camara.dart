@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'pide_icons.dart';
+
 class Camara extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -35,7 +37,7 @@ class _MyHomePageState extends State<Camara> {
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
         tooltip: 'Imagen',
-        child: Icon(Icons.add_a_photo),
+        child: Icon(Pide.add_a_photo),
       ),
     );
   }

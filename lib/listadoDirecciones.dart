@@ -7,7 +7,7 @@ import 'funciones_generales.dart';
 
 import 'blocks/modelo.dart';
 import 'direcciones.dart';
-
+import 'package:Pide/pide_icons.dart';
 class ListadoDirecciones extends StatefulWidget {
   @override
   _listadoDireccionesState createState() => _listadoDireccionesState();
@@ -64,7 +64,7 @@ bool _btnDireccionesCargando=false;
         Navigator.pushNamed(context, '/direcciones');
       },
       tooltip: 'Increment',
-      child: Icon(Icons.add),
+      child: Icon(Pide.add),
            backgroundColor: Colors.green,
 
     ),
@@ -95,7 +95,7 @@ bool _btnDireccionesCargando=false;
                 )),
 
       trailing:
-      IconButton(icon: Icon(Icons.highlight_off, size: 35.0),onPressed: (){
+      IconButton(icon: Icon(Pide.highlight_off, size: 35.0),onPressed: (){
 
 
         _showAlert("¿Esta seguro de eliminar la dirección: $address?",datab,index);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:Pide/pide_icons.dart';
 /*
 void main() => runApp(new MaterialApp(
   home: new HomePage(),
@@ -51,14 +52,14 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(8.0),
               child: new Card(
                 child: new ListTile(
-                  leading: new Icon(Icons.search),
+                  leading: new Icon(Pide.search),
                   title: new TextField(
                     controller: controller,
                     decoration: new InputDecoration(
                         hintText: 'Search', border: InputBorder.none),
                     onChanged: onSearchTextChanged,
                   ),
-                  trailing: new IconButton(icon: new Icon(Icons.cancel), onPressed: () {
+                  trailing: new IconButton(icon: new Icon(Pide.cancel), onPressed: () {
                     controller.clear();
                     onSearchTextChanged('');
                   },),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:Pide/pide_icons.dart';
 
 class Buscador extends StatelessWidget {
   // This widget is the root of your application.
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: InputDecoration(
                     labelText: "Search",
                     hintText: "Search",
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: Icon(Pide.search),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),
               ),

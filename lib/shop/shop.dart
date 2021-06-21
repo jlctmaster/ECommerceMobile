@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:Pide/pide_icons.dart';
 
 import 'search.dart';
 
@@ -32,7 +33,7 @@ class _ShopState extends State<Shop> {
         appBar: AppBar(
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.search, color: Colors.white),
+              icon: Icon(Pide.search, color: Colors.white),
               onPressed: () {
                 scaffoldKey.currentState
                     .showBottomSheet((context) => ShopSearch());
@@ -54,8 +55,8 @@ class _ShopState extends State<Shop> {
                         child: TabBar(
                           indicatorColor: Colors.blue,
                           tabs: [
-                            Tab(icon: Icon(Icons.view_list)),
-                            Tab(icon: Icon(Icons.grid_on)),
+                            Tab(icon: Icon(Pide.view_list)),
+                            Tab(icon: Icon(Pide.grid_on)),
                           ],
                         ),
                       ),
@@ -81,7 +82,7 @@ class _ShopState extends State<Shop> {
                                           Padding(
                                             padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                                             child: ListTile(
-                                              trailing: Icon(Icons.navigate_next),
+                                              trailing: Icon(Pide.navigate_next),
                                               leading: ClipRRect(
                                                 borderRadius: BorderRadius.circular(5.0),
                                                 child: Container(
@@ -94,7 +95,7 @@ class _ShopState extends State<Shop> {
                                                     placeholder: (context, url) => Center(
                                                         child: CircularProgressIndicator()
                                                     ),
-                                                    errorWidget: (context, url, error) => new Icon(Icons.error),
+                                                    errorWidget: (context, url, error) => new Icon(Pide.error),
                                                   ),
                                                 ),
                                               ),
@@ -189,7 +190,7 @@ class _ShopState extends State<Shop> {
                                               placeholder: (context, url) => Center(
                                                   child: CircularProgressIndicator()
                                               ),
-                                              errorWidget: (context, url, error) => new Icon(Icons.error),
+                                              errorWidget: (context, url, error) => new Icon(Pide.error),
                                             ),
                                           ),
                                           Padding(
@@ -279,8 +280,8 @@ class _ShopState extends State<Shop> {
 //                    child: TabBar(
 //                      indicatorColor: Colors.blue,
 //                      tabs: [
-//                        Tab(icon: Icon(Icons.view_list)),
-//                        Tab(icon: Icon(Icons.grid_on)),
+//                        Tab(icon: Icon(Pide.view_list)),
+//                        Tab(icon: Icon(Pide.grid_on)),
 //                      ],
 //                    ),
 //                  ),
@@ -306,7 +307,7 @@ class _ShopState extends State<Shop> {
 //                                      Padding(
 //                                        padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
 //                                        child: ListTile(
-//                                          trailing: Icon(Icons.navigate_next),
+//                                          trailing: Icon(Pide.navigate_next),
 //                                          leading: ClipRRect(
 //                                            borderRadius: BorderRadius.circular(5.0),
 //                                            child: Container(
@@ -319,7 +320,7 @@ class _ShopState extends State<Shop> {
 //                                                placeholder: (context, url) => Center(
 //                                                    child: CircularProgressIndicator()
 //                                                ),
-//                                                errorWidget: (context, url, error) => new Icon(Icons.error),
+//                                                errorWidget: (context, url, error) => new Icon(Pide.error),
 //                                              ),
 //                                            ),
 //                                          ),
@@ -414,7 +415,7 @@ class _ShopState extends State<Shop> {
 //                                          placeholder: (context, url) => Center(
 //                                              child: CircularProgressIndicator()
 //                                          ),
-//                                          errorWidget: (context, url, error) => new Icon(Icons.error),
+//                                          errorWidget: (context, url, error) => new Icon(Pide.error),
 //                                        ),
 //                                      ),
 //                                      Padding(

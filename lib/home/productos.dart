@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../funciones_generales.dart';
 import '../modelo/products.dart';
 import '../shop/search.dart';
+import 'package:Pide/pide_icons.dart';
 class Productos extends StatefulWidget {
 final String titulo;
 
@@ -46,15 +47,17 @@ bool _botonBusqueda=false;
           elevation: 0,
           iconTheme: IconThemeData(
             color:Color(colorVerde), //change your color here
+
           ),
-         // leading: btnAtrasProductos(),
-          automaticallyImplyLeading: true,
+          
+         //leading: btnAtrasProductos(),
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           primary: false,
           actions: <Widget>[
             
             IconButton(
-              icon: Icon(Icons.tune,color: Color(colorVerde),),
+              icon: Icon(Pide.tune,color: Color(colorVerde),),
 
               onPressed: () {
                 if(_botonBusqueda){
@@ -82,11 +85,8 @@ bool _botonBusqueda=false;
   Widget btnAtrasProductos(){
     //return null;
     return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: (){
-
-
-      },
+      icon: Icon(Pide.arrow_back),
+    onPressed: () => Navigator.pushNamed(context,"/home"),
     );
   }
 }
