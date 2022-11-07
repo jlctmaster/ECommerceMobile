@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'funciones_generales.dart';
 
-const String BASE_URL = 'http://44.212.34.192/data';
+const String BASE_URL = 'http://44.212.34.192/';
 //const String BASE_URL = 'http://127.0.0.1:8000';
 //const String BASE_URL_IMAGEN="http://127.0.0.1:8000/storage/";  //se usa para evitar CROSS
 const String BASE_URL_IMAGEN = "http://44.212.34.192/storage/"; //se usa para evitar CROSS
