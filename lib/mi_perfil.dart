@@ -19,6 +19,7 @@ import 'blocks/auth_block.dart';
 import 'package:Pide/pide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+
 class MiPerfil extends StatefulWidget {
   @override
   _MiPerfilState createState() => _MiPerfilState();
@@ -33,40 +34,27 @@ class _MiPerfilState extends State<MiPerfil> {
   bool radioCargado = false;
   bool _cargando = false;
   String _msjErrorRadio = "";
-  var campo = {
-    'cities_id':null,
-    'rif': '',
-    'tipoRif': '',
-    'sex': '',
-    'name': '',
-    'birthdate':''
-  };
-
+  var campo = {'cities_id': null, 'rif': '', 'tipoRif': '', 'sex': '', 'name': '', 'birthdate': ''};
 
   String _value;
   String _cities_id;
   String customerid;
-  List data=null;
-  bool cargado=false;
+  List data = null;
+  bool cargado = false;
   FocusNode _focus = new FocusNode();
 
-  bool loading=false;
-bool _btnDireccionesCargando=false;
+  bool loading = false;
+  bool _btnDireccionesCargando = false;
   var _regions_id;
 
   var _states_id;
-bool _avisoObligatorioState=false;
-bool _avisoObligatorioRegions=false;
-bool _avisoObligatorioCities=false;
-bool _widgetCities=true;
-bool _widgetRegions=true;
+  bool _avisoObligatorioState = false;
+  bool _avisoObligatorioRegions = false;
+  bool _avisoObligatorioCities = false;
+  bool _widgetCities = true;
+  bool _widgetRegions = true;
 
-  bool _buenoStates=false;
-
-
-
-
-
+  bool _buenoStates = false;
 
   File _image;
   File _imageB;
@@ -76,18 +64,16 @@ bool _widgetRegions=true;
   DateTime selectedDate = DateTime.now().subtract(new Duration(days: 3600));
   TextEditingController _controller;
   String fecha;
-  bool cargandoImagen=false;
+  bool cargandoImagen = false;
   Future getImage() async {
     setState(() {
-      cargandoImagen=true;
+      cargandoImagen = true;
     });
 
-
-
     String base64Image;
-    String url= await UrlLogin('actualizarFotoPerfil');
+    String url = await UrlLogin('actualizarFotoPerfil');
     await _showSelectionDialog(context);
-    if(_imageB!=null) {
+    if (_imageB != null) {
       base64Image = base64Encode(_imageB.readAsBytesSync());
       //Map res=await upload("fotoPerfil",url,base64Image);
       Map res = await peticionPost(url, {"image": base64Image});
@@ -98,12 +84,12 @@ bool _widgetRegions=true;
     }
 
     setState(() {
-      cargandoImagen=false;
+      cargandoImagen = false;
       _image = _imageB;
-
     });
   }
-Future<bool> _showSelectionDialog(context) {
+
+  Future<bool> _showSelectionDialog(context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -115,17 +101,21 @@ Future<bool> _showSelectionDialog(context) {
                     GestureDetector(
                       child: Text("Galeria"),
                       onTap: () async {
-                            final pickedFile=await picker.getImage(source: ImageSource.gallery,maxWidth: 500,maxHeight: 500);
-                            _imageB= File(pickedFile.path);
-                            Navigator.of(context).pop();
+                        final pickedFile = await picker.getImage(source: ImageSource.gallery, maxWidth: 500, maxHeight: 500);
+                        _imageB = File(pickedFile.path);
+                        Navigator.of(context).pop();
                       },
                     ),
                     Padding(padding: EdgeInsets.all(14.0)),
                     GestureDetector(
                       child: Text("Camara"),
                       onTap: () async {
-                        final pickedFile=await picker.getImage(source: ImageSource.camera,maxWidth: 500,maxHeight: 500,);
-                        _imageB= File(pickedFile.path);
+                        final pickedFile = await picker.getImage(
+                          source: ImageSource.camera,
+                          maxWidth: 500,
+                          maxHeight: 500,
+                        );
+                        _imageB = File(pickedFile.path);
                         Navigator.of(context).pop();
                       },
                     )
@@ -134,79 +124,69 @@ Future<bool> _showSelectionDialog(context) {
               ));
         });
   }
-  upload(String fileName,url,base64Image) async {
+
+  upload(String fileName, url, base64Image) async {
     http.post(url, body: {
       "image": base64Image,
       "name": fileName,
     }).then((result) {
       return jsonDecode(result.body);
-
     }).catchError((error) {
       return null;
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     AuthBlock auth = Provider.of<AuthBlock>(context);
     return Scaffold(
         appBar: AppBarBio(context, 'Mi perfil'),
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  // Form(
-                  // key: _formKey,
+          child: Column(
+            children: <Widget>[
+              // Form(
+              // key: _formKey,
 
-                  FutureBuilder(
+              FutureBuilder(
+                future: _getUsuario(),
+                builder: (context, projectSnap) {
+                  if (projectSnap.connectionState == ConnectionState.done) {
+                    Map row = projectSnap.data;
+                    if (radioCargado == false) {
+                      campo = {
+                        'rif': row['nro_rif'],
+                        'tipoRif': row['nacionalidad'],
+                        'sex': row['sex'],
+                        'name': row['name'],
+                        'birthdate': row['birthdate'],
+                        'phone': row['phone']
+                      };
 
-                    future: _getUsuario(),
-                    builder: (context, projectSnap) {
-                      if (projectSnap.connectionState == ConnectionState.done) {
-                        Map row = projectSnap.data;
-                        if (radioCargado == false) {
-                          campo = {
-                            'rif': row['nro_rif'],
-                            'tipoRif': row['nacionalidad'],
-                            'sex': row['sex'],
-                            'name': row['name'],
-                            'birthdate': row['birthdate'],
-                            'phone': row['phone']
-                          };
+                      fecha = f.format(DateTime.parse(row['birthdate'])).split(' ')[0];
+                    } else {
+                      fecha = f.format(selectedDate.toLocal()).split(' ')[0];
+                    }
 
-                          fecha = f.format(DateTime.parse(row['birthdate'])).split(' ')[0];
-                        }else{
-                          fecha = f.format(selectedDate.toLocal()).split(' ')[0];
-                      }
+                    _controller = new TextEditingController(text: primeraVez ? '' : fecha);
+                    Map rowSelect = {'nroCedula': row['nro_rif'], 'nacionalidad': row['nacionalidad']};
 
-                        _controller = new TextEditingController(text: primeraVez ? '' : fecha);
-                        Map rowSelect = {
-                          'nroCedula': row['nro_rif'],
-                          'nacionalidad': row['nacionalidad']
-                        };
-
-                        radioCargado = true;
-                        String urlImagen=BASE_URL+'/'+(row['avatar']);
-                        return Padding(
-                            padding: EdgeInsets.only(right: 30, left: 30),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Center(child: cargandoImagen==false ? IconButton(
-
-                                    icon:
-
-                                    CachedNetworkImage(
+                    radioCargado = true;
+                    String urlImagen = BASE_URL + '/' + (row['avatar']);
+                    return Padding(
+                        padding: EdgeInsets.only(right: 30, left: 30),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                          Center(
+                            child: cargandoImagen == false
+                                ? IconButton(
+                                    icon: CachedNetworkImage(
                                       imageUrl: urlImagen,
                                       imageBuilder: (context, imageProvider) => Container(
                                         width: 130.0,
                                         height: 130.0,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                              image: imageProvider, fit: BoxFit.cover),
+                                          image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                                         ),
                                       ),
                                       placeholder: (context, url) => CircularProgressIndicator(),
@@ -215,38 +195,40 @@ Future<bool> _showSelectionDialog(context) {
                                     iconSize: 140,
                                     color: Color(colorVerde),
                                     onPressed: getImage,
-                                    ) : CircularProgressIndicator(),
-
-                                    ),
-                                  Center(child: Text(row['email'],
-                                    style: TextStyle(fontSize: 20),),),
-                                  _campoTexto('name', 'Nombre y apellido',
-                                      'todo', true, row['name']),
-                                  Cedula(row: rowSelect,
-                                    onChanged: _actualizarCedula,),
-
-                                  _Calendario(),
-_campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
-                                  Sexo(campo: row['sex'],
-                                    onChanged: _actualizarSexo,),
-
-                                  _botonRojo()
-                                ]
-                            )
-                        );
-                      } else {
-                        //print(" add   $projectSnap.data");
-                        return Center(child: CircularProgressIndicator(),);
-                      }
-                    },
-
-                  ),
-                  // ),
-                ],
+                                  )
+                                : CircularProgressIndicator(),
+                          ),
+                          Center(
+                            child: Text(
+                              row['email'],
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          _campoTexto('name', 'Nombre y apellido', 'todo', true, row['name']),
+                          Cedula(
+                            row: rowSelect,
+                            onChanged: _actualizarCedula,
+                          ),
+                          _Calendario(),
+                          _campoTexto('phone', 'Nro. telefónico', 'phone', true, row['phone']),
+                          Sexo(
+                            campo: row['sex'],
+                            onChanged: _actualizarSexo,
+                          ),
+                          _botonRojo()
+                        ]));
+                  } else {
+                    //print(" add   $projectSnap.data");
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
               ),
-            )
-        )
-    );
+              // ),
+            ],
+          ),
+        )));
   }
 
   void _actualizarSexo(value) {
@@ -267,31 +249,26 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
           child: SizedBox(
             width: 150,
             height: 40,
-            child: Consumer<AuthBlock>(builder:
-                (BuildContext context, AuthBlock auth, Widget child) {
-              return RaisedButton(
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(18.0),
-                ),
-                color: Color(0xFFe1251b),
-                textColor: Colors.white,
-                child: _cargando ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ) : Text('Guardar'),
+            child: Consumer<AuthBlock>(builder: (BuildContext context, AuthBlock auth, Widget child) {
+              return ElevatedButton(
+                child: _cargando
+                    ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    : Text('Guardar'),
                 onPressed: () async {
                   await _guardarPerfil(campo);
                 },
               );
             }),
           ),
-        )
-    );
+        ));
   }
 
   _getUsuario() async {
-   // String url = await UrlLogin('getPerfil');
-   // Map res=await peticionGet(url);
-    Map res= jsonDecode(await getData('perfil'));
+    // String url = await UrlLogin('getPerfil');
+    // Map res=await peticionGet(url);
+    Map res = jsonDecode(await getData('perfil'));
     return res['data'][0];
   }
 
@@ -303,17 +280,11 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
     String phone = campo['phone'];
     String cities_id = campo['cities_id'];
     String url = await UrlLogin('actualizarPerfil');
-       
-    //print(res);
-    Map res= await peticionPost(url,{
-      'rif':     rif,
-      'sex':  sex,
-      'name':      name,
-      'birthdate':       birthdate,
-      'phone':       phone
-    });
 
-    await saveData('perfil',res);
+    //print(res);
+    Map res = await peticionPost(url, {'rif': rif, 'sex': sex, 'name': name, 'birthdate': birthdate, 'phone': phone});
+
+    await saveData('perfil', res);
     msj(res['msj_general']);
   }
 
@@ -351,20 +322,16 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-     DatePicker.showDatePicker(context,
-                              showTitleActions: true,
-                              
-                              minTime: DateTime(1960, 8),
-                              maxTime:DateTime(2010,12), onChanged: (date) {
-                            print('change $date');
-                          }, onConfirm: (date) {
-                            print('confirm $date');
-                                  setState(() {
-                                    primeraVez=false;
-                                    selectedDate = date;
-                                    _actualizarFecha(selectedDate.toLocal().toString().split(' ')[0]);
-                                  });
-                          }, currentTime: selectedDate, locale: LocaleType.es);
+    DatePicker.showDatePicker(context, showTitleActions: true, minTime: DateTime(1960, 8), maxTime: DateTime(2010, 12), onChanged: (date) {
+      print('change $date');
+    }, onConfirm: (date) {
+      print('confirm $date');
+      setState(() {
+        primeraVez = false;
+        selectedDate = date;
+        _actualizarFecha(selectedDate.toLocal().toString().split(' ')[0]);
+      });
+    }, currentTime: selectedDate, locale: LocaleType.es);
 
 /*
     DatePicker.showDatePicker(
@@ -386,14 +353,15 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
     );
     */
   }
-  _actualizarFecha(value){
-    campo['birthdate']=value;
+
+  _actualizarFecha(value) {
+    campo['birthdate'] = value;
   }
+
   _Calendario() {
     return Padding(
       padding: EdgeInsets.only(top: 10),
       child: Column(
-
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -413,108 +381,132 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
               labelText: "Fecha de nacimiento",
             ),
           ),
-
         ],
       ),
     );
   }
-    Widget StatesId(row) {
 
-    if (_states_id == null){
-
+  Widget StatesId(row) {
+    if (_states_id == null) {
       _states_id = row['states_id'];
     }
     return FutureBuilder(
-      future: modelo.getStates(all:true),
+      future: modelo.getStates(all: true),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.done) {
-
           return _selectStatesId(projectSnap.data);
-
-        }else {
+        } else {
           return CircularProgressIndicator();
         }
       },
-
     );
   }
+
   Widget CitiesId(row) {
-    if (_cities_id== null && _widgetCities==true){
-      campo['cities_id']=row['cities_id'];
+    if (_cities_id == null && _widgetCities == true) {
+      campo['cities_id'] = row['cities_id'];
       _cities_id = row['cities_id'];
     }
     return FutureBuilder(
-      future: modelo.getCities(_regions_id,all:true),
+      future: modelo.getCities(_regions_id, all: true),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.done) {
           return _selectCitiesId(projectSnap.data);
-
-        }else {
+        } else {
           //print(" add   $projectSnap.data");
           return CircularProgressIndicator();
         }
       },
-
     );
   }
-    Widget _selectCitiesId(List data){
-    if(_regions_id==null){
-      return Padding(padding: EdgeInsets.all(0.00),);
-    }
-    if(data==null){
-      return Row(children: <Widget>[Text("Parroquias:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
-    }
-      return DropdownButton(
-        items: data?.map((item) {
-          return DropdownMenuItem(
-            child: Text(item['name']),
-            value: item['id'],
-          );
-        })?.toList() ?? [],
-        hint: Text("Parroquia",),
 
-        onChanged: (newVal) {
-          setState(() {
-            campo['cities_id']=newVal;
-            _cities_id = newVal;
-            _avisoObligatorioCities=false;
-          });
-        },
-        isExpanded: true,
-        value: _cities_id,
-        underline: _validarCombosLinea(_avisoObligatorioCities),
+  Widget _selectCitiesId(List data) {
+    if (_regions_id == null) {
+      return Padding(
+        padding: EdgeInsets.all(0.00),
       );
-
-  }
-    Widget _validarCombosLinea(tipo){
-    if(tipo){
-      return Container(color: Colors.red, height: 0.5);
-    }else {
-      return Container(color: Colors.grey, height: 0.5);
     }
-  }
-  Widget _selectRegionsId(List data){
-    if(_states_id==null){
-      return Padding(padding: EdgeInsets.all(0.00),);
-    }
-    if(data==null){
-      return Row(children: <Widget>[Text("Municipios:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
+    if (data == null) {
+      return Row(
+        children: <Widget>[
+          Text("Parroquias:"),
+          IconButton(
+            icon: Icon(Pide.autorenew),
+            onPressed: () {
+              setState(() {});
+            },
+          )
+        ],
+      );
     }
     return DropdownButton(
       items: data?.map((item) {
-        return DropdownMenuItem(
-          child: Text(item['name']),
-          value: item['id'],
-        );
-      })?.toList() ?? [],
-      hint: Text("Municipio",),
-
+            return DropdownMenuItem(
+              child: Text(item['name']),
+              value: item['id'],
+            );
+          })?.toList() ??
+          [],
+      hint: Text(
+        "Parroquia",
+      ),
       onChanged: (newVal) {
         setState(() {
-          _cities_id=null;
-          _widgetCities=false;
-          modelo.citiesCargado=false;
-          _avisoObligatorioRegions=false;
+          campo['cities_id'] = newVal;
+          _cities_id = newVal;
+          _avisoObligatorioCities = false;
+        });
+      },
+      isExpanded: true,
+      value: _cities_id,
+      underline: _validarCombosLinea(_avisoObligatorioCities),
+    );
+  }
+
+  Widget _validarCombosLinea(tipo) {
+    if (tipo) {
+      return Container(color: Colors.red, height: 0.5);
+    } else {
+      return Container(color: Colors.grey, height: 0.5);
+    }
+  }
+
+  Widget _selectRegionsId(List data) {
+    if (_states_id == null) {
+      return Padding(
+        padding: EdgeInsets.all(0.00),
+      );
+    }
+    if (data == null) {
+      return Row(
+        children: <Widget>[
+          Text("Municipios:"),
+          IconButton(
+            icon: Icon(Pide.autorenew),
+            onPressed: () {
+              setState(() {});
+            },
+          )
+        ],
+      );
+    }
+    return DropdownButton(
+      items: data?.map((item) {
+            return DropdownMenuItem(
+              child: Text(item['name']),
+              value: item['id'],
+            );
+          })?.toList() ??
+          [],
+      hint: Text(
+        "Municipio",
+      ),
+      onChanged: (newVal) {
+        setState(() {
+          _cities_id = null;
+          _widgetCities = false;
+          modelo.citiesCargado = false;
+          _avisoObligatorioRegions = false;
           _regions_id = newVal;
         });
       },
@@ -522,61 +514,69 @@ _campoTexto('phone','Nro. telefónico','phone',true,row['phone']),
       value: _regions_id,
       underline: _validarCombosLinea(_avisoObligatorioRegions),
     );
-
   }
+
   Widget RegionsId(row) {
-    if (_regions_id == null && _widgetRegions==true){
+    if (_regions_id == null && _widgetRegions == true) {
       _regions_id = row['regions_id'];
     }
     return FutureBuilder(
-      future: modelo.getRegions(_states_id,all:true),
+      future: modelo.getRegions(_states_id, all: true),
       builder: (context, projectSnap) {
         if (projectSnap.connectionState == ConnectionState.done) {
           return _selectRegionsId(projectSnap.data);
-
-        }else {
+        } else {
           //print(" add   $projectSnap.data");
           return CircularProgressIndicator();
         }
       },
-
     );
   }
-  Widget _selectStatesId(List data){
-    if(data==null){
-      return Row(children: <Widget>[Text("Estados:"),IconButton(icon: Icon(Pide.autorenew),onPressed: (){setState(() {});},)],);
+
+  Widget _selectStatesId(List data) {
+    if (data == null) {
+      return Row(
+        children: <Widget>[
+          Text("Estados:"),
+          IconButton(
+            icon: Icon(Pide.autorenew),
+            onPressed: () {
+              setState(() {});
+            },
+          )
+        ],
+      );
     }
 
     return DropdownButton(
-
       items: data?.map((item) {
-        if(item['id']==_states_id){ //para evitar el error si desactiamos un estado y el usuario consulta y tiene el estado viejo
-          _buenoStates=true;
-        }
-        return DropdownMenuItem(
-          child: Text(item['name']),
-          value: item['id'],
-        );
-
-      })?.toList() ?? [],
-      hint: Text("Estado",),
+            if (item['id'] == _states_id) {
+              //para evitar el error si desactiamos un estado y el usuario consulta y tiene el estado viejo
+              _buenoStates = true;
+            }
+            return DropdownMenuItem(
+              child: Text(item['name']),
+              value: item['id'],
+            );
+          })?.toList() ??
+          [],
+      hint: Text(
+        "Estado",
+      ),
       onChanged: (newVal) {
-
         setState(() {
-
-          _regions_id=null;
-          _cities_id=null;
-          _widgetRegions=false;
-          modelo.citiesCargado=false;
-          modelo.regionsCargado=false;
-          _avisoObligatorioState=false;
+          _regions_id = null;
+          _cities_id = null;
+          _widgetRegions = false;
+          modelo.citiesCargado = false;
+          modelo.regionsCargado = false;
+          _avisoObligatorioState = false;
           _states_id = newVal;
         });
       },
-underline: _validarCombosLinea(_avisoObligatorioState),
+      underline: _validarCombosLinea(_avisoObligatorioState),
       isExpanded: true,
       value: _buenoStates ? _states_id : null,
     );
-
   }
 }

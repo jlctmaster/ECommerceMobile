@@ -4,6 +4,7 @@ import '../config.dart';
 import 'package:flutter/material.dart';
 
 import '../funciones_generales.dart';
+
 class BtnSolicitarDevolucion extends StatefulWidget {
   final int id;
   final ValueChanged<String> onChanged;
@@ -14,56 +15,55 @@ class BtnSolicitarDevolucion extends StatefulWidget {
 }
 
 class _SolicitarDevolucionState extends State<BtnSolicitarDevolucion> {
- bool _cargando=false;
- String opinion;
- bool _calificado=false;
- double v_puntos=0;
+  bool _cargando = false;
+  String opinion;
+  bool _calificado = false;
+  double v_puntos = 0;
   @override
   Widget build(BuildContext context) {
-   return Column(
+    return Column(
       children: <Widget>[
-        RatingOrder(orders_id: widget.id,onChanged: _puntos,),
-        Padding(padding: EdgeInsets.only(top: 15),),
-        Text("Elije una estrella y escríbenos tu experiencia.",style: TextStyle(color: Color(colorVerde),fontSize: 17),),
+        RatingOrder(
+          orders_id: widget.id,
+          onChanged: _puntos,
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 15),
+        ),
+        Text(
+          "Elije una estrella y escríbenos tu experiencia.",
+          style: TextStyle(color: Color(colorVerde), fontSize: 17),
+        ),
         Padding(
           padding: EdgeInsets.all(10),
-          child:
-        Card(
-            color: Colors.white70,
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: TextField(
-                onChanged: (value){
-                  opinion=value;
-                },
-
-                autofocus: true,
-                maxLines: 8,
-                decoration: InputDecoration.collapsed(hintText: "Ingresa tu opinión aquí"),
-              ),
-            )
-        )
-          ,),
-        RaisedButton(
-          shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(18.0),
-          ),
-          color: Color(0xFFe1251b),
-          textColor: Colors.white,
+          child: Card(
+              color: Colors.white70,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) {
+                    opinion = value;
+                  },
+                  autofocus: true,
+                  maxLines: 8,
+                  decoration: InputDecoration.collapsed(hintText: "Ingresa tu opinión aquí"),
+                ),
+              )),
+        ),
+        ElevatedButton(
           child: _cargando ? CircularProgressIndicator() : Text("Guardar"),
-          onPressed: () async{
-            if(v_puntos==0){
+          onPressed: () async {
+            if (v_puntos == 0) {
               msj("Debe elegir una estrella");
-            }else if(opinion==null){
+            } else if (opinion == null) {
               msj("Escríbenos tu experiencia.");
-            }else{
+            } else {
               setState(() {
                 _cargando = true;
               });
 
-
-              if(await guardarOpinion()){
-                _calificado=true;
+              if (await guardarOpinion()) {
+                _calificado = true;
               }
               setState(() {
                 _cargando = false;
@@ -73,25 +73,24 @@ class _SolicitarDevolucionState extends State<BtnSolicitarDevolucion> {
         )
       ],
     );
-
-
   }
+
   Future guardarOpinion() async {
     String url;
-    String datos='guardarOpinionOrden&user_rating='+v_puntos.toString()+'&opinion='+opinion+'&orders_id='+widget.id.toString();
+    String datos = 'guardarOpinionOrden&user_rating=' + v_puntos.toString() + '&opinion=' + opinion + '&orders_id=' + widget.id.toString();
     print(datos);
-    url=await UrlLogin(datos);
-    Map res=await peticionGet(url);
-    if (res['success']==true) {
+    url = await UrlLogin(datos);
+    Map res = await peticionGet(url);
+    if (res['success'] == true) {
       msj(res['msj_general']);
       Navigator.pop(context);
       return true;
-    }else{
+    } else {
       msj(res['msj_general']);
     }
   }
-  _puntos(v){
-    v_puntos=v;
 
+  _puntos(v) {
+    v_puntos = v;
   }
 }

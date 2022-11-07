@@ -339,19 +339,7 @@ msj(String msj){
       fontSize: 16.0);
 }
 
-msjb(String msj,context){
-  Scaffold.of(context).removeCurrentSnackBar();
-  Scaffold.of(context)
-      .showSnackBar(
 
-        SnackBar(
-        
-          duration: Duration(seconds: 4),
-          content: Text(msj)
-          )
-      );
-      
-}
 noInternet(){
     return Center(child: Text("Verifique su conexión a internet",style: TextStyle(color: Colors.red),),);
 }

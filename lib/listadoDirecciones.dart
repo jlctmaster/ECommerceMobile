@@ -130,10 +130,10 @@ bool _btnDireccionesCargando=false;
           content: new Text(value,
             style: new TextStyle(fontSize: 25.0),),
           actions: <Widget>[
-            new FlatButton(onPressed: () {
+            TextButton(onPressed: () {
               Navigator.pop(context);
             }, child: new Text('NO')),
-            new FlatButton(onPressed: () async {
+            new TextButton(onPressed: () async {
              await modelo.eliminarDireccion(datab[index]['id']);
               setState(() {
                 datab.removeAt(index);

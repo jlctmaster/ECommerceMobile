@@ -112,7 +112,7 @@ return RawMaterialButton(
                   await setCarrito(widget.id,_cant);
                   proveedor.notifyListeners();
                   String total=await proveedor.totalCarrito();
-                  msjb("Total:  "+total,context);
+                  msj("Total:  "+total);
               }
            }
   },
@@ -163,7 +163,7 @@ width: double.infinity,
                   await setCarrito(widget.id,_cant);
                   proveedor.notifyListeners();
                   String total=await proveedor.totalCarrito();
-                  msjb("Total:  "+total,context);
+                  msj("Total:  "+total);
               }
            }
   },
@@ -186,7 +186,7 @@ return       Container(
             await setCarrito(widget.id,_cant);
            proveedor.notifyListeners();
                  String total=await proveedor.totalCarrito();
-                  msjb(total,context);
+                  msj(total);
        
   },
   elevation: 2.0,

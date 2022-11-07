@@ -4,36 +4,38 @@ import 'package:intl/intl.dart';
 import '../funciones_generales.dart';
 import 'package:provider/provider.dart';
 import 'package:Pide/pide_icons.dart';
+
 class AgregarProducto extends StatefulWidget {
   final double precioDolar;
   final double precioBolivar;
   final int stock;
   final int pedidoMax;
   final int id;
-  const AgregarProducto({Key key, this.precioDolar, this.precioBolivar,this.id, this.stock, this.pedidoMax}) : super(key: key);
+  const AgregarProducto({Key key, this.precioDolar, this.precioBolivar, this.id, this.stock, this.pedidoMax}) : super(key: key);
   @override
   _AgregarProductoState createState() => _AgregarProductoState();
 }
+
 class _AgregarProductoState extends State<AgregarProducto> {
-  int _cant=0;
+  int _cant = 0;
   List productos;
-  String _bolivar='0';
-  String _dolar='0';
-  int _stock=0;
-  int _pedidoMax=0;
+  String _bolivar = '0';
+  String _dolar = '0';
+  int _stock = 0;
+  int _pedidoMax = 0;
 
-  bool cargado=false;
-  final formatDolar = new NumberFormat.simpleCurrency(locale: 'en_US',decimalDigits: 2);
-  final formatBolivar = new NumberFormat.simpleCurrency(locale: 'es_ES',name: 'Bs',decimalDigits: 2);
+  bool cargado = false;
+  final formatDolar = new NumberFormat.simpleCurrency(locale: 'en_US', decimalDigits: 2);
+  final formatBolivar = new NumberFormat.simpleCurrency(locale: 'es_ES', name: 'Bs', decimalDigits: 2);
 
-  bool _rojoStock=false;
-  Color _colorStock=Colors.black;
-  bool _rojoMaximo=false;
-  Color _colorMaximo=Colors.black;
+  bool _rojoStock = false;
+  Color _colorStock = Colors.black;
+  bool _rojoMaximo = false;
+  Color _colorMaximo = Colors.black;
   //Future init() async {
-   // print("initssssssssssssssssss");
-    //await getCarrito();
- // }
+  // print("initssssssssssssssssss");
+  //await getCarrito();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,131 +43,125 @@ class _AgregarProductoState extends State<AgregarProducto> {
     return FutureBuilder(
       future: proveedor.getCarritob(),
       builder: (context, obj) {
-        _stock=widget.stock-_cant;
-        _pedidoMax=widget.pedidoMax;
-          if(cargado==false) {
-            if (obj.connectionState == ConnectionState.done) {
-              if (obj.data['productos'] != null) {
+        _stock = widget.stock - _cant;
+        _pedidoMax = widget.pedidoMax;
+        if (cargado == false) {
+          if (obj.connectionState == ConnectionState.done) {
+            if (obj.data['productos'] != null) {
               if (obj.data['productos'][widget.id.toString()] != null) {
                 _cant = obj.data['productos'][widget.id.toString()];
 
                 _dolar = formatDolar.format((widget.precioDolar * _cant));
                 _bolivar = formatBolivar.format((widget.precioBolivar * _cant));
               }
-              } else {
+            } else {
               print("producto NULO");
-              }
-              cargado = true;
             }
+            cargado = true;
           }
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Expanded(
-                child://Row(
-                  //children: <Widget>[
-Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: //<Widget>[
+        }
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Expanded(
+                child: //Row(
+                    //children: <Widget>[
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: //<Widget>[
 
-  widget.pedidoMax>0 ? [wStock(),wPedidoMax()] : [wStock()]
+                            widget.pedidoMax > 0 ? [wStock(), wPedidoMax()] : [wStock()]
 
-            //],
-)
-                 // ],
+                        //],
+                        )
+                // ],
                 //),
-              ),
-
-
-              FlatButton(child: Icon(Pide.do_not_disturb_on),
-
-                  onPressed: () async {
-
-
-                  if(_cant>0) {
-                    _rojoStock=false;
-                    _colorStock=Colors.black;
+                ),
+            TextButton(
+                child: Icon(Pide.do_not_disturb_on),
+                onPressed: () async {
+                  if (_cant > 0) {
+                    _rojoStock = false;
+                    _colorStock = Colors.black;
 
                     _cant--;
                     _stock++;
-                    _dolar=formatDolar.format((widget.precioDolar*_cant));
-                    _bolivar=formatBolivar.format((widget.precioBolivar*_cant));
+                    _dolar = formatDolar.format((widget.precioDolar * _cant));
+                    _bolivar = formatBolivar.format((widget.precioBolivar * _cant));
                     //productos[widget.id] = _cant;
-                    await setCarrito(widget.id,_cant);
-                   proveedor.actualizar();
+                    await setCarrito(widget.id, _cant);
+                    proveedor.actualizar();
                   }
-                   if(_pedidoMax>_cant){
-                    if(_rojoMaximo){
-
-                        _rojoMaximo=false;
-                        _colorMaximo=Colors.black;
-
-
+                  if (_pedidoMax > _cant) {
+                    if (_rojoMaximo) {
+                      _rojoMaximo = false;
+                      _colorMaximo = Colors.black;
                     }
                   }
+                }),
+            Icon(
+              Pide.shopping_cart,
+              size: 16,
+            ),
+            Text(
+              "$_cant",
+              style: TextStyle(fontSize: 21),
+            ),
+            TextButton(
+              child: Icon(Pide.add_circle),
+              onPressed: () async {
+                if (_stock > 0 && (_pedidoMax > _cant || widget.pedidoMax == 0) && widget.stock > _cant) {
+                  //setState(() async {
 
-              }),
-              Icon(Pide.shopping_cart,size: 16,),
-              Text("$_cant",style: TextStyle(fontSize: 21),),
-              FlatButton(
-                child: Icon(Pide.add_circle),
-                onPressed: () async {
+                  if (_cant >= 0) {
+                    _cant++;
 
-if(_stock>0 && (_pedidoMax>_cant || widget.pedidoMax==0) && widget.stock>_cant) {
+                    _stock--;
+                    _dolar = formatDolar.format((widget.precioDolar * _cant));
+                    _bolivar = formatBolivar.format((widget.precioBolivar * _cant));
+                    await setCarrito(widget.id, _cant);
+                    proveedor.actualizar();
+                    // productos[widget.id] = _cant;
+                  }
+                  // });
+                }
 
-  //setState(() async {
-
-    if (_cant >= 0) {
-      _cant++;
-
-      _stock--;
-      _dolar = formatDolar.format((widget.precioDolar * _cant));
-      _bolivar = formatBolivar.format((widget.precioBolivar * _cant));
-      await setCarrito(widget.id, _cant);
-      proveedor.actualizar();
-      // productos[widget.id] = _cant;
-    }
- // });
-}
-
-if(_stock==0 || widget.stock==_cant){
-  if(!_rojoStock){
-    setState(() {
-      _rojoStock=true;
-      _colorStock=Colors.red;
-    });
-
-  }
-}
-if(_pedidoMax<=_cant && widget.pedidoMax!=0){
-  if(!_rojoMaximo){
-    setState(() {
-      _rojoMaximo=true;
-      _colorMaximo=Colors.red;
-    });
-
-  }
-}
-                },
-              ),
-            ],
-          );
+                if (_stock == 0 || widget.stock == _cant) {
+                  if (!_rojoStock) {
+                    setState(() {
+                      _rojoStock = true;
+                      _colorStock = Colors.red;
+                    });
+                  }
+                }
+                if (_pedidoMax <= _cant && widget.pedidoMax != 0) {
+                  if (!_rojoMaximo) {
+                    setState(() {
+                      _rojoMaximo = true;
+                      _colorMaximo = Colors.red;
+                    });
+                  }
+                }
+              },
+            ),
+          ],
+        );
 
         //}else{
         //  return Center(child:CircularProgressIndicator());
         //}
       },
     );
+  }
 
+  Widget wStock() {
+    return Text(
+      "En stock: " + widget.stock.toString(),
+      style: TextStyle(fontSize: 16, color: _colorStock),
+    );
   }
-  Widget wStock(){
-    return Text("En stock: "+widget.stock.toString(),style: TextStyle(fontSize: 16,color: _colorStock),);
-  }
-  Widget wPedidoMax(){
-    return Text("Pedido Máximo: $_pedidoMax",style: TextStyle(fontSize: 16,color: _colorMaximo) );
+
+  Widget wPedidoMax() {
+    return Text("Pedido Máximo: $_pedidoMax", style: TextStyle(fontSize: 16, color: _colorMaximo));
   }
 }
-
-
-
-
